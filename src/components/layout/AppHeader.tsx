@@ -58,7 +58,7 @@ export default function AppHeader() {
   const unreadCount = notifications.filter((n) => n.unread).length;
 
   return (
-    <header className="sticky top-0 z-30 bg-white border-b border-gray-200">
+    <header className="sticky top-0 z-30 bg-white/95 backdrop-blur-xl border-b border-gray-200/50 shadow-sm">
       <div className="flex items-center justify-between px-4 lg:px-6 h-16">
         {/* Left Section */}
         <div className="flex items-center gap-4">

@@ -33,11 +33,11 @@ const Button = ({
   const baseStyles = 'inline-flex items-center justify-center font-medium rounded-lg transition-colors focus:outline-none focus:ring-4 disabled:opacity-50 disabled:cursor-not-allowed';
 
   const variantStyles = {
-    primary: 'bg-brand-500 text-white hover:bg-brand-600 focus:ring-brand-500/20',
+    primary: 'bg-gradient-to-r from-brand-500 to-cyan-500 text-white hover:from-brand-600 hover:to-cyan-600 focus:ring-brand-500/20 shadow-md',
     secondary: 'bg-gray-100 text-gray-900 hover:bg-gray-200 focus:ring-gray-500/10',
     outline: 'border-2 border-brand-500 text-brand-500 hover:bg-brand-50 focus:ring-brand-500/20',
     ghost: 'text-brand-500 hover:bg-brand-50 focus:ring-brand-500/20',
-    danger: 'bg-error-500 text-white hover:bg-error-600 focus:ring-error-500/20',
+    danger: 'bg-gradient-to-r from-error-500 to-error-600 text-white hover:from-error-600 hover:to-error-700 focus:ring-error-500/20 shadow-md',
   };
 
   const sizeStyles = {

@@ -44,11 +44,11 @@ const Card = ({
 
   return (
     <div
-      className={`bg-white rounded-lg border border-gray-200 ${shadowStyles[shadow]} ${hoverStyles} ${className}`}
+      className={`bg-white/80 backdrop-blur-xl rounded-lg border border-gray-200/50 ${shadowStyles[shadow]} ${hoverStyles} ${className}`}
       {...props}
     >
       {header && (
-        <div className="px-6 py-4 border-b border-gray-200">
+        <div className="px-6 py-4 border-b border-gray-200/50">
           {header}
         </div>
       )}
@@ -58,7 +58,7 @@ const Card = ({
       </div>
 
       {footer && (
-        <div className="px-6 py-4 border-t border-gray-200 bg-gray-50 rounded-b-lg">
+        <div className="px-6 py-4 border-t border-gray-200/50 bg-gray-50/50 rounded-b-lg">
           {footer}
         </div>
       )}

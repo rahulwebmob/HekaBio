@@ -69,12 +69,12 @@ const Modal = ({
       {/* Modal */}
       <div className="flex min-h-full items-center justify-center p-4">
         <div
-          className={`relative bg-white rounded-xl shadow-theme-xl w-full ${sizeStyles[size]} transform transition-all`}
+          className={`relative bg-white/95 backdrop-blur-xl rounded-xl shadow-theme-xl w-full ${sizeStyles[size]} transform transition-all border border-gray-200/50`}
           onClick={(e) => e.stopPropagation()}
         >
           {/* Header */}
           {title && (
-            <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200">
+            <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200/50">
               <h3 className="text-lg font-semibold text-gray-900">{title}</h3>
               <button
                 onClick={onClose}
@@ -90,7 +90,7 @@ const Modal = ({
 
           {/* Footer */}
           {footer && (
-            <div className="px-6 py-4 border-t border-gray-200 bg-gray-50 rounded-b-xl">
+            <div className="px-6 py-4 border-t border-gray-200/50 bg-gray-50/50 rounded-b-xl">
               {footer}
             </div>
           )}

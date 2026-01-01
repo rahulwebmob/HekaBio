@@ -18,28 +18,28 @@ export default function DashboardPage() {
       value: '42',
       icon: IconFolder,
       color: 'text-brand-500',
-      bgColor: 'bg-brand-50',
+      bgColor: 'bg-brand-50/80',
     },
     {
       title: 'Active Pipeline',
       value: '28',
       icon: IconFileText,
       color: 'text-cyan-500',
-      bgColor: 'bg-cyan-50',
+      bgColor: 'bg-cyan-50/80',
     },
     {
       title: 'Completed',
       value: '12',
       icon: IconCircleCheck,
       color: 'text-success-500',
-      bgColor: 'bg-success-50',
+      bgColor: 'bg-success-50/80',
     },
     {
       title: 'Pending Review',
       value: '8',
       icon: IconClock,
       color: 'text-warning-500',
-      bgColor: 'bg-warning-50',
+      bgColor: 'bg-warning-50/80',
     },
   ];
 
@@ -116,7 +116,7 @@ export default function DashboardPage() {
             </li>
           </ul>
 
-          <div className="bg-gray-50 rounded-lg border border-gray-200 p-6">
+          <div className="bg-gray-50/50 backdrop-blur-sm rounded-lg border border-gray-200/50 p-6">
             <p className="text-sm font-semibold text-gray-900 mb-3">
               Next Steps - Phase 0.2:
             </p>

@@ -116,8 +116,8 @@ export default function AppSidebar() {
       {/* Sidebar */}
       <aside
         className={`
-          fixed top-0 left-0 h-full bg-white border-r border-gray-200 z-50
-          transition-all duration-300 ease-in-out
+          fixed top-0 left-0 h-full bg-white/80 backdrop-blur-xl border-r border-gray-200/50 z-50
+          transition-all duration-300 ease-in-out shadow-theme-xl
           ${sidebarWidth}
           ${isMobileOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
         `}
@@ -133,11 +133,11 @@ export default function AppSidebar() {
         }}
       >
         {/* Logo */}
-        <div className="h-16 flex items-center justify-center border-b border-gray-200 px-4">
+        <div className="h-16 flex items-center justify-center border-b border-gray-200/50 px-4">
           {isExpanded ? (
             <img src="/logo.png" alt="HekaBio" className="h-10" />
           ) : (
-            <div className="w-10 h-10 bg-brand-500 rounded-lg flex items-center justify-center">
+            <div className="w-10 h-10 bg-brand-500 rounded-lg flex items-center justify-center shadow-sm">
               <span className="text-white font-bold text-lg">H</span>
             </div>
           )}
@@ -158,8 +158,8 @@ export default function AppSidebar() {
                         transition-all duration-200
                         ${
                           isActive(undefined, item.submenu)
-                            ? 'bg-brand-50 text-brand-600'
-                            : 'text-gray-700 hover:bg-gray-100'
+                            ? 'bg-brand-50 text-brand-600 shadow-sm'
+                            : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900'
                         }
                         ${!isExpanded && 'justify-center'}
                       `}
@@ -215,8 +215,8 @@ export default function AppSidebar() {
                       transition-all duration-200
                       ${
                         isActive(item.path)
-                          ? 'bg-brand-50 text-brand-600'
-                          : 'text-gray-700 hover:bg-gray-100'
+                          ? 'bg-brand-50 text-brand-600 shadow-sm'
+                          : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900'
                       }
                       ${!isExpanded && 'justify-center'}
                     `}
@@ -239,7 +239,7 @@ export default function AppSidebar() {
 
         {/* Collapse Toggle (Desktop Only) */}
         {!isMobileOpen && (
-          <div className="hidden lg:block border-t border-gray-200 p-3">
+          <div className="hidden lg:block border-t border-gray-200/50 p-3">
             <button
               onClick={() => {
                 setHoverExpanded(false);
@@ -251,7 +251,7 @@ export default function AppSidebar() {
               }}
               className={`
                 w-full flex items-center gap-3 px-3 py-2.5 rounded-lg
-                text-gray-700 hover:bg-gray-100 transition-colors
+                text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition-colors
                 ${!isExpanded && 'justify-center'}
               `}
             >

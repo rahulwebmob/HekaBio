@@ -7,7 +7,7 @@ export default function AppFooter() {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="bg-white border-t border-gray-200 mt-auto">
+    <footer className="bg-white/95 backdrop-blur-xl border-t border-gray-200/50 mt-auto">
       <div className="px-4 lg:px-6 py-4">
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
           {/* Copyright */}

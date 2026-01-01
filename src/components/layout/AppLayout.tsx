@@ -35,7 +35,16 @@ function LayoutContent({ children }: AppLayoutProps) {
     : '';
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col">
+    <div
+      className="min-h-screen flex flex-col"
+      style={{
+        backgroundImage: 'url(/login-bg.avif)',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat',
+        backgroundAttachment: 'fixed',
+      }}
+    >
       <AppSidebar />
 
       {/* Main Content Area */}

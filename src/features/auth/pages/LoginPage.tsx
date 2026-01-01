@@ -90,7 +90,7 @@ export default function LoginPage() {
       }}
     >
       <div className="w-full max-w-[450px] my-8">
-        <div className="bg-white/95 backdrop-blur-xl rounded-xl shadow-theme-lg border border-gray-200 p-8">
+        <div className="bg-white/80 backdrop-blur-xl rounded-xl shadow-theme-xl border border-gray-200/50 p-8">
           {/* Logo & Header */}
           <div className="text-center mb-8">
             <img
@@ -162,10 +162,10 @@ export default function LoginPage() {
           {/* Divider */}
           <div className="relative my-6">
             <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-gray-200"></div>
+              <div className="w-full border-t border-gray-200/50"></div>
             </div>
             <div className="relative flex justify-center text-sm">
-              <span className="px-4 bg-white text-gray-500">OR</span>
+              <span className="px-4 text-gray-500">OR</span>
             </div>
           </div>
 
@@ -182,7 +182,7 @@ export default function LoginPage() {
 
             <Button
               type="button"
-              variant="secondary"
+              variant="outline"
               size="md"
               fullWidth
               disabled={!selectedRole}
