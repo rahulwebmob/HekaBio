@@ -5,15 +5,10 @@
 
 import { Suspense, useEffect, type ReactElement } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { ConfigProvider, Spin } from 'antd';
 import { Provider } from 'react-redux';
 
-// Store & Theme
+// Store
 import { store } from './app/store';
-import theme from './config/theme';
-
-// Styles
-import './assets/styles/global.css';
 
 // Routes
 import { routes } from './routes';
@@ -23,14 +18,11 @@ import { useAuth } from './hooks/useAuth';
 
 // Loading Fallback
 const LoadingFallback = () => (
-  <div style={{
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    height: '100vh',
-    backgroundColor: '#f5f5f5'
-  }}>
-    <Spin size="large" tip="Loading..." />
+  <div className="flex justify-center items-center h-screen bg-gray-50">
+    <div className="flex flex-col items-center gap-4">
+      <div className="w-12 h-12 border-4 border-brand-500 border-t-transparent rounded-full animate-spin"></div>
+      <p className="text-sm font-medium text-gray-700">Loading...</p>
+    </div>
   </div>
 );
 
@@ -104,11 +96,9 @@ function AppRouter() {
 function App() {
   return (
     <Provider store={store}>
-      <ConfigProvider theme={theme}>
-        <BrowserRouter>
-          <AppRouter />
-        </BrowserRouter>
-      </ConfigProvider>
+      <BrowserRouter>
+        <AppRouter />
+      </BrowserRouter>
     </Provider>
   );
 }

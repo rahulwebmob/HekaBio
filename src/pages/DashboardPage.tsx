@@ -1,145 +1,150 @@
 /**
- * Dashboard Page
- * Main dashboard after login (placeholder for now)
+ * Dashboard Page - TailAdmin Style
+ * Main dashboard after login
  */
 
-import { Button, Card, Col, Row, Statistic, Typography } from 'antd';
-import {
-  ProjectOutlined,
-  FileTextOutlined,
-  CheckCircleOutlined,
-  ClockCircleOutlined,
-  LogoutOutlined,
-} from '@ant-design/icons';
-import { useNavigate } from 'react-router-dom';
+import { IconFolder, IconFileText, IconCircleCheck, IconClock } from '@tabler/icons-react';
 import { useAuth } from '../hooks/useAuth';
 import { RoleLabels } from '../types/auth.types';
-
-const { Title, Text } = Typography;
+import { AppLayout } from '../components/layout';
+import { Card } from '../components/ui';
 
 export default function DashboardPage() {
-  const { user, logout } = useAuth();
-  const navigate = useNavigate();
+  const { user } = useAuth();
 
-  const handleLogout = async () => {
-    await logout();
-    navigate('/login');
-  };
+  const stats = [
+    {
+      title: 'Total Projects',
+      value: '42',
+      icon: IconFolder,
+      color: 'text-brand-500',
+      bgColor: 'bg-brand-50',
+    },
+    {
+      title: 'Active Pipeline',
+      value: '28',
+      icon: IconFileText,
+      color: 'text-cyan-500',
+      bgColor: 'bg-cyan-50',
+    },
+    {
+      title: 'Completed',
+      value: '12',
+      icon: IconCircleCheck,
+      color: 'text-success-500',
+      bgColor: 'bg-success-50',
+    },
+    {
+      title: 'Pending Review',
+      value: '8',
+      icon: IconClock,
+      color: 'text-warning-500',
+      bgColor: 'bg-warning-50',
+    },
+  ];
 
   return (
-    <div style={{ minHeight: '100vh', background: '#f5f5f5' }}>
-      {/* Header */}
-      <div style={{
-        background: '#ffffff',
-        padding: '20px 50px',
-        borderBottom: '1px solid #f0f0f0',
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-      }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-          <img src="/logo.png" alt="HekaBio" style={{ height: 40 }} />
-          <Title level={4} style={{ margin: 0 }}>
-            HekaBio Platform
-          </Title>
-        </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-          <div style={{ textAlign: 'right' }}>
-            <Text strong>{user?.fullName}</Text>
-            <br />
-            <Text type="secondary" style={{ fontSize: 12 }}>
-              {user?.role && RoleLabels[user.role]}
-            </Text>
-          </div>
-          <Button
-            icon={<LogoutOutlined />}
-            onClick={handleLogout}
-          >
-            Logout
-          </Button>
-        </div>
-      </div>
-
-      {/* Content */}
-      <div style={{ padding: '40px 50px' }}>
-        <Title level={2}>
-          Welcome, {user?.firstName}! 👋
-        </Title>
-        <Text type="secondary" style={{ fontSize: 16 }}>
-          Your role: <strong>{user?.role && RoleLabels[user.role]}</strong>
-        </Text>
-
-        <div style={{ marginTop: 32 }}>
-          <Row gutter={[24, 24]}>
-            <Col xs={24} sm={12} lg={6}>
-              <Card>
-                <Statistic
-                  title="Total Projects"
-                  value={42}
-                  prefix={<ProjectOutlined />}
-                  valueStyle={{ color: 'var(--color-primary)' }}
-                />
-              </Card>
-            </Col>
-            <Col xs={24} sm={12} lg={6}>
-              <Card>
-                <Statistic
-                  title="Active Pipeline"
-                  value={28}
-                  prefix={<FileTextOutlined />}
-                  valueStyle={{ color: '#1890ff' }}
-                />
-              </Card>
-            </Col>
-            <Col xs={24} sm={12} lg={6}>
-              <Card>
-                <Statistic
-                  title="Completed"
-                  value={12}
-                  prefix={<CheckCircleOutlined />}
-                  valueStyle={{ color: '#52c41a' }}
-                />
-              </Card>
-            </Col>
-            <Col xs={24} sm={12} lg={6}>
-              <Card>
-                <Statistic
-                  title="Pending Review"
-                  value={8}
-                  prefix={<ClockCircleOutlined />}
-                  valueStyle={{ color: '#faad14' }}
-                />
-              </Card>
-            </Col>
-          </Row>
+    <AppLayout>
+      <div>
+        {/* Welcome Section */}
+        <div className="mb-8">
+          <h2 className="text-3xl font-semibold text-gray-900 mb-2">
+            Welcome, {user?.firstName}!
+          </h2>
+          <p className="text-base text-gray-600">
+            Your role: <span className="font-medium text-gray-900">{user?.role && RoleLabels[user.role]}</span>
+          </p>
         </div>
 
-        <Card style={{ marginTop: 32 }}>
-          <Title level={4}>🎉 Foundation Setup Complete!</Title>
-          <Text>
+        {/* Stats Grid */}
+        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4 mb-8">
+          {stats.map((stat) => (
+            <Card key={stat.title} padding="md" shadow="sm" hover>
+              <div className="flex items-center justify-between mb-4">
+                <div className={`flex items-center justify-center w-12 h-12 rounded-lg ${stat.bgColor}`}>
+                  <stat.icon size={24} stroke={1.5} className={stat.color} />
+                </div>
+              </div>
+              <div>
+                <p className="text-sm font-medium text-gray-600 mb-1">{stat.title}</p>
+                <p className={`text-3xl font-bold ${stat.color}`}>{stat.value}</p>
+              </div>
+            </Card>
+          ))}
+        </div>
+
+        {/* Info Card */}
+        <Card padding="lg" shadow="sm">
+          <h3 className="text-xl font-semibold text-gray-900 mb-4">
+            Foundation Setup Complete!
+          </h3>
+          <p className="text-sm text-gray-700 mb-6">
             The HekaBio platform foundation is now ready. We have successfully set up:
-          </Text>
-          <ul style={{ marginTop: 16, fontSize: 15 }}>
-            <li>✅ React 18 + TypeScript + Vite</li>
-            <li>✅ Ant Design UI Library with custom teal theme</li>
-            <li>✅ Redux Toolkit state management</li>
-            <li>✅ React Router with protected routes</li>
-            <li>✅ Mock authentication with 12 user roles</li>
-            <li>✅ TypeScript type definitions for all entities</li>
-            <li>✅ Landing page and login flow</li>
+          </p>
+          <ul className="space-y-3 text-sm text-gray-700 mb-6">
+            <li className="flex items-start gap-3">
+              <IconCircleCheck size={20} stroke={1.5} className="text-success-500 flex-shrink-0 mt-0.5" />
+              <span>React 18 + TypeScript + Vite</span>
+            </li>
+            <li className="flex items-start gap-3">
+              <IconCircleCheck size={20} stroke={1.5} className="text-success-500 flex-shrink-0 mt-0.5" />
+              <span>Tailwind CSS 4 with TailAdmin design system</span>
+            </li>
+            <li className="flex items-start gap-3">
+              <IconCircleCheck size={20} stroke={1.5} className="text-success-500 flex-shrink-0 mt-0.5" />
+              <span>Redux Toolkit state management</span>
+            </li>
+            <li className="flex items-start gap-3">
+              <IconCircleCheck size={20} stroke={1.5} className="text-success-500 flex-shrink-0 mt-0.5" />
+              <span>React Router with protected routes</span>
+            </li>
+            <li className="flex items-start gap-3">
+              <IconCircleCheck size={20} stroke={1.5} className="text-success-500 flex-shrink-0 mt-0.5" />
+              <span>Mock authentication with 12 user roles</span>
+            </li>
+            <li className="flex items-start gap-3">
+              <IconCircleCheck size={20} stroke={1.5} className="text-success-500 flex-shrink-0 mt-0.5" />
+              <span>TypeScript type definitions for all entities</span>
+            </li>
+            <li className="flex items-start gap-3">
+              <IconCircleCheck size={20} stroke={1.5} className="text-success-500 flex-shrink-0 mt-0.5" />
+              <span>Landing page and login flow with TailAdmin style</span>
+            </li>
+            <li className="flex items-start gap-3">
+              <IconCircleCheck size={20} stroke={1.5} className="text-success-500 flex-shrink-0 mt-0.5" />
+              <span>Custom teal/cyan theme matching HekaBio branding</span>
+            </li>
           </ul>
-          <div style={{ marginTop: 24, padding: 16, background: '#f9f9f9', borderRadius: 8 }}>
-            <Text strong>📋 Next Steps - Phase 0.2:</Text>
-            <ul style={{ marginTop: 8 }}>
-              <li>Create AppLayout with Header, Sidebar, and navigation</li>
-              <li>Build Address Book module (companies & contacts)</li>
-              <li>Build Project management module</li>
-              <li>Build Survey system</li>
-              <li>...and 20+ more modules from the granular plan!</li>
+
+          <div className="bg-gray-50 rounded-lg border border-gray-200 p-6">
+            <p className="text-sm font-semibold text-gray-900 mb-3">
+              Next Steps - Phase 0.2:
+            </p>
+            <ul className="space-y-2 text-sm text-gray-700">
+              <li className="flex items-start gap-2">
+                <span className="text-brand-500">•</span>
+                <span>Create AppLayout with Header, Sidebar, and navigation</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="text-brand-500">•</span>
+                <span>Build Address Book module (companies & contacts)</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="text-brand-500">•</span>
+                <span>Build Project management module</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="text-brand-500">•</span>
+                <span>Build Survey system</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="text-brand-500">•</span>
+                <span>...and 20+ more modules from the granular plan!</span>
+              </li>
             </ul>
           </div>
         </Card>
       </div>
-    </div>
+    </AppLayout>
   );
 }

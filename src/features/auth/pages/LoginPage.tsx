@@ -1,184 +1,197 @@
 /**
- * Login Page
+ * Login Page - TailAdmin Style
  * Authentication page with role switcher for demo
  */
 
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Form, Input, Button, Card, Typography, message, Select, Divider } from 'antd';
-import { UserOutlined, LockOutlined } from '@ant-design/icons';
+import { IconUser, IconLock, IconEye, IconEyeOff } from '@tabler/icons-react';
 import { useAuth } from '../../../hooks/useAuth';
 import { UserRole, RoleLabels } from '../../../types/auth.types';
-
-const { Title, Paragraph, Text } = Typography;
-const { Option } = Select;
+import { Button, Input, Select } from '../../../components/ui';
 
 export default function LoginPage() {
   const navigate = useNavigate();
   const { login, switchRole, isLoading } = useAuth();
-  const [selectedRole, setSelectedRole] = useState<UserRole | null>(null);
+  const [selectedRole, setSelectedRole] = useState<UserRole | ''>('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [formData, setFormData] = useState({ email: '', password: '' });
+  const [errors, setErrors] = useState({ email: '', password: '' });
 
-  const onFinish = async (values: { email: string; password: string }) => {
+  const validateForm = () => {
+    const newErrors = { email: '', password: '' };
+    let isValid = true;
+
+    if (!formData.email) {
+      newErrors.email = 'Please enter your email';
+      isValid = false;
+    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+      newErrors.email = 'Please enter a valid email';
+      isValid = false;
+    }
+
+    if (!formData.password) {
+      newErrors.password = 'Please enter your password';
+      isValid = false;
+    }
+
+    setErrors(newErrors);
+    return isValid;
+  };
+
+  const onFinish = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!validateForm()) return;
+
     try {
-      const result = await login(values);
+      const result = await login(formData);
 
       if (result.meta.requestStatus === 'fulfilled') {
-        message.success('Login successful!');
         navigate('/dashboard');
       } else {
-        message.error('Invalid email or password');
+        setErrors({ ...errors, password: 'Invalid email or password' });
       }
     } catch (error) {
-      message.error('Login failed. Please try again.');
+      setErrors({ ...errors, password: 'Login failed. Please try again.' });
     }
   };
 
   const handleRoleSwitch = () => {
     if (selectedRole) {
-      switchRole(selectedRole);
-      message.success(`Logged in as ${RoleLabels[selectedRole]}`);
+      switchRole(selectedRole as UserRole);
       navigate('/dashboard');
     }
   };
 
+  // Prepare role options for Select component
+  const roleOptions = [
+    { value: UserRole.SUPER_ADMIN, label: RoleLabels[UserRole.SUPER_ADMIN] },
+    { value: UserRole.CRM_OWNER, label: RoleLabels[UserRole.CRM_OWNER] },
+    { value: UserRole.GATE_1_ANALYST, label: RoleLabels[UserRole.GATE_1_ANALYST] },
+    { value: UserRole.GATE_2_ANALYST, label: RoleLabels[UserRole.GATE_2_ANALYST] },
+    { value: UserRole.GATE_3_DECISION_MAKER, label: RoleLabels[UserRole.GATE_3_DECISION_MAKER] },
+    { value: UserRole.DD_SPECIALIST_SCIENTIFIC, label: RoleLabels[UserRole.DD_SPECIALIST_SCIENTIFIC] },
+    { value: UserRole.PRODUCT_OWNER, label: RoleLabels[UserRole.PRODUCT_OWNER] },
+    { value: UserRole.HOSPITAL_STAFF, label: RoleLabels[UserRole.HOSPITAL_STAFF] },
+    { value: UserRole.DISTRIBUTOR_STAFF, label: RoleLabels[UserRole.DISTRIBUTOR_STAFF] },
+    { value: UserRole.LICENSE_HOLDER_STAFF, label: RoleLabels[UserRole.LICENSE_HOLDER_STAFF] },
+    { value: UserRole.MANUFACTURING_STAFF, label: RoleLabels[UserRole.MANUFACTURING_STAFF] },
+  ];
+
   return (
-    <div style={{
-      position: 'fixed',
-      top: 0,
-      left: 0,
-      right: 0,
-      bottom: 0,
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      backgroundImage: 'url(/login-bg.avif)',
-      backgroundSize: 'cover',
-      backgroundPosition: 'center',
-      backgroundRepeat: 'no-repeat',
-      backgroundColor: '#f0f2f5',
-      padding: '24px',
-      overflow: 'auto',
-    }}>
-      <div style={{
-        width: '100%',
-        maxWidth: '450px',
-        margin: '0 auto',
-      }}>
-        <Card
-          style={{
-            background: 'rgba(255, 255, 255, 0.95)',
-            backdropFilter: 'blur(20px)',
-            WebkitBackdropFilter: 'blur(20px)',
-            boxShadow: '0 8px 32px rgba(0, 0, 0, 0.12)',
-            border: '1px solid rgba(255, 255, 255, 0.3)',
-          }}
-        >
-          <div style={{ textAlign: 'center', marginBottom: 32 }}>
+    <div
+      className="fixed inset-0 flex items-center justify-center bg-gray-50 px-4 overflow-auto"
+      style={{
+        backgroundImage: 'url(/login-bg.avif)',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat',
+      }}
+    >
+      <div className="w-full max-w-[450px] my-8">
+        <div className="bg-white/95 backdrop-blur-xl rounded-xl shadow-theme-lg border border-gray-200 p-8">
+          {/* Logo & Header */}
+          <div className="text-center mb-8">
             <img
               src="/logo.png"
               alt="HekaBio Logo"
-              style={{ height: 60, marginBottom: 16 }}
+              className="h-[60px] mx-auto mb-4"
             />
-            <Title level={3} style={{ margin: 0, color: 'var(--color-primary)' }}>
+            <h3 className="text-2xl font-semibold text-brand-500 mb-2">
               Welcome to HekaBio
-            </Title>
-            <Paragraph type="secondary">
+            </h3>
+            <p className="text-sm text-gray-600">
               Healthcare Innovation Management Platform
-            </Paragraph>
+            </p>
           </div>
 
-          <Form
-            name="login"
-            onFinish={onFinish}
-            layout="vertical"
-            size="large"
-          >
-            <Form.Item
-              name="email"
-              rules={[
-                { required: true, message: 'Please enter your email' },
-                { type: 'email', message: 'Please enter a valid email' },
-              ]}
-            >
-              <Input
-                prefix={<UserOutlined />}
-                placeholder="Email"
-                autoComplete="email"
-              />
-            </Form.Item>
+          {/* Login Form */}
+          <form onSubmit={onFinish} className="space-y-5">
+            {/* Email Input */}
+            <Input
+              label="Email"
+              type="email"
+              value={formData.email}
+              onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+              placeholder="Enter your email"
+              autoComplete="email"
+              leftIcon={<IconUser size={18} stroke={1.5} />}
+              error={errors.email}
+              fullWidth
+            />
 
-            <Form.Item
-              name="password"
-              rules={[{ required: true, message: 'Please enter your password' }]}
-            >
-              <Input.Password
-                prefix={<LockOutlined />}
-                placeholder="Password"
-                autoComplete="current-password"
-              />
-            </Form.Item>
+            {/* Password Input */}
+            <Input
+              label="Password"
+              type={showPassword ? 'text' : 'password'}
+              value={formData.password}
+              onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+              placeholder="Enter your password"
+              autoComplete="current-password"
+              leftIcon={<IconLock size={18} stroke={1.5} />}
+              rightIcon={
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="text-gray-500 hover:text-gray-700 transition-colors"
+                >
+                  {showPassword ? (
+                    <IconEyeOff size={18} stroke={1.5} />
+                  ) : (
+                    <IconEye size={18} stroke={1.5} />
+                  )}
+                </button>
+              }
+              error={errors.password}
+              fullWidth
+            />
 
-            <Form.Item>
-              <Button
-                type="primary"
-                htmlType="submit"
-                loading={isLoading}
-                block
-                style={{ height: 44 }}
-              >
-                Login
-              </Button>
-            </Form.Item>
-          </Form>
-
-          <Divider>OR</Divider>
-
-          <div style={{ marginTop: 24 }}>
-            <Text strong style={{ display: 'block', marginBottom: 12 }}>
-              Quick Demo Login (Select Role):
-            </Text>
-            <Select
-              style={{ width: '100%', marginBottom: 16 }}
-              placeholder="Select a role to demo"
-              size="large"
-              value={selectedRole}
-              onChange={setSelectedRole}
-            >
-              <Option value={UserRole.SUPER_ADMIN}>{RoleLabels[UserRole.SUPER_ADMIN]}</Option>
-              <Option value={UserRole.CRM_OWNER}>{RoleLabels[UserRole.CRM_OWNER]}</Option>
-              <Option value={UserRole.GATE_1_ANALYST}>{RoleLabels[UserRole.GATE_1_ANALYST]}</Option>
-              <Option value={UserRole.GATE_2_ANALYST}>{RoleLabels[UserRole.GATE_2_ANALYST]}</Option>
-              <Option value={UserRole.GATE_3_DECISION_MAKER}>{RoleLabels[UserRole.GATE_3_DECISION_MAKER]}</Option>
-              <Option value={UserRole.DD_SPECIALIST_SCIENTIFIC}>{RoleLabels[UserRole.DD_SPECIALIST_SCIENTIFIC]}</Option>
-              <Option value={UserRole.PRODUCT_OWNER}>{RoleLabels[UserRole.PRODUCT_OWNER]}</Option>
-              <Option value={UserRole.HOSPITAL_STAFF}>{RoleLabels[UserRole.HOSPITAL_STAFF]}</Option>
-              <Option value={UserRole.DISTRIBUTOR_STAFF}>{RoleLabels[UserRole.DISTRIBUTOR_STAFF]}</Option>
-              <Option value={UserRole.LICENSE_HOLDER_STAFF}>{RoleLabels[UserRole.LICENSE_HOLDER_STAFF]}</Option>
-              <Option value={UserRole.MANUFACTURING_STAFF}>{RoleLabels[UserRole.MANUFACTURING_STAFF]}</Option>
-            </Select>
+            {/* Submit Button */}
             <Button
-              block
-              size="large"
+              type="submit"
+              variant="primary"
+              size="md"
+              fullWidth
+              loading={isLoading}
+            >
+              Login
+            </Button>
+          </form>
+
+          {/* Divider */}
+          <div className="relative my-6">
+            <div className="absolute inset-0 flex items-center">
+              <div className="w-full border-t border-gray-200"></div>
+            </div>
+            <div className="relative flex justify-center text-sm">
+              <span className="px-4 bg-white text-gray-500">OR</span>
+            </div>
+          </div>
+
+          {/* Demo Role Selector */}
+          <div className="space-y-4">
+            <Select
+              label="Quick Demo Login (Select Role):"
+              placeholder="Select a role to demo"
+              options={roleOptions}
+              value={selectedRole}
+              onChange={(e) => setSelectedRole(e.target.value as UserRole | '')}
+              fullWidth
+            />
+
+            <Button
+              type="button"
+              variant="secondary"
+              size="md"
+              fullWidth
               disabled={!selectedRole}
               onClick={handleRoleSwitch}
-              style={{ height: 44 }}
             >
               Login as Selected Role
             </Button>
           </div>
-
-          <Divider />
-
-          <div style={{ textAlign: 'center' }}>
-            <Text type="secondary" style={{ fontSize: 13 }}>
-              Demo Accounts: Any email from mock users with password length ≥ 3
-            </Text>
-            <br />
-            <Text type="secondary" style={{ fontSize: 12 }}>
-              Example: crm@hekabio.com / password
-            </Text>
-          </div>
-        </Card>
+        </div>
       </div>
     </div>
   );

@@ -1,24 +1,55 @@
-/* Import our global styles */
-@import './assets/styles/global.css';
+@import url("https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap");
 
-/* Basic reset - don't use flex on body! */
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    font-family: 'Quicksand', sans-serif;
+  }
 }
 
-html,
-body,
-#root {
-  height: 100%;
-  margin: 0;
-  padding: 0;
+/* Stage Badge Styles */
+.stage-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  font-size: 12px;
+  font-weight: 500;
+  border-radius: 4px;
 }
 
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+.stage-lobby {
+  background-color: #f0f0f0;
+  color: #8c8c8c;
+}
+
+.stage-survey {
+  background-color: #e6f7ff;
+  color: #1890ff;
+}
+
+.stage-japan {
+  background-color: #f9f0ff;
+  color: #722ed1;
+}
+
+.stage-nda {
+  background-color: #fff7e6;
+  color: #fa8c16;
+}
+
+.stage-dd {
+  background-color: #99f6e4;
+  color: #0f766e;
+}
+
+.stage-approved {
+  background-color: #f6ffed;
+  color: #52c41a;
+}
+
+.stage-declined {
+  background-color: #fff1f0;
+  color: #f5222d;
 }
