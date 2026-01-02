@@ -6,17 +6,15 @@
 import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import {
-  IconLayoutDashboard,
   IconUsers,
   IconFileText,
   IconClipboardCheck,
   IconChartBar,
   IconSettings,
-  IconChevronDown,
-  IconChevronLeft,
   IconFlask,
   IconBuildingHospital,
 } from '@tabler/icons-react';
+import { ChevronDownIcon, ChevronLeftIcon, GridIcon } from '../../icons';
 import { useSidebar } from '../../contexts/SidebarContext';
 
 interface MenuItem {
@@ -30,7 +28,7 @@ interface MenuItem {
 const menuItems: MenuItem[] = [
   {
     label: 'Dashboard',
-    icon: <IconLayoutDashboard size={20} stroke={1.5} />,
+    icon: <GridIcon className="w-5 h-5" />,
     path: '/dashboard',
   },
   {
@@ -168,9 +166,8 @@ export default function AppSidebar() {
                           <span className="flex-1 text-sm font-medium text-left">
                             {item.label}
                           </span>
-                          <IconChevronDown
-                            size={16}
-                            className={`transition-transform duration-200 ${
+                          <ChevronDownIcon
+                            className={`w-4 h-4 transition-transform duration-200 ${
                               openSubmenu === item.label ? 'rotate-180' : ''
                             }`}
                           />
@@ -253,9 +250,8 @@ export default function AppSidebar() {
                 ${!isExpanded && 'justify-center'}
               `}
             >
-              <IconChevronLeft
-                size={20}
-                className={`transition-transform duration-300 ${
+              <ChevronLeftIcon
+                className={`w-5 h-5 transition-transform duration-300 ${
                   isCollapsed ? 'rotate-180' : ''
                 }`}
               />

@@ -23,21 +23,21 @@ const Badge = ({
   className = '',
   ...props
 }: BadgeProps) => {
-  const baseStyles = 'inline-flex items-center gap-1.5 font-medium rounded-full';
+  const baseStyles = 'inline-flex items-center gap-1.5 font-normal rounded-md border';
 
   const variantStyles = {
-    default: 'bg-gray-100 text-gray-700',
-    primary: 'bg-brand-100 text-brand-700',
-    success: 'bg-success-100 text-success-700',
-    warning: 'bg-warning-100 text-warning-700',
-    error: 'bg-error-100 text-error-700',
-    info: 'bg-cyan-100 text-cyan-700',
+    default: 'bg-gray-50/50 text-gray-600 border-gray-200/50',
+    primary: 'bg-brand-50/50 text-brand-600 border-brand-200/50',
+    success: 'bg-success-50/50 text-success-600 border-success-200/50',
+    warning: 'bg-warning-50/50 text-warning-600 border-warning-200/50',
+    error: 'bg-error-50/50 text-error-600 border-error-200/50',
+    info: 'bg-cyan-50/50 text-cyan-600 border-cyan-200/50',
   };
 
   const sizeStyles = {
-    sm: 'px-2 py-0.5 text-xs',
-    md: 'px-2.5 py-0.5 text-xs',
-    lg: 'px-3 py-1 text-sm',
+    sm: 'px-1.5 py-0.5 text-[10px]',
+    md: 'px-2 py-0.5 text-xs',
+    lg: 'px-2.5 py-1 text-xs',
   };
 
   const dotColors = {

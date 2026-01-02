@@ -44,11 +44,15 @@ const Card = ({
 
   return (
     <div
-      className={`bg-white/80 backdrop-blur-xl rounded-lg border border-gray-200/50 ${shadowStyles[shadow]} ${hoverStyles} ${className}`}
+      className={`bg-white/70 backdrop-blur-2xl rounded-lg border border-white/40 ${shadowStyles[shadow]} ${hoverStyles} ${className}`}
+      style={{
+        backdropFilter: 'blur(40px) saturate(180%)',
+        WebkitBackdropFilter: 'blur(40px) saturate(180%)',
+      }}
       {...props}
     >
       {header && (
-        <div className="px-6 py-4 border-b border-gray-200/50">
+        <div className="px-6 py-4 border-b border-white/30 bg-white/20">
           {header}
         </div>
       )}
@@ -58,7 +62,7 @@ const Card = ({
       </div>
 
       {footer && (
-        <div className="px-6 py-4 border-t border-gray-200/50 bg-gray-50/50 rounded-b-lg">
+        <div className="px-6 py-4 border-t border-white/30 bg-white/20 rounded-b-lg">
           {footer}
         </div>
       )}

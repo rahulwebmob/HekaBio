@@ -8,12 +8,9 @@ import {
   IconBuilding,
   IconMapPin,
   IconWorld,
-  IconMail,
   IconPhone,
-  IconEdit,
-  IconTrash,
-  IconUser,
 } from '@tabler/icons-react';
+import { MailIcon, PencilIcon, TrashBinIcon, UserIcon } from '../../icons';
 import { useAppSelector, useAppDispatch } from '../../app/store';
 import { deleteCompany } from '../../store/slices/addressBookSlice';
 import { Button, Badge, Drawer, Modal } from '../ui';
@@ -97,7 +94,7 @@ export function CompanyDetailDrawer({ isOpen, onClose, companyId }: CompanyDetai
           <div className="flex items-center justify-between gap-3">
             <Button
               variant="danger"
-              leftIcon={<IconTrash size={18} />}
+              leftIcon={<TrashBinIcon className="w-[18px] h-[18px]" />}
               onClick={() => setShowDeleteModal(true)}
             >
               Delete Company
@@ -108,7 +105,7 @@ export function CompanyDetailDrawer({ isOpen, onClose, companyId }: CompanyDetai
               </Button>
               <Button
                 variant="primary"
-                leftIcon={<IconEdit size={18} />}
+                leftIcon={<PencilIcon className="w-[18px] h-[18px]" />}
                 onClick={() => setShowEditModal(true)}
               >
                 Edit Company
@@ -215,7 +212,7 @@ export function CompanyDetailDrawer({ isOpen, onClose, companyId }: CompanyDetai
 
               {company.email && (
                 <div className="flex items-start gap-3">
-                  <IconMail size={18} className="text-gray-400 mt-0.5 flex-shrink-0" />
+                  <MailIcon className="w-[18px] h-[18px] text-gray-400 mt-0.5 flex-shrink-0" />
                   <div className="text-sm">
                     <p className="text-gray-600 mb-1">Email</p>
                     <a
@@ -306,13 +303,13 @@ export function CompanyDetailDrawer({ isOpen, onClose, companyId }: CompanyDetai
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 bg-brand-100 rounded-lg flex items-center justify-center">
-                  <IconUser size={20} className="text-brand-600" />
+                  <UserIcon className="w-5 h-5 text-brand-600" />
                 </div>
                 <h2 className="text-xl font-semibold text-gray-900">
                   Contacts ({contacts.length})
                 </h2>
               </div>
-              <Button variant="outline" size="sm" leftIcon={<IconUser size={16} />}>
+              <Button variant="outline" size="sm" leftIcon={<UserIcon className="w-4 h-4" />}>
                 Add Contact
               </Button>
             </div>
@@ -350,7 +347,7 @@ export function CompanyDetailDrawer({ isOpen, onClose, companyId }: CompanyDetai
                       </div>
                       <div className="mt-2 space-y-1">
                         <div className="flex items-center gap-2 text-sm text-gray-600">
-                          <IconMail size={14} />
+                          <MailIcon className="w-3.5 h-3.5" />
                           <a
                             href={`mailto:${contact.email}`}
                             className="hover:text-brand-600 transition-colors"
@@ -380,7 +377,7 @@ export function CompanyDetailDrawer({ isOpen, onClose, companyId }: CompanyDetai
                 <Button
                   variant="primary"
                   size="sm"
-                  leftIcon={<IconUser size={16} />}
+                  leftIcon={<UserIcon className="w-4 h-4" />}
                   className="mt-4"
                 >
                   Add First Contact

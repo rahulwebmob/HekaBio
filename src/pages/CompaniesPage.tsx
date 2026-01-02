@@ -6,16 +6,14 @@
 import { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
-  IconPlus,
   IconSearch,
   IconFilter,
   IconBuilding,
   IconMapPin,
   IconWorld,
-  IconMail,
   IconPhone,
-  IconEye,
 } from '@tabler/icons-react';
+import { PlusIcon, MailIcon, EyeIcon } from '../icons';
 import { useAppSelector } from '../app/store';
 import { AppLayout } from '../components/layout';
 import { Button, Card, Input, Select, Badge } from '../components/ui';
@@ -165,7 +163,7 @@ export default function CompaniesPage() {
           </div>
           <Button
             variant="primary"
-            leftIcon={<IconPlus size={18} />}
+            leftIcon={<PlusIcon className="w-[18px] h-[18px]" />}
             onClick={() => setIsModalOpen(true)}
           >
             Add Company
@@ -246,7 +244,7 @@ export default function CompaniesPage() {
         <Card padding="none" shadow="sm">
           <div className="overflow-x-auto">
             <table className="w-full">
-              <thead className="bg-gray-50 border-b border-gray-200/50">
+              <thead className="bg-white/50 backdrop-blur-xl border-b border-white/40">
                 <tr>
                   <th className="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
                     Company
@@ -271,11 +269,11 @@ export default function CompaniesPage() {
                   </th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-200/50">
+              <tbody className="divide-y divide-white/30">
                 {paginatedCompanies.map((company) => (
                   <tr
                     key={company.id}
-                    className="hover:bg-gray-50 transition-colors"
+                    className="hover:bg-white/50 transition-all duration-200 backdrop-blur-sm"
                   >
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-3">
@@ -293,14 +291,14 @@ export default function CompaniesPage() {
                       </div>
                     </td>
                     <td className="px-6 py-4">
-                      <Badge variant={getRoleBadgeVariant(company.role)} size="sm">
+                      <span className="text-sm text-gray-700">
                         {CompanyRoleLabels[company.role]}
-                      </Badge>
+                      </span>
                     </td>
                     <td className="px-6 py-4">
-                      <Badge variant={getCategoryBadgeVariant(company.category)} size="sm">
+                      <span className="text-sm text-gray-700">
                         {CompanyCategoryLabels[company.category]}
-                      </Badge>
+                      </span>
                     </td>
                     <td className="px-6 py-4">
                       <div className="text-sm text-gray-900">{company.address.city}</div>
@@ -337,7 +335,7 @@ export default function CompaniesPage() {
                           className="p-2 text-brand-600 hover:text-brand-700 hover:bg-brand-50 rounded-lg transition-all duration-200 hover:scale-110"
                           title="View company details"
                         >
-                          <IconEye size={18} stroke={1.5} />
+                          <EyeIcon className="w-[18px] h-[18px]" />
                         </button>
                       </div>
                     </td>
@@ -363,7 +361,7 @@ export default function CompaniesPage() {
               </p>
               <Button
                 variant="primary"
-                leftIcon={<IconPlus size={18} />}
+                leftIcon={<PlusIcon className="w-[18px] h-[18px]" />}
                 onClick={() => setIsModalOpen(true)}
               >
                 Add Company

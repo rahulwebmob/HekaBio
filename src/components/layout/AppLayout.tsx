@@ -35,30 +35,41 @@ function LayoutContent({ children }: AppLayoutProps) {
     : '';
 
   return (
-    <div
-      className="min-h-screen flex flex-col"
-      style={{
-        backgroundImage: 'url(/login-bg.avif)',
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundRepeat: 'no-repeat',
-        backgroundAttachment: 'fixed',
-      }}
-    >
-      <AppSidebar />
+    <div className="min-h-screen flex flex-col relative overflow-hidden">
+      {/* Background Image */}
+      <div
+        className="fixed inset-0 z-0"
+        style={{
+          backgroundImage: 'url(/login-bg.avif)',
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat',
+        }}
+      />
 
-      {/* Main Content Area */}
-      <div className={`flex-1 flex flex-col transition-all duration-300 ${mainMargin}`}>
-        <AppHeader />
+      {/* Extreme Blur Glass Overlay */}
+      <div className="fixed inset-0 z-0 glass-extreme" />
 
-        {/* Page Content */}
-        <main className="flex-1 p-4 lg:p-6">
-          <div className="max-w-screen-2xl mx-auto">
-            {children}
-          </div>
-        </main>
+      {/* Additional Glass Layer for Extra Effect */}
+      <div className="fixed inset-0 z-0 bg-gradient-to-br from-white/30 via-blue-50/10 to-cyan-50/20 glass-layer" />
 
-        <AppFooter />
+      {/* Content */}
+      <div className="relative z-10 min-h-screen flex flex-col">
+        <AppSidebar />
+
+        {/* Main Content Area */}
+        <div className={`flex-1 flex flex-col transition-all duration-300 ${mainMargin}`}>
+          <AppHeader />
+
+          {/* Page Content */}
+          <main className="flex-1 p-4 lg:p-6">
+            <div className="max-w-screen-2xl mx-auto">
+              {children}
+            </div>
+          </main>
+
+          <AppFooter />
+        </div>
       </div>
     </div>
   );

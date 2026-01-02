@@ -5,7 +5,7 @@
 
 import { useEffect, useState } from 'react';
 import type { ReactNode } from 'react';
-import { IconX } from '@tabler/icons-react';
+import { CloseIcon } from '../../icons';
 
 interface ModalProps {
   isOpen: boolean;
@@ -109,7 +109,7 @@ const Modal = ({
                 onClick={onClose}
                 className="text-gray-400 hover:text-gray-700 transition-all duration-200 p-1 rounded-lg hover:bg-white/50"
               >
-                <IconX size={20} stroke={1.5} />
+                <CloseIcon className="w-5 h-5" />
               </button>
             </div>
           )}
