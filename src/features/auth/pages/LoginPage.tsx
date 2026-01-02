@@ -52,7 +52,7 @@ export default function LoginPage() {
       } else {
         setErrors({ ...errors, password: 'Invalid email or password' });
       }
-    } catch (error) {
+    } catch {
       setErrors({ ...errors, password: 'Login failed. Please try again.' });
     }
   };

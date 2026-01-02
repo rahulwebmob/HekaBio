@@ -3,28 +3,32 @@
  * Companies and Contacts
  */
 
-import type { ID, Timestamp, Email } from './auth.types';
+import type { ID, Timestamp, Email } from './common.types';
 
 // ===== Company Types =====
-export enum CompanyRole {
-  HOSPITAL = 'HOSPITAL',
-  DISTRIBUTOR = 'DISTRIBUTOR',
-  LICENSE_HOLDER = 'LICENSE_HOLDER',
-  MANUFACTURER = 'MANUFACTURER',
-  PRODUCT_OWNER = 'PRODUCT_OWNER',
-  RESEARCH_INSTITUTION = 'RESEARCH_INSTITUTION',
-  VENTURE_CAPITAL = 'VENTURE_CAPITAL',
-  OTHER = 'OTHER',
-}
+export const CompanyRole = {
+  HOSPITAL: 'HOSPITAL',
+  DISTRIBUTOR: 'DISTRIBUTOR',
+  LICENSE_HOLDER: 'LICENSE_HOLDER',
+  MANUFACTURER: 'MANUFACTURER',
+  PRODUCT_OWNER: 'PRODUCT_OWNER',
+  RESEARCH_INSTITUTION: 'RESEARCH_INSTITUTION',
+  VENTURE_CAPITAL: 'VENTURE_CAPITAL',
+  OTHER: 'OTHER',
+} as const;
 
-export enum CompanyCategory {
-  CUSTOMER = 'CUSTOMER',
-  PARTNER = 'PARTNER',
-  PROSPECT = 'PROSPECT',
-  SUPPLIER = 'SUPPLIER',
-  INVESTOR = 'INVESTOR',
-  OTHER = 'OTHER',
-}
+export type CompanyRole = (typeof CompanyRole)[keyof typeof CompanyRole];
+
+export const CompanyCategory = {
+  CUSTOMER: 'CUSTOMER',
+  PARTNER: 'PARTNER',
+  PROSPECT: 'PROSPECT',
+  SUPPLIER: 'SUPPLIER',
+  INVESTOR: 'INVESTOR',
+  OTHER: 'OTHER',
+} as const;
+
+export type CompanyCategory = (typeof CompanyCategory)[keyof typeof CompanyCategory];
 
 export interface Address {
   street: string;
@@ -56,21 +60,23 @@ export interface Company {
 }
 
 // ===== Contact Types =====
-export enum ContactRole {
-  CEO = 'CEO',
-  CTO = 'CTO',
-  CFO = 'CFO',
-  COO = 'COO',
-  VP_SALES = 'VP_SALES',
-  VP_RND = 'VP_RND',
-  VP_REGULATORY = 'VP_REGULATORY',
-  BD_MANAGER = 'BD_MANAGER',
-  PROJECT_MANAGER = 'PROJECT_MANAGER',
-  CLINICAL_DIRECTOR = 'CLINICAL_DIRECTOR',
-  PROCUREMENT_MANAGER = 'PROCUREMENT_MANAGER',
-  QUALITY_MANAGER = 'QUALITY_MANAGER',
-  OTHER = 'OTHER',
-}
+export const ContactRole = {
+  CEO: 'CEO',
+  CTO: 'CTO',
+  CFO: 'CFO',
+  COO: 'COO',
+  VP_SALES: 'VP_SALES',
+  VP_RND: 'VP_RND',
+  VP_REGULATORY: 'VP_REGULATORY',
+  BD_MANAGER: 'BD_MANAGER',
+  PROJECT_MANAGER: 'PROJECT_MANAGER',
+  CLINICAL_DIRECTOR: 'CLINICAL_DIRECTOR',
+  PROCUREMENT_MANAGER: 'PROCUREMENT_MANAGER',
+  QUALITY_MANAGER: 'QUALITY_MANAGER',
+  OTHER: 'OTHER',
+} as const;
+
+export type ContactRole = (typeof ContactRole)[keyof typeof ContactRole];
 
 export interface Contact {
   id: ID;

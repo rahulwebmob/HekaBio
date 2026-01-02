@@ -1,28 +1,24 @@
 /**
  * App Sidebar - Main navigation sidebar
- * Collapsible sidebar with hover expand, submenu support
+ * Collapsible sidebar with hover expand
  */
 
-import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import {
-  IconUsers,
-  IconFileText,
-  IconClipboardCheck,
-  IconChartBar,
-  IconSettings,
   IconFlask,
   IconBuildingHospital,
+  IconFileText,
+  IconTemplate,
+  IconTrendingUp,
 } from '@tabler/icons-react';
-import { ChevronDownIcon, ChevronLeftIcon, GridIcon } from '../../icons';
+import { ChevronLeftIcon, GridIcon, UserIcon } from '../../icons';
 import { useSidebar } from '../../contexts/SidebarContext';
 
 interface MenuItem {
   label: string;
   icon: React.ReactNode;
-  path?: string;
+  path: string;
   badge?: string;
-  submenu?: { label: string; path: string }[];
 }
 
 const menuItems: MenuItem[] = [
@@ -32,71 +28,46 @@ const menuItems: MenuItem[] = [
     path: '/dashboard',
   },
   {
-    label: 'Innovations',
+    label: 'Projects',
     icon: <IconFlask size={20} stroke={1.5} />,
-    submenu: [
-      { label: 'All Innovations', path: '/innovations' },
-      { label: 'Submit New', path: '/innovations/submit' },
-      { label: 'My Submissions', path: '/innovations/my-submissions' },
-    ],
+    path: '/projects',
   },
   {
-    label: 'Evaluations',
-    icon: <IconClipboardCheck size={20} stroke={1.5} />,
-    submenu: [
-      { label: 'Pending Reviews', path: '/evaluations/pending' },
-      { label: 'Gate 1', path: '/evaluations/gate-1' },
-      { label: 'Gate 2', path: '/evaluations/gate-2' },
-      { label: 'Gate 3', path: '/evaluations/gate-3' },
-      { label: 'Due Diligence', path: '/evaluations/due-diligence' },
-    ],
+    label: 'Lead Scoring',
+    icon: <IconTrendingUp size={20} stroke={1.5} />,
+    path: '/lead-scoring',
   },
   {
-    label: 'Users',
-    icon: <IconUsers size={20} stroke={1.5} />,
-    path: '/users',
-  },
-  {
-    label: 'Address Book',
-    icon: <IconBuildingHospital size={20} stroke={1.5} />,
-    submenu: [
-      { label: 'Companies', path: '/companies' },
-      { label: 'Contacts', path: '/contacts' },
-    ],
-  },
-  {
-    label: 'Reports',
-    icon: <IconChartBar size={20} stroke={1.5} />,
-    path: '/reports',
-  },
-  {
-    label: 'Documents',
+    label: 'Surveys',
     icon: <IconFileText size={20} stroke={1.5} />,
-    path: '/documents',
+    path: '/surveys',
   },
   {
-    label: 'Settings',
-    icon: <IconSettings size={20} stroke={1.5} />,
-    path: '/settings',
+    label: 'Survey Templates',
+    icon: <IconTemplate size={20} stroke={1.5} />,
+    path: '/admin/survey-templates',
+  },
+  {
+    label: 'Companies',
+    icon: <IconBuildingHospital size={20} stroke={1.5} />,
+    path: '/companies',
+  },
+  {
+    label: 'Contacts',
+    icon: <UserIcon className="w-5 h-5" />,
+    path: '/contacts',
   },
 ];
 
 export default function AppSidebar() {
   const location = useLocation();
   const { isCollapsed, isMobileOpen, isHoverExpanded, setHoverExpanded, closeMobile } = useSidebar();
-  const [openSubmenu, setOpenSubmenu] = useState<string | null>(null);
 
   const isExpanded = !isCollapsed || isHoverExpanded;
   const sidebarWidth = isExpanded ? 'w-64' : 'w-20';
 
-  const isActive = (path?: string, submenuPaths?: { path: string }[]) => {
-    if (path) return location.pathname === path;
-    if (submenuPaths) return submenuPaths.some((item) => location.pathname === item.path);
-    return false;
-  };
-
-  const toggleSubmenu = (label: string) => {
-    setOpenSubmenu(openSubmenu === label ? null : label);
+  const isActive = (path: string) => {
+    return location.pathname === path || location.pathname.startsWith(path + '/');
   };
 
   return (
@@ -144,89 +115,30 @@ export default function AppSidebar() {
           <ul className="space-y-1">
             {menuItems.map((item) => (
               <li key={item.label}>
-                {item.submenu ? (
-                  // Submenu Item
-                  <div>
-                    <button
-                      onClick={() => toggleSubmenu(item.label)}
-                      className={`
-                        w-full flex items-center gap-3 px-3 py-2.5 rounded-lg
-                        transition-all duration-200
-                        ${
-                          isActive(undefined, item.submenu)
-                            ? 'bg-brand-50 text-brand-600 shadow-sm'
-                            : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900'
-                        }
-                        ${!isExpanded && 'justify-center'}
-                      `}
-                    >
-                      <span className="flex-shrink-0">{item.icon}</span>
-                      {isExpanded && (
-                        <>
-                          <span className="flex-1 text-sm font-medium text-left">
-                            {item.label}
-                          </span>
-                          <ChevronDownIcon
-                            className={`w-4 h-4 transition-transform duration-200 ${
-                              openSubmenu === item.label ? 'rotate-180' : ''
-                            }`}
-                          />
-                        </>
-                      )}
-                    </button>
-
-                    {/* Submenu Items */}
-                    {isExpanded && openSubmenu === item.label && (
-                      <ul className="mt-1 ml-9 space-y-1">
-                        {item.submenu.map((subItem) => (
-                          <li key={subItem.path}>
-                            <Link
-                              to={subItem.path}
-                              onClick={() => isMobileOpen && closeMobile()}
-                              className={`
-                                block px-3 py-2 rounded-lg text-sm
-                                transition-colors duration-200
-                                ${
-                                  location.pathname === subItem.path
-                                    ? 'bg-brand-50 text-brand-600 font-medium'
-                                    : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'
-                                }
-                              `}
-                            >
-                              {subItem.label}
-                            </Link>
-                          </li>
-                        ))}
-                      </ul>
-                    )}
-                  </div>
-                ) : (
-                  // Regular Item
-                  <Link
-                    to={item.path!}
-                    onClick={() => isMobileOpen && closeMobile()}
-                    className={`
-                      flex items-center gap-3 px-3 py-2.5 rounded-lg
-                      transition-all duration-200
-                      ${
-                        isActive(item.path)
-                          ? 'bg-brand-50 text-brand-600 shadow-sm'
-                          : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900'
-                      }
-                      ${!isExpanded && 'justify-center'}
-                    `}
-                  >
-                    <span className="flex-shrink-0">{item.icon}</span>
-                    {isExpanded && (
-                      <span className="text-sm font-medium">{item.label}</span>
-                    )}
-                    {item.badge && isExpanded && (
-                      <span className="ml-auto text-xs bg-brand-500 text-white px-2 py-0.5 rounded-full">
-                        {item.badge}
-                      </span>
-                    )}
-                  </Link>
-                )}
+                <Link
+                  to={item.path}
+                  onClick={() => isMobileOpen && closeMobile()}
+                  className={`
+                    flex items-center gap-3 px-3 py-2.5 rounded-lg
+                    transition-all duration-200
+                    ${
+                      isActive(item.path)
+                        ? 'bg-brand-50 text-brand-600 shadow-sm'
+                        : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900'
+                    }
+                    ${!isExpanded && 'justify-center'}
+                  `}
+                >
+                  <span className="flex-shrink-0">{item.icon}</span>
+                  {isExpanded && (
+                    <span className="text-sm font-medium">{item.label}</span>
+                  )}
+                  {item.badge && isExpanded && (
+                    <span className="ml-auto text-xs bg-brand-500 text-white px-2 py-0.5 rounded-full">
+                      {item.badge}
+                    </span>
+                  )}
+                </Link>
               </li>
             ))}
           </ul>

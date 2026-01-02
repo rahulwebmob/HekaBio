@@ -13,7 +13,7 @@ export const usePermissions = () => {
   const permissions = useMemo(() => {
     if (!user?.role) return [];
     return rolePermissions[user.role] || [];
-  }, [user?.role]);
+  }, [user]);
 
   const can = (permission: Permission): boolean => {
     if (!user?.role) return false;

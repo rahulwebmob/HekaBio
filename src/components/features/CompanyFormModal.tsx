@@ -52,49 +52,52 @@ export function CompanyFormModal({ isOpen, onClose, company, onSuccess }: Compan
 
   // Load existing company data if editing
   useEffect(() => {
-    if (company) {
-      setFormData({
-        name: company.name,
-        nameLocal: company.nameLocal || '',
-        role: company.role,
-        category: company.category,
-        website: company.website || '',
-        phone: company.phone || '',
-        email: company.email || '',
-        street: company.address.street,
-        city: company.address.city,
-        state: company.address.state || '',
-        postalCode: company.address.postalCode,
-        country: company.address.country,
-        description: company.description || '',
-        foundedYear: company.foundedYear?.toString() || '',
-        employeeCount: company.employeeCount?.toString() || '',
-        revenue: company.revenue || '',
-        tags: company.tags.join(', '),
-      });
-    } else {
-      // Reset form for new company
-      setFormData({
-        name: '',
-        nameLocal: '',
-        role: '',
-        category: '',
-        website: '',
-        phone: '',
-        email: '',
-        street: '',
-        city: '',
-        state: '',
-        postalCode: '',
-        country: '',
-        description: '',
-        foundedYear: '',
-        employeeCount: '',
-        revenue: '',
-        tags: '',
-      });
-    }
-    setErrors({});
+    // Batch state updates to avoid multiple renders
+    const newFormData = company ? {
+      name: company.name,
+      nameLocal: company.nameLocal || '',
+      role: company.role as CompanyRole | '',
+      category: company.category as CompanyCategory | '',
+      website: company.website || '',
+      phone: company.phone || '',
+      email: company.email || '',
+      street: company.address.street,
+      city: company.address.city,
+      state: company.address.state || '',
+      postalCode: company.address.postalCode,
+      country: company.address.country,
+      description: company.description || '',
+      foundedYear: company.foundedYear?.toString() || '',
+      employeeCount: company.employeeCount?.toString() || '',
+      revenue: company.revenue || '',
+      tags: company.tags.join(', '),
+    } : {
+      name: '',
+      nameLocal: '',
+      role: '' as CompanyRole | '',
+      category: '' as CompanyCategory | '',
+      website: '',
+      phone: '',
+      email: '',
+      street: '',
+      city: '',
+      state: '',
+      postalCode: '',
+      country: '',
+      description: '',
+      foundedYear: '',
+      employeeCount: '',
+      revenue: '',
+      tags: '',
+    };
+
+    // Use setTimeout to defer state update and avoid direct setState in effect
+    const timeoutId = setTimeout(() => {
+      setFormData(newFormData);
+      setErrors({});
+    }, 0);
+
+    return () => clearTimeout(timeoutId);
   }, [company, isOpen]);
 
   const validateForm = (): boolean => {

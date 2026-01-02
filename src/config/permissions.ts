@@ -5,52 +5,54 @@
 
 import { UserRole } from '../types/auth.types';
 
-export enum Permission {
+export const Permission = {
   // Dashboard
-  VIEW_DASHBOARD = 'view_dashboard',
+  VIEW_DASHBOARD: 'view_dashboard',
 
   // Innovations
-  VIEW_INNOVATIONS = 'view_innovations',
-  CREATE_INNOVATION = 'create_innovation',
-  EDIT_OWN_INNOVATION = 'edit_own_innovation',
-  EDIT_ANY_INNOVATION = 'edit_any_innovation',
-  DELETE_INNOVATION = 'delete_innovation',
+  VIEW_INNOVATIONS: 'view_innovations',
+  CREATE_INNOVATION: 'create_innovation',
+  EDIT_OWN_INNOVATION: 'edit_own_innovation',
+  EDIT_ANY_INNOVATION: 'edit_any_innovation',
+  DELETE_INNOVATION: 'delete_innovation',
 
   // Evaluations
-  VIEW_EVALUATIONS = 'view_evaluations',
-  EVALUATE_GATE_1 = 'evaluate_gate_1',
-  EVALUATE_GATE_2 = 'evaluate_gate_2',
-  EVALUATE_GATE_3 = 'evaluate_gate_3',
-  CONDUCT_DUE_DILIGENCE = 'conduct_due_diligence',
+  VIEW_EVALUATIONS: 'view_evaluations',
+  EVALUATE_GATE_1: 'evaluate_gate_1',
+  EVALUATE_GATE_2: 'evaluate_gate_2',
+  EVALUATE_GATE_3: 'evaluate_gate_3',
+  CONDUCT_DUE_DILIGENCE: 'conduct_due_diligence',
 
   // Users
-  VIEW_USERS = 'view_users',
-  CREATE_USER = 'create_user',
-  EDIT_USER = 'edit_user',
-  DELETE_USER = 'delete_user',
+  VIEW_USERS: 'view_users',
+  CREATE_USER: 'create_user',
+  EDIT_USER: 'edit_user',
+  DELETE_USER: 'delete_user',
 
   // Partners
-  VIEW_PARTNERS = 'view_partners',
-  CREATE_PARTNER = 'create_partner',
-  EDIT_PARTNER = 'edit_partner',
-  DELETE_PARTNER = 'delete_partner',
+  VIEW_PARTNERS: 'view_partners',
+  CREATE_PARTNER: 'create_partner',
+  EDIT_PARTNER: 'edit_partner',
+  DELETE_PARTNER: 'delete_partner',
 
   // Reports
-  VIEW_REPORTS = 'view_reports',
-  EXPORT_REPORTS = 'export_reports',
+  VIEW_REPORTS: 'view_reports',
+  EXPORT_REPORTS: 'export_reports',
 
   // Documents
-  VIEW_DOCUMENTS = 'view_documents',
-  UPLOAD_DOCUMENTS = 'upload_documents',
-  DELETE_DOCUMENTS = 'delete_documents',
+  VIEW_DOCUMENTS: 'view_documents',
+  UPLOAD_DOCUMENTS: 'upload_documents',
+  DELETE_DOCUMENTS: 'delete_documents',
 
   // Settings
-  VIEW_SETTINGS = 'view_settings',
-  EDIT_SETTINGS = 'edit_settings',
+  VIEW_SETTINGS: 'view_settings',
+  EDIT_SETTINGS: 'edit_settings',
 
   // Admin
-  ACCESS_ADMIN = 'access_admin',
-}
+  ACCESS_ADMIN: 'access_admin',
+} as const;
+
+export type Permission = (typeof Permission)[keyof typeof Permission];
 
 // Permission sets for each role
 export const rolePermissions: Record<UserRole, Permission[]> = {
@@ -115,7 +117,7 @@ export const rolePermissions: Record<UserRole, Permission[]> = {
     Permission.UPLOAD_DOCUMENTS,
   ],
 
-  [UserRole.DD_SPECIALIST_CLINICAL]: [
+  [UserRole.DD_SPECIALIST_REGULATORY]: [
     Permission.VIEW_DASHBOARD,
     Permission.VIEW_INNOVATIONS,
     Permission.VIEW_EVALUATIONS,

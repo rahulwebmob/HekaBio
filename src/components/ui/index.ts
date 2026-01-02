@@ -12,7 +12,9 @@ export { default as Card } from './Card';
 export { default as Badge } from './Badge';
 export { default as Modal } from './Modal';
 export { default as Drawer } from './Drawer';
+export { Table } from './Table';
 
 // Type exports
 export type { ButtonVariant, ButtonSize } from './Button';
 export type { BadgeVariant, BadgeSize } from './Badge';
+export type { TableColumn, TableProps } from './Table';

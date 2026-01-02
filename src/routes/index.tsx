@@ -14,6 +14,16 @@ const DashboardPage = lazy(() => import('../pages/DashboardPage'));
 const CompaniesPage = lazy(() => import('../pages/CompaniesPage'));
 const CompanyDetailPage = lazy(() => import('../pages/CompanyDetailPage'));
 const CompanyFormPage = lazy(() => import('../pages/CompanyFormPage'));
+const ContactsPage = lazy(() => import('../pages/ContactsPage'));
+const ProjectsPage = lazy(() => import('../pages/ProjectsPage'));
+const ProjectDetailPage = lazy(() => import('../pages/ProjectDetailPage'));
+const SurveysPage = lazy(() => import('../pages/SurveysPage'));
+const SurveyDetailPage = lazy(() => import('../pages/SurveyDetailPage'));
+const PublicSurveyPage = lazy(() => import('../pages/PublicSurveyPage'));
+const SurveyTemplatesPage = lazy(() => import('../pages/SurveyTemplatesPage'));
+const SurveyBuilderPage = lazy(() => import('../pages/SurveyBuilderPage'));
+const LeadScorePage = lazy(() => import('../pages/LeadScorePage'));
+const JapanScreeningPage = lazy(() => import('../pages/JapanScreeningPage'));
 
 // 404 Page
 const NotFoundPage = lazy(() => import('../pages/NotFoundPage'));
@@ -27,6 +37,7 @@ export interface RouteConfig {
   children?: RouteConfig[];
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const routes: RouteConfig[] = [
   // Public Routes
   {
@@ -41,6 +52,12 @@ export const routes: RouteConfig[] = [
     isPublic: true,
     title: 'Login - HekaBio',
   },
+  {
+    path: '/survey/:surveyId',
+    element: PublicSurveyPage,
+    isPublic: true,
+    title: 'Survey - HekaBio',
+  },
 
   // Protected Routes
   {
@@ -50,7 +67,67 @@ export const routes: RouteConfig[] = [
     title: 'Dashboard - HekaBio',
   },
 
-  // Phase 2: Address Book
+  // Phase 1: Projects & Pipeline
+  {
+    path: '/projects',
+    element: ProjectsPage,
+    isPublic: false,
+    title: 'Projects - HekaBio',
+  },
+  {
+    path: '/projects/:id',
+    element: ProjectDetailPage,
+    isPublic: false,
+    title: 'Project Detail - HekaBio',
+  },
+
+  // Phase 1: Surveys
+  {
+    path: '/surveys',
+    element: SurveysPage,
+    isPublic: false,
+    title: 'Surveys - HekaBio',
+  },
+  {
+    path: '/surveys/:id',
+    element: SurveyDetailPage,
+    isPublic: false,
+    title: 'Survey Detail - HekaBio',
+  },
+
+  // Lead Scoring
+  {
+    path: '/lead-scoring',
+    element: LeadScorePage,
+    isPublic: false,
+    title: 'Lead Scoring - HekaBio',
+  },
+
+  // Japan Market Screening
+  {
+    path: '/projects/:projectId/japan-screening',
+    element: JapanScreeningPage,
+    isPublic: false,
+    title: 'Japan Market Screening - HekaBio',
+  },
+
+  // Admin: Survey Templates & Builder
+  {
+    path: '/admin/survey-templates',
+    element: SurveyTemplatesPage,
+    isPublic: false,
+    allowedRoles: ['super_admin', 'crm_owner'],
+    title: 'Survey Templates - HekaBio',
+  },
+  {
+    path: '/admin/survey-builder/:templateId',
+    element: SurveyBuilderPage,
+    isPublic: false,
+    allowedRoles: ['super_admin', 'crm_owner'],
+    title: 'Survey Builder - HekaBio',
+  },
+
+  // Phase 1: Address Book
   {
     path: '/companies',
     element: CompaniesPage,
@@ -74,6 +151,12 @@ export const routes: RouteConfig[] = [
     element: CompanyDetailPage,
     isPublic: false,
     title: 'Company Detail - HekaBio',
+  },
+  {
+    path: '/contacts',
+    element: ContactsPage,
+    isPublic: false,
+    title: 'Contacts - HekaBio',
   },
 
   // Phase 1 Routes (will be added as we build)
@@ -99,38 +182,5 @@ export const routes: RouteConfig[] = [
   },
 ];
 
-// Route paths as constants for easy reference
-export const ROUTES = {
-  HOME: '/',
-  LOGIN: '/login',
-  DASHBOARD: '/dashboard',
-
-  // Phase 1
-  PROJECTS: '/projects',
-  PROJECT_DETAIL: '/projects/:id',
-  ADDRESS_BOOK: '/address-book',
-  COMPANIES: '/address-book/companies',
-  CONTACTS: '/address-book/contacts',
-  SURVEYS: '/surveys',
-  PIPELINE: '/pipeline',
-  LEAD_SCORE: '/lead-score',
-  COMMUNICATIONS: '/communications',
-  TASKS: '/tasks',
-  NOTIFICATIONS: '/notifications',
-
-  // Phase 2
-  ORDERS: '/orders',
-  ORDER_DETAIL: '/orders/:id',
-  MANUFACTURING: '/manufacturing',
-  TRANSPORTATION: '/transportation',
-  INVENTORY: '/inventory',
-  COLLECTION: '/collection',
-  DOCUMENTS: '/documents',
-  CALENDAR: '/calendar',
-  REPORTS: '/reports',
-
-  // Admin
-  ADMIN: '/admin',
-  ADMIN_USERS: '/admin/users',
-  ADMIN_SETTINGS: '/admin/settings',
-} as const;
+// Re-export route paths from constants for easy reference
+export { ROUTES } from './constants';

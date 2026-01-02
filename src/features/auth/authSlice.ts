@@ -195,7 +195,7 @@ export const login = createAsyncThunk(
       };
 
       return { user: updatedUser, token };
-    } catch (error) {
+    } catch {
       return rejectWithValue('Login failed. Please try again.');
     }
   }

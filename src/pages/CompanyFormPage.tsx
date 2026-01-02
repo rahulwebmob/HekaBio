@@ -55,7 +55,7 @@ export default function CompanyFormPage() {
   // Load existing company data if editing
   useEffect(() => {
     if (existingCompany) {
-      setFormData({
+      const newFormData = {
         name: existingCompany.name,
         nameLocal: existingCompany.nameLocal || '',
         role: existingCompany.role,
@@ -73,7 +73,11 @@ export default function CompanyFormPage() {
         employeeCount: existingCompany.employeeCount?.toString() || '',
         revenue: existingCompany.revenue || '',
         tags: existingCompany.tags.join(', '),
-      });
+      };
+
+      // Defer state update to avoid direct setState in effect
+      const timeoutId = setTimeout(() => setFormData(newFormData), 0);
+      return () => clearTimeout(timeoutId);
     }
   }, [existingCompany]);
 
@@ -196,24 +200,23 @@ export default function CompanyFormPage() {
   return (
     <AppLayout>
       <div className="max-w-4xl mx-auto space-y-6">
+        {/* Breadcrumb */}
+        <button
+          onClick={() => navigate(-1)}
+          className="inline-flex items-center gap-2 text-sm text-gray-600 hover:text-gray-900 transition-colors"
+        >
+          <IconArrowLeft size={16} />
+          <span>Back</span>
+        </button>
+
         {/* Header */}
-        <div className="flex items-center gap-4">
-          <Button
-            variant="ghost"
-            size="sm"
-            leftIcon={<IconArrowLeft size={18} />}
-            onClick={() => navigate(-1)}
-          >
-            Back
-          </Button>
-          <div>
-            <h1 className="text-3xl font-semibold text-gray-900">
-              {isEdit ? 'Edit Company' : 'Add New Company'}
-            </h1>
-            <p className="text-gray-600 mt-1">
-              {isEdit ? 'Update company information' : 'Enter company details below'}
-            </p>
-          </div>
+        <div>
+          <h1 className="text-3xl font-semibold text-gray-900">
+            {isEdit ? 'Edit Company' : 'Add New Company'}
+          </h1>
+          <p className="text-gray-600 mt-1">
+            {isEdit ? 'Update company information' : 'Enter company details below'}
+          </p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">

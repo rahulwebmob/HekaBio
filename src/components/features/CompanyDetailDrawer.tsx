@@ -20,7 +20,6 @@ import {
   CompanyCategoryLabels,
   ContactRoleLabels,
 } from '../../types/addressBook.types';
-import type { Company } from '../../types/addressBook.types';
 
 interface CompanyDetailDrawerProps {
   isOpen: boolean;

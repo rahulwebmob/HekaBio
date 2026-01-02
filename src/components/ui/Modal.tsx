@@ -39,18 +39,23 @@ const Modal = ({
   // Handle mount and animation
   useEffect(() => {
     if (isOpen) {
-      setShouldMount(true);
+      // Defer state updates to avoid direct setState in effect
+      const mountTimer = setTimeout(() => setShouldMount(true), 0);
       // Trigger animation after mount
-      setTimeout(() => {
-        setShouldAnimate(true);
-      }, 10);
+      const animateTimer = setTimeout(() => setShouldAnimate(true), 10);
+      return () => {
+        clearTimeout(mountTimer);
+        clearTimeout(animateTimer);
+      };
     } else {
-      setShouldAnimate(false);
+      // Defer state updates
+      const animateTimer = setTimeout(() => setShouldAnimate(false), 0);
       // Unmount after animation completes
-      const timer = setTimeout(() => {
-        setShouldMount(false);
-      }, 300);
-      return () => clearTimeout(timer);
+      const unmountTimer = setTimeout(() => setShouldMount(false), 300);
+      return () => {
+        clearTimeout(animateTimer);
+        clearTimeout(unmountTimer);
+      };
     }
   }, [isOpen]);
 

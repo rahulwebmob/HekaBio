@@ -4,19 +4,14 @@
  */
 
 import { useState, useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
 import {
   IconSearch,
-  IconFilter,
   IconBuilding,
-  IconMapPin,
-  IconWorld,
-  IconPhone,
 } from '@tabler/icons-react';
-import { PlusIcon, MailIcon, EyeIcon } from '../icons';
+import { PlusIcon, EyeIcon } from '../icons';
 import { useAppSelector } from '../app/store';
 import { AppLayout } from '../components/layout';
-import { Button, Card, Input, Select, Badge } from '../components/ui';
+import { Button, Card, Input, Select } from '../components/ui';
 import { CompanyFormModal, CompanyDetailDrawer } from '../components/features';
 import {
   CompanyRole,
@@ -24,7 +19,6 @@ import {
   CompanyRoleLabels,
   CompanyCategoryLabels,
 } from '../types/addressBook.types';
-import type { Company } from '../types/addressBook.types';
 
 export default function CompaniesPage() {
   const companies = useAppSelector((state) => state.addressBook.companies);
@@ -121,34 +115,6 @@ export default function CompaniesPage() {
     { value: 'active', label: 'Active Only' },
     { value: 'inactive', label: 'Inactive Only' },
   ];
-
-  const getRoleBadgeVariant = (role: CompanyRole) => {
-    switch (role) {
-      case CompanyRole.HOSPITAL:
-        return 'primary' as const;
-      case CompanyRole.DISTRIBUTOR:
-        return 'info' as const;
-      case CompanyRole.MANUFACTURER:
-        return 'warning' as const;
-      case CompanyRole.PRODUCT_OWNER:
-        return 'success' as const;
-      default:
-        return 'default' as const;
-    }
-  };
-
-  const getCategoryBadgeVariant = (category: CompanyCategory) => {
-    switch (category) {
-      case CompanyCategory.CUSTOMER:
-        return 'success' as const;
-      case CompanyCategory.PARTNER:
-        return 'primary' as const;
-      case CompanyCategory.PROSPECT:
-        return 'warning' as const;
-      default:
-        return 'default' as const;
-    }
-  };
 
   return (
     <AppLayout>

@@ -3,7 +3,7 @@
  */
 
 import type { ID, Timestamp } from './common.types';
-import type { Company } from './company.types';
+import type { Company } from './addressBook.types';
 
 // ===== Project Tag =====
 export type ProjectTag = 'Strategic Portfolio' | 'Finders' | 'Development Services';

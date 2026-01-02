@@ -3,8 +3,8 @@
  * View and manage individual company details
  */
 
-import { useState, useMemo } from 'react';
-import { useParams, useNavigate, Link } from 'react-router-dom';
+import { useState } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import {
   IconBuilding,
   IconMapPin,
@@ -15,8 +15,6 @@ import {
   IconTrash,
   IconArrowLeft,
   IconUser,
-  IconCalendar,
-  IconBriefcase,
 } from '@tabler/icons-react';
 import { useAppSelector, useAppDispatch } from '../app/store';
 import { deleteCompany } from '../store/slices/addressBookSlice';
@@ -75,23 +73,22 @@ export default function CompanyDetailPage() {
   return (
     <AppLayout>
       <div className="space-y-6">
+        {/* Breadcrumb */}
+        <button
+          onClick={() => navigate('/companies')}
+          className="inline-flex items-center gap-2 text-sm text-gray-600 hover:text-gray-900 transition-colors"
+        >
+          <IconArrowLeft size={16} />
+          <span>Back to Companies</span>
+        </button>
+
         {/* Header */}
         <div className="flex items-start justify-between gap-4">
-          <div className="flex items-center gap-4">
-            <Button
-              variant="ghost"
-              size="sm"
-              leftIcon={<IconArrowLeft size={18} />}
-              onClick={() => navigate('/companies')}
-            >
-              Back
-            </Button>
-            <div>
-              <h1 className="text-3xl font-semibold text-gray-900">{company.name}</h1>
-              {company.nameLocal && (
-                <p className="text-lg text-gray-600 mt-1">{company.nameLocal}</p>
-              )}
-            </div>
+          <div>
+            <h1 className="text-3xl font-semibold text-gray-900">{company.name}</h1>
+            {company.nameLocal && (
+              <p className="text-lg text-gray-600 mt-1">{company.nameLocal}</p>
+            )}
           </div>
           <div className="flex items-center gap-2">
             <Button
