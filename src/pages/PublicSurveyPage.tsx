@@ -120,7 +120,7 @@ export default function PublicSurveyPage() {
   }
 
   const { template } = surveyInstance;
-  const sections = template.sections.sort((a, b) => a.order - b.order);
+  const sections = [...template.sections].sort((a, b) => a.order - b.order);
   const currentSection = sections[currentSectionIndex];
 
   // Calculate completion percentage
@@ -504,7 +504,7 @@ export default function PublicSurveyPage() {
 
           {/* Questions */}
           <div className="space-y-6">
-            {currentSection.questions
+            {[...currentSection.questions]
               .sort((a, b) => a.order - b.order)
               .map((question, index) => (
                 <div key={question.id} className="pb-6 border-b border-gray-100 last:border-0">

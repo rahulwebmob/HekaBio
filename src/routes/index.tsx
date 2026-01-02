@@ -24,6 +24,12 @@ const SurveyTemplatesPage = lazy(() => import('../pages/SurveyTemplatesPage'));
 const SurveyBuilderPage = lazy(() => import('../pages/SurveyBuilderPage'));
 const LeadScorePage = lazy(() => import('../pages/LeadScorePage'));
 const JapanScreeningPage = lazy(() => import('../pages/JapanScreeningPage'));
+const CommunicationsPage = lazy(() => import('../pages/CommunicationsPage'));
+const TasksPage = lazy(() => import('../pages/TasksPage'));
+const NotificationsPage = lazy(() => import('../pages/NotificationsPage'));
+const PipelinePage = lazy(() => import('../pages/PipelinePage'));
+const CalendarPage = lazy(() => import('../pages/CalendarPage'));
+const DocumentsPage = lazy(() => import('../pages/DocumentsPage'));
 
 // 404 Page
 const NotFoundPage = lazy(() => import('../pages/NotFoundPage'));
@@ -109,6 +115,54 @@ export const routes: RouteConfig[] = [
     element: JapanScreeningPage,
     isPublic: false,
     title: 'Japan Market Screening - HekaBio',
+  },
+
+  // Pipeline
+  {
+    path: '/pipeline',
+    element: PipelinePage,
+    isPublic: false,
+    title: 'Sales Pipeline - HekaBio',
+  },
+
+  // Communications
+  {
+    path: '/communications',
+    element: CommunicationsPage,
+    isPublic: false,
+    title: 'Communications - HekaBio',
+  },
+
+  // Tasks
+  {
+    path: '/tasks',
+    element: TasksPage,
+    isPublic: false,
+    title: 'Tasks - HekaBio',
+  },
+
+  // Notifications
+  {
+    path: '/notifications',
+    element: NotificationsPage,
+    isPublic: false,
+    title: 'Notifications - HekaBio',
+  },
+
+  // Calendar
+  {
+    path: '/calendar',
+    element: CalendarPage,
+    isPublic: false,
+    title: 'Calendar - HekaBio',
+  },
+
+  // Documents
+  {
+    path: '/documents',
+    element: DocumentsPage,
+    isPublic: false,
+    title: 'Documents - HekaBio',
   },
 
   // Admin: Survey Templates & Builder

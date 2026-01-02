@@ -26,12 +26,17 @@ export const ROUTES = {
   COMPANY_EDIT: '/companies/:id/edit',
   CONTACTS: '/contacts',
 
+  // Pipeline
+  PIPELINE: '/pipeline',
+
+  // Communications & Tasks
+  COMMUNICATIONS: '/communications',
+  TASKS: '/tasks',
+  NOTIFICATIONS: '/notifications',
+  CALENDAR: '/calendar',
+  DOCUMENTS: '/documents',
+
   // Future Phase 1 Routes (Not Yet Implemented)
-  // PIPELINE: '/pipeline',
-  // LEAD_SCORE: '/lead-score',
-  // COMMUNICATIONS: '/communications',
-  // TASKS: '/tasks',
-  // NOTIFICATIONS: '/notifications',
 
   // Future Phase 2 Routes (Not Yet Implemented)
   // ORDERS: '/orders',

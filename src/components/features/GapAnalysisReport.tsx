@@ -64,7 +64,7 @@ export function GapAnalysisReport({
         if (question.isRequired) {
           priority = 'critical';
         } else if (
-          question.type === 'file_upload' ||
+          question.type === 'FILE_UPLOAD' ||
           question.questionText.toLowerCase().includes('email') ||
           question.questionText.toLowerCase().includes('contact')
         ) {

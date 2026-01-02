@@ -4,6 +4,7 @@
  */
 
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   IconMail,
   IconCopy,
@@ -29,6 +30,7 @@ export function FollowUpEmailModal({
   surveyInstance,
   gaps,
 }: FollowUpEmailModalProps) {
+  const navigate = useNavigate();
   const [recipientEmail, setRecipientEmail] = useState('');
   const [subject, setSubject] = useState(
     `Follow-up: Additional Information Needed - ${surveyInstance.template.name}`
@@ -96,8 +98,7 @@ export function FollowUpEmailModal({
   };
 
   const handleOpenFollowUpForm = () => {
-    const followUpLink = `${window.location.origin}/survey/${surveyInstance.id}/follow-up`;
-    window.open(followUpLink, '_blank', 'noopener,noreferrer');
+    navigate(`/survey/${surveyInstance.id}/follow-up`);
   };
 
   const criticalCount = gaps.filter((g) => g.priority === 'critical').length;

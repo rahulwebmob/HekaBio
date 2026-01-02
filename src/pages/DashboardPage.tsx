@@ -10,9 +10,6 @@ import {
   IconBuildingHospital,
   IconTrendingUp,
   IconChartBar,
-  IconBriefcase,
-  IconSearch as IconFinders,
-  IconBuilding,
 } from '@tabler/icons-react';
 import { useAuth } from '../hooks/useAuth';
 import { useAppSelector } from '../app/store';
@@ -171,59 +168,6 @@ export default function DashboardPage() {
             </Card>
           ))}
         </div>
-
-        {/* Projects by Tag */}
-        <Card
-          padding="lg"
-          shadow="sm"
-          header={
-            <h3 className="text-xl font-semibold text-gray-900">Projects by Tag</h3>
-          }
-        >
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <button
-              onClick={() => navigate('/projects?tag=Strategic%20Portfolio')}
-              className="bg-brand-50 rounded-lg p-5 text-left transition-all hover:shadow-md hover:bg-brand-100"
-            >
-              <div className="flex items-center justify-between mb-3">
-                <IconBriefcase size={28} className="text-brand-600" />
-                <span className="text-3xl font-bold text-brand-700">
-                  {stats.strategicPortfolio}
-                </span>
-              </div>
-              <h3 className="text-sm font-semibold text-gray-900">Strategic Portfolio</h3>
-              <p className="text-xs text-gray-600 mt-1">Core strategic initiatives</p>
-            </button>
-
-            <button
-              onClick={() => navigate('/projects?tag=Finders')}
-              className="bg-purple-50 rounded-lg p-5 text-left transition-all hover:shadow-md hover:bg-purple-100"
-            >
-              <div className="flex items-center justify-between mb-3">
-                <IconFinders size={28} className="text-purple-600" />
-                <span className="text-3xl font-bold text-purple-700">
-                  {stats.finders}
-                </span>
-              </div>
-              <h3 className="text-sm font-semibold text-gray-900">Finders</h3>
-              <p className="text-xs text-gray-600 mt-1">Discovery & scouting projects</p>
-            </button>
-
-            <button
-              onClick={() => navigate('/projects?tag=Development%20Services')}
-              className="bg-cyan-50 rounded-lg p-5 text-left transition-all hover:shadow-md hover:bg-cyan-100"
-            >
-              <div className="flex items-center justify-between mb-3">
-                <IconBuilding size={28} className="text-cyan-600" />
-                <span className="text-3xl font-bold text-cyan-700">
-                  {stats.developmentServices}
-                </span>
-              </div>
-              <h3 className="text-sm font-semibold text-gray-900">Development Services</h3>
-              <p className="text-xs text-gray-600 mt-1">Client development work</p>
-            </button>
-          </div>
-        </Card>
 
         {/* Main Content Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">

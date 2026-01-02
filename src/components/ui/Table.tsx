@@ -3,7 +3,7 @@
  * Reusable table with glassmorphism design
  */
 
-import { ReactNode } from 'react';
+import type { ReactNode } from 'react';
 import { IconSortAscending, IconSortDescending } from '@tabler/icons-react';
 
 export interface TableColumn<T> {

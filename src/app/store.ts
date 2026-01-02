@@ -11,6 +11,12 @@ import authReducer from '../features/auth/authSlice';
 import addressBookReducer from '../store/slices/addressBookSlice';
 import projectsReducer from '../store/slices/projectsSlice';
 import surveysReducer from '../store/slices/surveysSlice';
+import communicationsReducer from '../store/slices/communicationsSlice';
+import tasksReducer from '../store/slices/tasksSlice';
+import notificationsReducer from '../store/slices/notificationsSlice';
+import pipelineReducer from '../store/slices/pipelineSlice';
+import calendarReducer from '../store/slices/calendarSlice';
+import documentsReducer from '../store/slices/documentsSlice';
 
 export const store = configureStore({
   reducer: {
@@ -18,6 +24,12 @@ export const store = configureStore({
     addressBook: addressBookReducer,
     projects: projectsReducer,
     surveys: surveysReducer,
+    communications: communicationsReducer,
+    tasks: tasksReducer,
+    notifications: notificationsReducer,
+    pipeline: pipelineReducer,
+    calendar: calendarReducer,
+    documents: documentsReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

@@ -4,6 +4,7 @@
  */
 
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { IconSend, IconCopy, IconCheck, IconExternalLink } from '@tabler/icons-react';
 import { useAppDispatch, useAppSelector } from '../../app/store';
 import { addSurveyInstance } from '../../store/slices/surveysSlice';
@@ -18,6 +19,7 @@ interface SendSurveyModalProps {
 
 export function SendSurveyModal({ isOpen, onClose }: SendSurveyModalProps) {
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
   const templates = useAppSelector((state) => state.surveys.templates.filter(t => t.isActive));
   const companies = useAppSelector((state) => state.addressBook.companies);
   const projects = useAppSelector((state) => state.projects.projects);
@@ -99,7 +101,8 @@ export function SendSurveyModal({ isOpen, onClose }: SendSurveyModalProps) {
   };
 
   const handleOpenInNewWindow = () => {
-    window.open(surveyLink, '_blank', 'noopener,noreferrer');
+    const surveyId = surveyLink.split('/survey/')[1];
+    navigate(`/survey/${surveyId}`);
   };
 
   const handleReset = () => {

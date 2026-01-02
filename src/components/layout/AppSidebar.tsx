@@ -10,6 +10,12 @@ import {
   IconFileText,
   IconTemplate,
   IconTrendingUp,
+  IconMail,
+  IconChecklist,
+  IconBell,
+  IconCalendar,
+  IconChartDots,
+  IconFolder,
 } from '@tabler/icons-react';
 import { ChevronLeftIcon, GridIcon, UserIcon } from '../../icons';
 import { useSidebar } from '../../contexts/SidebarContext';
@@ -38,6 +44,11 @@ const menuItems: MenuItem[] = [
     path: '/lead-scoring',
   },
   {
+    label: 'Pipeline',
+    icon: <IconChartDots size={20} stroke={1.5} />,
+    path: '/pipeline',
+  },
+  {
     label: 'Surveys',
     icon: <IconFileText size={20} stroke={1.5} />,
     path: '/surveys',
@@ -46,6 +57,31 @@ const menuItems: MenuItem[] = [
     label: 'Survey Templates',
     icon: <IconTemplate size={20} stroke={1.5} />,
     path: '/admin/survey-templates',
+  },
+  {
+    label: 'Communications',
+    icon: <IconMail size={20} stroke={1.5} />,
+    path: '/communications',
+  },
+  {
+    label: 'Tasks',
+    icon: <IconChecklist size={20} stroke={1.5} />,
+    path: '/tasks',
+  },
+  {
+    label: 'Notifications',
+    icon: <IconBell size={20} stroke={1.5} />,
+    path: '/notifications',
+  },
+  {
+    label: 'Calendar',
+    icon: <IconCalendar size={20} stroke={1.5} />,
+    path: '/calendar',
+  },
+  {
+    label: 'Documents',
+    icon: <IconFolder size={20} stroke={1.5} />,
+    path: '/documents',
   },
   {
     label: 'Companies',

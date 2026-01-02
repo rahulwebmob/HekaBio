@@ -8,6 +8,7 @@ export type Timestamp = string; // ISO 8601 format
 export type Email = string;
 export type URL = string;
 export type PhoneNumber = string;
+export type Currency = 'USD' | 'EUR' | 'GBP' | 'JPY' | 'CNY';
 
 // ===== Loading & Error States =====
 export interface LoadingState {

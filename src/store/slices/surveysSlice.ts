@@ -12,9 +12,31 @@ interface SurveysState {
   instances: SurveyInstance[];
 }
 
+// Load survey instances from localStorage if available
+const loadSurveyInstances = (): SurveyInstance[] => {
+  try {
+    const stored = localStorage.getItem('surveyInstances');
+    if (stored) {
+      return JSON.parse(stored);
+    }
+  } catch (error) {
+    console.error('Failed to load survey instances from localStorage:', error);
+  }
+  return mockSurveyInstances;
+};
+
+// Save survey instances to localStorage
+const saveSurveyInstances = (instances: SurveyInstance[]) => {
+  try {
+    localStorage.setItem('surveyInstances', JSON.stringify(instances));
+  } catch (error) {
+    console.error('Failed to save survey instances to localStorage:', error);
+  }
+};
+
 const initialState: SurveysState = {
   templates: mockSurveyTemplates,
-  instances: mockSurveyInstances,
+  instances: loadSurveyInstances(),
 };
 
 const surveysSlice = createSlice({
@@ -44,15 +66,18 @@ const surveysSlice = createSlice({
     // ===== Survey Instance Management =====
     addSurveyInstance: (state, action: PayloadAction<SurveyInstance>) => {
       state.instances.push(action.payload);
+      saveSurveyInstances(state.instances);
     },
     updateSurveyInstance: (state, action: PayloadAction<SurveyInstance>) => {
       const index = state.instances.findIndex((i) => i.id === action.payload.id);
       if (index !== -1) {
         state.instances[index] = action.payload;
+        saveSurveyInstances(state.instances);
       }
     },
     deleteSurveyInstance: (state, action: PayloadAction<string>) => {
       state.instances = state.instances.filter((i) => i.id !== action.payload);
+      saveSurveyInstances(state.instances);
     },
 
     // ===== Status Updates =====
@@ -74,6 +99,7 @@ const surveysSlice = createSlice({
         } else if (action.payload.status === 'REVIEWED' && !instance.reviewedAt) {
           instance.reviewedAt = now;
         }
+        saveSurveyInstances(state.instances);
       }
     },
 
@@ -94,6 +120,7 @@ const surveysSlice = createSlice({
           instance.status = 'SUBMITTED';
           instance.submittedAt = new Date().toISOString();
         }
+        saveSurveyInstances(state.instances);
       }
     },
 
@@ -115,6 +142,7 @@ const surveysSlice = createSlice({
         instance.reviewNotes = action.payload.reviewNotes;
         instance.flaggedQuestions = action.payload.flaggedQuestions;
         instance.updatedAt = new Date().toISOString();
+        saveSurveyInstances(state.instances);
       }
     },
 
@@ -127,6 +155,7 @@ const surveysSlice = createSlice({
       if (instance) {
         instance.dueDate = action.payload.dueDate;
         instance.updatedAt = new Date().toISOString();
+        saveSurveyInstances(state.instances);
       }
     },
 
@@ -139,6 +168,7 @@ const surveysSlice = createSlice({
       if (instance) {
         instance.assignedTo = action.payload.assignedTo;
         instance.updatedAt = new Date().toISOString();
+        saveSurveyInstances(state.instances);
       }
     },
 
@@ -173,6 +203,7 @@ const surveysSlice = createSlice({
             instance.reviewedAt = now;
           }
         }
+        saveSurveyInstances(state.instances);
       }
     },
   },

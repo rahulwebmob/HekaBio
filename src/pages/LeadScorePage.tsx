@@ -420,7 +420,7 @@ export default function LeadScorePage() {
             onRowClick={(project) => navigate(`/projects/${project.id}`)}
             sortField={sortField}
             sortOrder={sortOrder}
-            onSort={handleSort}
+            onSort={(field) => handleSort(field as SortField)}
             emptyMessage="No projects found matching your criteria"
           />
         </Card>
