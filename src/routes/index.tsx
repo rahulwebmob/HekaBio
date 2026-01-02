@@ -11,6 +11,9 @@ import type { UserRole } from '../types/auth.types';
 const LandingPage = lazy(() => import('../pages/LandingPage'));
 const LoginPage = lazy(() => import('../features/auth/pages/LoginPage'));
 const DashboardPage = lazy(() => import('../pages/DashboardPage'));
+const CompaniesPage = lazy(() => import('../pages/CompaniesPage'));
+const CompanyDetailPage = lazy(() => import('../pages/CompanyDetailPage'));
+const CompanyFormPage = lazy(() => import('../pages/CompanyFormPage'));
 
 // 404 Page
 const NotFoundPage = lazy(() => import('../pages/NotFoundPage'));
@@ -45,6 +48,32 @@ export const routes: RouteConfig[] = [
     element: DashboardPage,
     isPublic: false,
     title: 'Dashboard - HekaBio',
+  },
+
+  // Phase 2: Address Book
+  {
+    path: '/companies',
+    element: CompaniesPage,
+    isPublic: false,
+    title: 'Companies - HekaBio',
+  },
+  {
+    path: '/companies/new',
+    element: CompanyFormPage,
+    isPublic: false,
+    title: 'Add Company - HekaBio',
+  },
+  {
+    path: '/companies/:id/edit',
+    element: CompanyFormPage,
+    isPublic: false,
+    title: 'Edit Company - HekaBio',
+  },
+  {
+    path: '/companies/:id',
+    element: CompanyDetailPage,
+    isPublic: false,
+    title: 'Company Detail - HekaBio',
   },
 
   // Phase 1 Routes (will be added as we build)

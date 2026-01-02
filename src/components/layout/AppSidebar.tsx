@@ -59,13 +59,11 @@ const menuItems: MenuItem[] = [
     path: '/users',
   },
   {
-    label: 'Partners',
+    label: 'Address Book',
     icon: <IconBuildingHospital size={20} stroke={1.5} />,
     submenu: [
-      { label: 'Hospitals', path: '/partners/hospitals' },
-      { label: 'Distributors', path: '/partners/distributors' },
-      { label: 'License Holders', path: '/partners/license-holders' },
-      { label: 'Manufacturers', path: '/partners/manufacturers' },
+      { label: 'Companies', path: '/companies' },
+      { label: 'Contacts', path: '/contacts' },
     ],
   },
   {

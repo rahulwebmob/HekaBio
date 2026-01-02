@@ -30,7 +30,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
     },
     ref
   ) => {
-    const baseStyles = 'px-4 py-2.5 border rounded-lg text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-4 transition-colors disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-gray-50';
+    const baseStyles = 'px-4 py-2.5 border rounded-lg text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-4 transition-all duration-200 ease-out disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-gray-50/30 bg-white/80 hover:bg-white hover:border-gray-400';
 
     const errorStyles = error
       ? 'border-error-500 focus:border-error-500 focus:ring-error-500/10'

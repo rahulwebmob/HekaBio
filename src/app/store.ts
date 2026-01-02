@@ -8,12 +8,13 @@ import type { TypedUseSelectorHook } from 'react-redux';
 
 // Import reducers (will be added as we build features)
 import authReducer from '../features/auth/authSlice';
+import addressBookReducer from '../store/slices/addressBookSlice';
 
 export const store = configureStore({
   reducer: {
     auth: authReducer,
+    addressBook: addressBookReducer,
     // Phase 1 reducers will be added here:
-    // addressBook: addressBookReducer,
     // projects: projectsReducer,
     // surveys: surveysReducer,
     // etc.

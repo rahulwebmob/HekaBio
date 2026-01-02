@@ -1,31 +1,31 @@
 /**
- * Modal Component - HekaBio Design System
- * Reusable modal dialog with header and footer
+ * Drawer Component - HekaBio Design System
+ * Sliding panel from right side for detail views
  */
 
 import { useEffect, useState } from 'react';
 import type { ReactNode } from 'react';
 import { IconX } from '@tabler/icons-react';
 
-interface ModalProps {
+interface DrawerProps {
   isOpen: boolean;
   onClose: () => void;
   title?: string;
   children: ReactNode;
   footer?: ReactNode;
-  size?: 'sm' | 'md' | 'lg' | 'xl';
+  size?: 'sm' | 'md' | 'lg' | 'xl' | 'full';
   closeOnOverlayClick?: boolean;
 }
 
-const Modal = ({
+const Drawer = ({
   isOpen,
   onClose,
   title,
   children,
   footer,
-  size = 'md',
+  size = 'lg',
   closeOnOverlayClick = true,
-}: ModalProps) => {
+}: DrawerProps) => {
   const [shouldMount, setShouldMount] = useState(false);
   const [shouldAnimate, setShouldAnimate] = useState(false);
 
@@ -34,6 +34,7 @@ const Modal = ({
     md: 'max-w-lg',
     lg: 'max-w-2xl',
     xl: 'max-w-4xl',
+    full: 'max-w-full',
   };
 
   // Handle mount and animation
@@ -49,12 +50,12 @@ const Modal = ({
       // Unmount after animation completes
       const timer = setTimeout(() => {
         setShouldMount(false);
-      }, 300);
+      }, 500);
       return () => clearTimeout(timer);
     }
   }, [isOpen]);
 
-  // Lock body scroll when modal is open
+  // Lock body scroll when drawer is open
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = 'hidden';
@@ -80,53 +81,52 @@ const Modal = ({
   if (!shouldMount) return null;
 
   return (
-    <div className="fixed inset-0 z-999999 overflow-y-auto">
+    <>
       {/* Backdrop */}
       <div
-        className="fixed inset-0 bg-black/30 backdrop-blur-[2px] transition-opacity duration-300 ease-out"
-        style={{
-          opacity: shouldAnimate ? 1 : 0,
-        }}
+        className={`fixed inset-0 bg-black/30 backdrop-blur-[2px] transition-opacity duration-300 ease-out z-[9998] ${
+          shouldAnimate ? 'opacity-100' : 'opacity-0'
+        }`}
         onClick={closeOnOverlayClick ? onClose : undefined}
       />
 
-      {/* Modal */}
-      <div className="flex min-h-full items-center justify-center p-4">
-        <div
-          className={`relative bg-gray-50/95 rounded-xl shadow-2xl w-full ${sizeStyles[size]} border border-gray-200/30 will-change-transform`}
-          style={{
-            transform: shouldAnimate ? 'scale(1)' : 'scale(0.95)',
-            opacity: shouldAnimate ? 1 : 0,
-            transition: 'all 300ms cubic-bezier(0.4, 0, 0.2, 1)',
-          }}
-          onClick={(e) => e.stopPropagation()}
-        >
+      {/* Drawer */}
+      <div
+        className={`fixed inset-y-0 right-0 z-[9999] w-full ${sizeStyles[size]} will-change-transform`}
+        style={{
+          transform: shouldAnimate ? 'translateX(0)' : 'translateX(100%)',
+          transition: 'transform 500ms cubic-bezier(0.4, 0, 0.2, 1)',
+        }}
+      >
+        <div className="h-full bg-gray-50/95 shadow-2xl flex flex-col border-l border-gray-200/30">
           {/* Header */}
           {title && (
-            <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200/30">
-              <h3 className="text-lg font-semibold text-gray-900">{title}</h3>
+            <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200/30 bg-white/30 flex-shrink-0">
+              <h2 className="text-xl font-semibold text-gray-900">{title}</h2>
               <button
                 onClick={onClose}
-                className="text-gray-400 hover:text-gray-700 transition-all duration-200 p-1 rounded-lg hover:bg-white/50"
+                className="text-gray-400 hover:text-gray-700 transition-all duration-200 p-1.5 rounded-lg hover:bg-white/50"
               >
-                <IconX size={20} stroke={1.5} />
+                <IconX size={22} stroke={1.5} />
               </button>
             </div>
           )}
 
-          {/* Body */}
-          <div className="px-6 py-4 bg-white/40">{children}</div>
+          {/* Body - Scrollable */}
+          <div className="flex-1 overflow-y-auto px-6 py-6 bg-white/40 custom-scrollbar">
+            {children}
+          </div>
 
           {/* Footer */}
           {footer && (
-            <div className="px-6 py-4 border-t border-gray-200/30 bg-white/30 rounded-b-xl">
+            <div className="px-6 py-4 border-t border-gray-200/30 bg-white/30 flex-shrink-0">
               {footer}
             </div>
           )}
         </div>
       </div>
-    </div>
+    </>
   );
 };
 
-export default Modal;
+export default Drawer;

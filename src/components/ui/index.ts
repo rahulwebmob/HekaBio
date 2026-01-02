@@ -11,6 +11,7 @@ export { default as Radio } from './Radio';
 export { default as Card } from './Card';
 export { default as Badge } from './Badge';
 export { default as Modal } from './Modal';
+export { default as Drawer } from './Drawer';
 
 // Type exports
 export type { ButtonVariant, ButtonSize } from './Button';
