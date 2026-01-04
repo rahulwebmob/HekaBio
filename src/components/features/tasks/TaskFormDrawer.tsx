@@ -4,10 +4,14 @@
  */
 
 import { useState, useEffect } from 'react';
+
+import { IconTemplate, IconUserPlus } from '@tabler/icons-react';
 import { useAppDispatch } from '../../../app/store';
 import { addTask, updateTask } from '../../../store/slices/tasksSlice';
-import { Drawer, Input, Select, Button } from '../../ui';
+import { Drawer, Input, Select, Button, Card } from '../../ui';
 import type { Task, TaskType, TaskStatus, TaskPriority } from '../../../types/task.types';
+import { TASK_TEMPLATES, getTaskTemplate } from '../../../data/taskTemplates';
+import { getAllUsers, autoAssignTask } from '../../../services/taskAssignmentService';
 
 interface TaskFormDrawerProps {
   isOpen: boolean;
@@ -25,6 +29,7 @@ export default function TaskFormDrawer({ isOpen, onClose, task }: TaskFormDrawer
     type: 'GENERAL' as TaskType,
     status: 'TODO' as TaskStatus,
     priority: 'MEDIUM' as TaskPriority,
+    assignedTo: 'user-001',
     dueDate: '',
     estimatedHours: '',
     progress: 0,
@@ -34,6 +39,9 @@ export default function TaskFormDrawer({ isOpen, onClose, task }: TaskFormDrawer
 
   const [tagInput, setTagInput] = useState('');
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [selectedTemplateId, setSelectedTemplateId] = useState<string>('');
+
+  const allUsers = getAllUsers();
 
   // Populate form when editing
   useEffect(() => {
@@ -44,6 +52,7 @@ export default function TaskFormDrawer({ isOpen, onClose, task }: TaskFormDrawer
         type: task.type,
         status: task.status,
         priority: task.priority,
+        assignedTo: task.assignedTo,
         dueDate: task.dueDate
           ? new Date(task.dueDate).toISOString().split('T')[0]
           : '',
@@ -60,6 +69,7 @@ export default function TaskFormDrawer({ isOpen, onClose, task }: TaskFormDrawer
         type: 'GENERAL',
         status: 'TODO',
         priority: 'MEDIUM',
+        assignedTo: 'user-001',
         dueDate: '',
         estimatedHours: '',
         progress: 0,
@@ -68,6 +78,7 @@ export default function TaskFormDrawer({ isOpen, onClose, task }: TaskFormDrawer
       });
       setTagInput('');
       setErrors({});
+      setSelectedTemplateId('');
     }
   }, [task, isOpen]);
 
@@ -92,6 +103,43 @@ export default function TaskFormDrawer({ isOpen, onClose, task }: TaskFormDrawer
     setFormData((prev) => ({
       ...prev,
       tags: prev.tags.filter((tag) => tag !== tagToRemove),
+    }));
+  };
+
+  const handleTemplateSelect = (templateId: string) => {
+    if (!templateId) {
+      setSelectedTemplateId('');
+      return;
+    }
+
+    const template = getTaskTemplate(templateId);
+    if (template) {
+      setSelectedTemplateId(templateId);
+      setFormData({
+        title: template.name,
+        description: template.description,
+        type: template.type,
+        status: 'TODO',
+        priority: template.priority,
+        assignedTo: formData.assignedTo,
+        dueDate: '',
+        estimatedHours: template.estimatedHours?.toString() || '',
+        progress: 0,
+        tags: [...template.tags],
+        notes: template.checklist
+          ? `Checklist:\n${template.checklist.map((item, idx) => `${idx + 1}. [ ] ${item.text}`).join('\n')}`
+          : '',
+      });
+    }
+  };
+
+  const handleAutoAssign = () => {
+    const assignedUser = autoAssignTask({
+      taskType: formData.type,
+    });
+    setFormData((prev) => ({
+      ...prev,
+      assignedTo: assignedUser.userId,
     }));
   };
 
@@ -136,7 +184,7 @@ export default function TaskFormDrawer({ isOpen, onClose, task }: TaskFormDrawer
         type: formData.type,
         status: formData.status,
         priority: formData.priority,
-        assignedTo: 'user-001',
+        assignedTo: formData.assignedTo,
         assignedBy: 'user-001',
         assignedAt: new Date().toISOString(),
         dueDate: formData.dueDate ? new Date(formData.dueDate).toISOString() : undefined,
@@ -175,6 +223,39 @@ export default function TaskFormDrawer({ isOpen, onClose, task }: TaskFormDrawer
       }
     >
       <div className="space-y-6">
+        {/* Template Selector - Only show when creating new task */}
+        {!isEdit && (
+          <Card padding="md">
+            <div className="flex items-start gap-3">
+              <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-brand-100">
+                <IconTemplate size={20} className="text-brand-600" />
+              </div>
+              <div className="flex-1">
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Start from Template (Optional)
+                </label>
+                <Select
+                  value={selectedTemplateId}
+                  onChange={(e) => handleTemplateSelect(e.target.value)}
+                  options={[
+                    { value: '', label: 'Start from scratch' },
+                    ...TASK_TEMPLATES.map((template) => ({
+                      value: template.id,
+                      label: `${template.name} - ${template.category}`,
+                    })),
+                  ]}
+                  fullWidth
+                />
+                {selectedTemplateId && (
+                  <p className="text-xs text-gray-500 mt-1">
+                    Template applied. You can still customize the fields below.
+                  </p>
+                )}
+              </div>
+            </div>
+          </Card>
+        )}
+
         {/* Task Title */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -249,6 +330,33 @@ export default function TaskFormDrawer({ isOpen, onClose, task }: TaskFormDrawer
               ]}
               fullWidth
             />
+          </div>
+        </div>
+
+        {/* Assigned To - Grid */}
+        <div className="grid grid-cols-2 gap-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">Assigned To</label>
+            <Select
+              value={formData.assignedTo}
+              onChange={(e) => handleInputChange('assignedTo', e.target.value)}
+              options={allUsers.map((user) => ({
+                value: user.userId,
+                label: `${user.userName} (${user.userRole})`,
+              }))}
+              fullWidth
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">Auto-Assign</label>
+            <Button
+              variant="secondary"
+              onClick={handleAutoAssign}
+              leftIcon={<IconUserPlus size={18} />}
+              fullWidth
+            >
+              Auto-Assign by Role
+            </Button>
           </div>
         </div>
 

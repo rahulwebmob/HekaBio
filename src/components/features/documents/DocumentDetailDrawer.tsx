@@ -17,6 +17,8 @@ import {
   IconClock,
   IconUser,
   IconMessage,
+  IconHistory,
+  IconUpload,
 } from '@tabler/icons-react';
 import { useAppDispatch } from '../../../app/store';
 import {
@@ -31,6 +33,7 @@ import {
 import { Drawer, Badge, Button } from '../../ui';
 import type { Document, DocumentStatus } from '../../../types/document.types';
 import { getDocumentCategoryColor, formatFileSize } from '../../../types/document.types';
+import { DocumentVersionHistory, UploadNewVersion } from './';
 
 interface DocumentDetailDrawerProps {
   isOpen: boolean;
@@ -48,6 +51,8 @@ export default function DocumentDetailDrawer({
   const dispatch = useAppDispatch();
   const [commentText, setCommentText] = useState('');
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [isVersionHistoryOpen, setIsVersionHistoryOpen] = useState(false);
+  const [isUploadVersionOpen, setIsUploadVersionOpen] = useState(false);
 
   if (!document) return null;
 
@@ -161,6 +166,7 @@ export default function DocumentDetailDrawer({
   };
 
   return (
+    <>
     <Drawer
       isOpen={isOpen}
       onClose={onClose}
@@ -186,6 +192,20 @@ export default function DocumentDetailDrawer({
             )}
           </div>
           <div className="flex gap-2">
+            <Button
+              variant="ghost"
+              leftIcon={<IconHistory size={18} />}
+              onClick={() => setIsVersionHistoryOpen(true)}
+            >
+              Version History ({document.versions.length})
+            </Button>
+            <Button
+              variant="ghost"
+              leftIcon={<IconUpload size={18} />}
+              onClick={() => setIsUploadVersionOpen(true)}
+            >
+              Upload New Version
+            </Button>
             <Button variant="ghost" leftIcon={<IconEye size={18} />} onClick={handleView}>
               View
             </Button>
@@ -419,5 +439,19 @@ export default function DocumentDetailDrawer({
         )}
       </div>
     </Drawer>
+
+    {/* Version Control Modals */}
+    <DocumentVersionHistory
+      isOpen={isVersionHistoryOpen}
+      onClose={() => setIsVersionHistoryOpen(false)}
+      document={document}
+    />
+
+    <UploadNewVersion
+      isOpen={isUploadVersionOpen}
+      onClose={() => setIsUploadVersionOpen(false)}
+      document={document}
+    />
+    </>
   );
 }

@@ -13,8 +13,10 @@ export { default as Badge } from './Badge';
 export { default as Modal } from './Modal';
 export { default as Drawer } from './Drawer';
 export { Table } from './Table';
+export { default as RichTextEditor } from './RichTextEditor';
 
 // Type exports
+export type { RichTextEditorProps } from './RichTextEditor';
 export type { ButtonVariant, ButtonSize } from './Button';
 export type { BadgeVariant, BadgeSize } from './Badge';
 export type { TableColumn, TableProps } from './Table';

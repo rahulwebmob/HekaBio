@@ -9,6 +9,7 @@ import { SidebarProvider, useSidebar } from '../../contexts/SidebarContext';
 import AppSidebar from './AppSidebar';
 import AppHeader from './AppHeader';
 import AppFooter from './AppFooter';
+import SkipLinks from '../ui/SkipLinks';
 
 interface AppLayoutProps {
   children: ReactNode;
@@ -36,6 +37,9 @@ function LayoutContent({ children }: AppLayoutProps) {
 
   return (
     <div className="min-h-screen flex flex-col relative overflow-hidden">
+      {/* Skip Links for Accessibility */}
+      <SkipLinks />
+
       {/* Background Image */}
       <div
         className="fixed inset-0 z-0"
@@ -45,13 +49,14 @@ function LayoutContent({ children }: AppLayoutProps) {
           backgroundPosition: 'center',
           backgroundRepeat: 'no-repeat',
         }}
+        aria-hidden="true"
       />
 
       {/* Extreme Blur Glass Overlay */}
-      <div className="fixed inset-0 z-0 glass-extreme" />
+      <div className="fixed inset-0 z-0 glass-extreme" aria-hidden="true" />
 
       {/* Additional Glass Layer for Extra Effect */}
-      <div className="fixed inset-0 z-0 bg-gradient-to-br from-white/30 via-blue-50/10 to-cyan-50/20 glass-layer" />
+      <div className="fixed inset-0 z-0 bg-gradient-to-br from-white/30 via-blue-50/10 to-cyan-50/20 glass-layer" aria-hidden="true" />
 
       {/* Content */}
       <div className="relative z-10 min-h-screen flex flex-col">
@@ -62,7 +67,7 @@ function LayoutContent({ children }: AppLayoutProps) {
           <AppHeader />
 
           {/* Page Content */}
-          <main className="flex-1 p-4 lg:p-6">
+          <main id="main-content" className="flex-1 p-4 lg:p-6" role="main" aria-label="Main content">
             <div className="max-w-screen-2xl mx-auto">
               {children}
             </div>

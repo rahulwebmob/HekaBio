@@ -14,12 +14,14 @@ import {
   IconToggleLeft,
   IconToggleRight,
   IconFileText,
+  IconQrcode,
 } from '@tabler/icons-react';
 import { useAppSelector, useAppDispatch } from '../app/store';
 import { deleteTemplate, toggleTemplateActive } from '../store/slices/surveysSlice';
 import { AppLayout } from '../components/layout';
 import { Button, Card, Badge } from '../components/ui';
 import { DeleteConfirmModal } from '../components/features';
+import QRCodeModal from '../components/features/surveys/QRCodeModal';
 import type { SurveyTemplate } from '../types/survey.types';
 
 export default function SurveyTemplatesPage() {
@@ -29,6 +31,8 @@ export default function SurveyTemplatesPage() {
 
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [templateToDelete, setTemplateToDelete] = useState<SurveyTemplate | null>(null);
+  const [qrModalOpen, setQrModalOpen] = useState(false);
+  const [qrTemplate, setQrTemplate] = useState<SurveyTemplate | null>(null);
 
   const handleDeleteClick = (template: SurveyTemplate) => {
     setTemplateToDelete(template);
@@ -48,6 +52,11 @@ export default function SurveyTemplatesPage() {
   const handleDuplicate = (template: SurveyTemplate) => {
     // TODO: Implement template duplication
     console.log('Duplicate template:', template.id);
+  };
+
+  const handleShowQRCode = (template: SurveyTemplate) => {
+    setQrTemplate(template);
+    setQrModalOpen(true);
   };
 
   const getSurveyTypeLabel = (type: string) => {
@@ -208,6 +217,13 @@ export default function SurveyTemplatesPage() {
                             <IconEye size={18} />
                           </button>
                           <button
+                            onClick={() => handleShowQRCode(template)}
+                            className="p-2 text-brand-600 hover:text-brand-700 hover:bg-brand-50 rounded-lg transition-all duration-200 hover:scale-110"
+                            title="Generate QR Code"
+                          >
+                            <IconQrcode size={18} />
+                          </button>
+                          <button
                             onClick={() => handleDuplicate(template)}
                             className="p-2 text-gray-600 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-all duration-200 hover:scale-110"
                             title="Duplicate"
@@ -265,6 +281,19 @@ export default function SurveyTemplatesPage() {
         message="Are you sure you want to delete this survey template?"
         itemName={templateToDelete?.name}
       />
+
+      {/* QR Code Modal */}
+      {qrTemplate && (
+        <QRCodeModal
+          isOpen={qrModalOpen}
+          onClose={() => {
+            setQrModalOpen(false);
+            setQrTemplate(null);
+          }}
+          surveyId={qrTemplate.id}
+          surveyName={qrTemplate.name}
+        />
+      )}
     </AppLayout>
   );
 }

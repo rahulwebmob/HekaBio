@@ -121,6 +121,28 @@ const documentsSlice = createSlice({
       }
     },
 
+    // Restore document version
+    restoreDocumentVersion: (
+      state,
+      action: PayloadAction<{ documentId: string; versionId: string }>
+    ) => {
+      const document = state.documents.find((doc) => doc.id === action.payload.documentId);
+      if (document) {
+        const version = document.versions.find((v) => v.id === action.payload.versionId);
+        if (version) {
+          // Mark all versions as not current
+          document.versions.forEach((v) => (v.isCurrent = false));
+
+          // Mark selected version as current
+          version.isCurrent = true;
+          document.currentVersion = version.versionNumber;
+          document.fileUrl = version.fileUrl;
+          document.fileSize = version.fileSize;
+          document.updatedAt = new Date().toISOString();
+        }
+      }
+    },
+
     // Add comment
     addComment: (
       state,
@@ -247,6 +269,7 @@ export const {
   rejectDocument,
   archiveDocument,
   addDocumentVersion,
+  restoreDocumentVersion,
   addComment,
   updateComment,
   deleteComment,

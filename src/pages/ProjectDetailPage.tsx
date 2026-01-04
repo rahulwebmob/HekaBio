@@ -17,13 +17,15 @@ import {
   IconShieldCheck,
 } from '@tabler/icons-react';
 import { useAppSelector, useAppDispatch } from '../app/store';
-import { deleteProject } from '../store/slices/projectsSlice';
+import { deleteProject, updateProject } from '../store/slices/projectsSlice';
 import { AppLayout } from '../components/layout';
 import { Button, Card, Badge, Modal } from '../components/ui';
 import { ProjectFormModal } from '../components/features';
 import { StageTimeline, StageHistory } from '../components/common';
 import { GateReviewPanel, GateHistoryTimeline } from '../components/features/gates';
+import { WhatIfScoreCalculator } from '../components/features/projects';
 import { StageLabels } from '../types/project.types';
+import type { ScoreBreakdown } from '../types/project.types';
 
 export default function ProjectDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -349,6 +351,24 @@ export default function ProjectDetailPage() {
                   )}
                 </div>
               </Card>
+            )}
+
+            {/* What-If Score Calculator */}
+            {project.scoreBreakdown && (
+              <WhatIfScoreCalculator
+                currentBreakdown={project.scoreBreakdown}
+                onApplyScore={(newBreakdown: ScoreBreakdown) => {
+                  dispatch(
+                    updateProject({
+                      ...project,
+                      score: newBreakdown.total,
+                      scoreBreakdown: newBreakdown,
+                      lastScoredAt: new Date().toISOString(),
+                      updatedAt: new Date().toISOString(),
+                    })
+                  );
+                }}
+              />
             )}
 
             {/* Japan Market Assessment */}

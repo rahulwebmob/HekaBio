@@ -14,12 +14,13 @@ import {
   IconClock,
   IconSend,
   IconAlertCircle,
+  IconTemplate,
 } from '@tabler/icons-react';
 import { useAppSelector } from '../app/store';
 import { AppLayout } from '../components/layout';
 import { Input, Select, Card, Badge, Button } from '../components/ui';
 import type { Communication, CommunicationType, CommunicationStatus } from '../types/communication.types';
-import EmailComposerDrawer from '../components/features/communications/EmailComposerDrawer';
+import { EmailComposerDrawer, EmailTemplatesManager } from '../components/features/communications';
 
 export default function CommunicationsPage() {
   const communications = useAppSelector((state) => state.communications.communications);
@@ -33,6 +34,9 @@ export default function CommunicationsPage() {
   const [isComposerOpen, setIsComposerOpen] = useState(false);
   const [editingCommunication, setEditingCommunication] = useState<Communication | null>(null);
   const [replyToCommunication, setReplyToCommunication] = useState<Communication | null>(null);
+
+  // Template manager state
+  const [isTemplateManagerOpen, setIsTemplateManagerOpen] = useState(false);
 
   // Filter communications
   const filteredCommunications = useMemo(() => {
@@ -135,9 +139,18 @@ export default function CommunicationsPage() {
               Track emails, calls, and communication history
             </p>
           </div>
-          <Button variant="primary" leftIcon={<IconSend size={18} />} onClick={handleNewEmail}>
-            New Email
-          </Button>
+          <div className="flex gap-3">
+            <Button
+              variant="secondary"
+              leftIcon={<IconTemplate size={18} />}
+              onClick={() => setIsTemplateManagerOpen(true)}
+            >
+              Manage Templates
+            </Button>
+            <Button variant="primary" leftIcon={<IconSend size={18} />} onClick={handleNewEmail}>
+              New Email
+            </Button>
+          </div>
         </div>
 
         {/* Statistics Cards */}
@@ -341,6 +354,12 @@ export default function CommunicationsPage() {
         onClose={handleCloseComposer}
         communication={editingCommunication}
         replyTo={replyToCommunication}
+      />
+
+      {/* Email Templates Manager */}
+      <EmailTemplatesManager
+        isOpen={isTemplateManagerOpen}
+        onClose={() => setIsTemplateManagerOpen(false)}
       />
     </AppLayout>
   );

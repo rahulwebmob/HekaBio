@@ -27,6 +27,7 @@ const JapanScreeningPage = lazy(() => import('../pages/JapanScreeningPage'));
 const CommunicationsPage = lazy(() => import('../pages/CommunicationsPage'));
 const TasksPage = lazy(() => import('../pages/TasksPage'));
 const NotificationsPage = lazy(() => import('../pages/NotificationsPage'));
+const SettingsPage = lazy(() => import('../pages/SettingsPage'));
 const PipelinePage = lazy(() => import('../pages/PipelinePage'));
 const CalendarPage = lazy(() => import('../pages/CalendarPage'));
 const DocumentsPage = lazy(() => import('../pages/DocumentsPage'));
@@ -150,6 +151,14 @@ export const routes: RouteConfig[] = [
     element: NotificationsPage,
     isPublic: false,
     title: 'Notifications - HekaBio',
+  },
+
+  // Settings
+  {
+    path: '/settings',
+    element: SettingsPage,
+    isPublic: false,
+    title: 'Settings - HekaBio',
   },
 
   // Calendar

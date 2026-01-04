@@ -22,6 +22,8 @@ import ndaReducer from '../store/slices/ndaSlice';
 import ddReducer from '../store/slices/ddSlice';
 import contractReducer from '../store/slices/contractSlice';
 import extractionReducer from '../store/slices/extractionSlice';
+import userPreferencesReducer from '../store/slices/userPreferencesSlice';
+import emailTemplatesReducer from '../store/slices/emailTemplatesSlice';
 
 export const store = configureStore({
   reducer: {
@@ -40,6 +42,8 @@ export const store = configureStore({
     dd: ddReducer,
     contract: contractReducer,
     extraction: extractionReducer,
+    userPreferences: userPreferencesReducer,
+    emailTemplates: emailTemplatesReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

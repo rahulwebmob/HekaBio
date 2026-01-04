@@ -16,14 +16,15 @@ import {
   IconUser,
   IconEdit,
   IconEye,
+  IconLayoutKanban,
+  IconList,
 } from '@tabler/icons-react';
 import { useAppSelector, useAppDispatch } from '../app/store';
 import { updateTaskStatus, toggleChecklistItem } from '../store/slices/tasksSlice';
 import { AppLayout } from '../components/layout';
 import { Input, Select, Card, Badge, Button } from '../components/ui';
 import type { Task, TaskStatus, TaskPriority } from '../types/task.types';
-import TaskFormDrawer from '../components/features/tasks/TaskFormDrawer';
-import TaskDetailDrawer from '../components/features/tasks/TaskDetailDrawer';
+import { TaskFormDrawer, TaskDetailDrawer, TaskKanbanBoard } from '../components/features/tasks';
 
 export default function TasksPage() {
   const dispatch = useAppDispatch();
@@ -33,6 +34,7 @@ export default function TasksPage() {
   const [statusFilter, setStatusFilter] = useState<string>('');
   const [priorityFilter, setPriorityFilter] = useState<string>('');
   const [showCompleted, setShowCompleted] = useState(false);
+  const [view, setView] = useState<'list' | 'kanban'>('list');
 
   // Drawer states
   const [isFormDrawerOpen, setIsFormDrawerOpen] = useState(false);
@@ -150,9 +152,38 @@ export default function TasksPage() {
               Manage and track your tasks and to-dos
             </p>
           </div>
-          <Button variant="primary" leftIcon={<IconPlus size={18} />} onClick={handleOpenNewTask}>
-            New Task
-          </Button>
+          <div className="flex items-center gap-3">
+            {/* View Toggle */}
+            <div className="flex items-center border border-gray-300 rounded-lg overflow-hidden">
+              <button
+                onClick={() => setView('list')}
+                className={`px-4 py-2 flex items-center gap-2 transition-colors ${
+                  view === 'list'
+                    ? 'bg-brand-500 text-white'
+                    : 'bg-white text-gray-600 hover:bg-gray-50'
+                }`}
+                title="List View"
+              >
+                <IconList size={18} />
+                <span className="text-sm font-medium">List</span>
+              </button>
+              <button
+                onClick={() => setView('kanban')}
+                className={`px-4 py-2 flex items-center gap-2 transition-colors ${
+                  view === 'kanban'
+                    ? 'bg-brand-500 text-white'
+                    : 'bg-white text-gray-600 hover:bg-gray-50'
+                }`}
+                title="Kanban View"
+              >
+                <IconLayoutKanban size={18} />
+                <span className="text-sm font-medium">Kanban</span>
+              </button>
+            </div>
+            <Button variant="primary" leftIcon={<IconPlus size={18} />} onClick={handleOpenNewTask}>
+              New Task
+            </Button>
+          </div>
         </div>
 
         {/* Statistics Cards */}
@@ -274,144 +305,148 @@ export default function TasksPage() {
           </div>
         </Card>
 
-        {/* Tasks List */}
-        <div className="space-y-3">
-          {filteredTasks.map((task) => (
-            <Card
-              key={task.id}
-              padding="md"
-              shadow="sm"
-              className="hover:shadow-md transition-shadow"
-            >
-              <div className="flex items-start gap-4">
-                <button
-                  onClick={() => handleToggleStatus(task.id, task.status)}
-                  className={`w-6 h-6 rounded border-2 flex items-center justify-center flex-shrink-0 mt-1 transition-colors ${
-                    task.status === 'COMPLETED'
-                      ? 'bg-success-500 border-success-500'
-                      : 'border-gray-300 hover:border-brand-500'
-                  }`}
-                >
-                  {task.status === 'COMPLETED' && <IconCheck size={16} className="text-white" />}
-                </button>
+        {/* Tasks Display - List or Kanban View */}
+        {view === 'list' ? (
+          <div className="space-y-3">
+            {filteredTasks.map((task) => (
+              <Card
+                key={task.id}
+                padding="md"
+                shadow="sm"
+                className="hover:shadow-md transition-shadow"
+              >
+                <div className="flex items-start gap-4">
+                  <button
+                    onClick={() => handleToggleStatus(task.id, task.status)}
+                    className={`w-6 h-6 rounded border-2 flex items-center justify-center flex-shrink-0 mt-1 transition-colors ${
+                      task.status === 'COMPLETED'
+                        ? 'bg-success-500 border-success-500'
+                        : 'border-gray-300 hover:border-brand-500'
+                    }`}
+                  >
+                    {task.status === 'COMPLETED' && <IconCheck size={16} className="text-white" />}
+                  </button>
 
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-start justify-between gap-4 mb-2">
-                    <div className="flex-1 min-w-0">
-                      <h3 className={`font-semibold mb-1 ${task.status === 'COMPLETED' ? 'line-through text-gray-500' : 'text-gray-900'}`}>
-                        {task.title}
-                      </h3>
-                      {task.description && (
-                        <p className="text-sm text-gray-600 line-clamp-2">{task.description}</p>
-                      )}
-                    </div>
-                    <div className="flex items-center gap-2">
-                      {getStatusBadge(task.status)}
-                      {getPriorityBadge(task.priority)}
-                    </div>
-                  </div>
-
-                  {task.checklist && task.checklist.length > 0 && (
-                    <div className="mb-3 space-y-1">
-                      {task.checklist.map((item) => (
-                        <div key={item.id} className="flex items-center gap-2">
-                          <input
-                            type="checkbox"
-                            checked={item.completed}
-                            onChange={() => dispatch(toggleChecklistItem({ taskId: task.id, checklistId: item.id }))}
-                            className="w-4 h-4 text-brand-600 border-gray-300 rounded focus:ring-brand-500"
-                          />
-                          <span className={`text-sm ${item.completed ? 'line-through text-gray-500' : 'text-gray-700'}`}>
-                            {item.text}
-                          </span>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-
-                  {/* Progress Bar */}
-                  {task.progress > 0 && task.status !== 'COMPLETED' && (
-                    <div className="mb-3">
-                      <div className="flex items-center justify-between mb-1">
-                        <span className="text-xs text-gray-600">Progress</span>
-                        <span className="text-xs font-semibold text-gray-700">{task.progress}%</span>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-start justify-between gap-4 mb-2">
+                      <div className="flex-1 min-w-0">
+                        <h3 className={`font-semibold mb-1 ${task.status === 'COMPLETED' ? 'line-through text-gray-500' : 'text-gray-900'}`}>
+                          {task.title}
+                        </h3>
+                        {task.description && (
+                          <p className="text-sm text-gray-600 line-clamp-2">{task.description}</p>
+                        )}
                       </div>
-                      <div className="w-full bg-gray-200 rounded-full h-2">
-                        <div
-                          className="bg-brand-500 h-2 rounded-full transition-all"
-                          style={{ width: `${task.progress}%` }}
-                        />
+                      <div className="flex items-center gap-2">
+                        {getStatusBadge(task.status)}
+                        {getPriorityBadge(task.priority)}
                       </div>
                     </div>
-                  )}
 
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-4 text-xs text-gray-500">
-                      {task.company && (
-                        <span className="flex items-center gap-1">
-                          <IconUser size={12} />
-                          {task.company.name}
-                        </span>
-                      )}
-                      {task.dueDate && (
-                        <span className="flex items-center gap-1">
-                          <IconCalendar size={12} />
-                          {formatDate(task.dueDate)}
-                        </span>
-                      )}
-                      {task.estimatedHours && (
-                        <span className="flex items-center gap-1">
-                          <IconClock size={12} />
-                          {task.estimatedHours}h
-                        </span>
-                      )}
-                    </div>
-
-                    <div className="flex items-center gap-2">
-                      {task.tags.length > 0 && (
-                        <div className="flex gap-2">
-                          {task.tags.slice(0, 3).map((tag) => (
-                            <span
-                              key={tag}
-                              className="inline-flex items-center px-2 py-0.5 rounded text-xs bg-gray-100 text-gray-700"
-                            >
-                              {tag}
+                    {task.checklist && task.checklist.length > 0 && (
+                      <div className="mb-3 space-y-1">
+                        {task.checklist.map((item) => (
+                          <div key={item.id} className="flex items-center gap-2">
+                            <input
+                              type="checkbox"
+                              checked={item.completed}
+                              onChange={() => dispatch(toggleChecklistItem({ taskId: task.id, checklistId: item.id }))}
+                              className="w-4 h-4 text-brand-600 border-gray-300 rounded focus:ring-brand-500"
+                            />
+                            <span className={`text-sm ${item.completed ? 'line-through text-gray-500' : 'text-gray-700'}`}>
+                              {item.text}
                             </span>
-                          ))}
+                          </div>
+                        ))}
+                      </div>
+                    )}
+
+                    {/* Progress Bar */}
+                    {task.progress > 0 && task.status !== 'COMPLETED' && (
+                      <div className="mb-3">
+                        <div className="flex items-center justify-between mb-1">
+                          <span className="text-xs text-gray-600">Progress</span>
+                          <span className="text-xs font-semibold text-gray-700">{task.progress}%</span>
                         </div>
-                      )}
-                      <div className="flex gap-1 ml-auto">
-                        <button
-                          onClick={() => handleViewTask(task)}
-                          className="p-1.5 hover:bg-white/80 rounded-lg transition-colors"
-                          title="View Details"
-                        >
-                          <IconEye size={16} className="text-gray-600" />
-                        </button>
-                        <button
-                          onClick={() => handleEditTask(task)}
-                          className="p-1.5 hover:bg-white/80 rounded-lg transition-colors"
-                          title="Edit Task"
-                        >
-                          <IconEdit size={16} className="text-gray-600" />
-                        </button>
+                        <div className="w-full bg-gray-200 rounded-full h-2">
+                          <div
+                            className="bg-brand-500 h-2 rounded-full transition-all"
+                            style={{ width: `${task.progress}%` }}
+                          />
+                        </div>
+                      </div>
+                    )}
+
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-4 text-xs text-gray-500">
+                        {task.company && (
+                          <span className="flex items-center gap-1">
+                            <IconUser size={12} />
+                            {task.company.name}
+                          </span>
+                        )}
+                        {task.dueDate && (
+                          <span className="flex items-center gap-1">
+                            <IconCalendar size={12} />
+                            {formatDate(task.dueDate)}
+                          </span>
+                        )}
+                        {task.estimatedHours && (
+                          <span className="flex items-center gap-1">
+                            <IconClock size={12} />
+                            {task.estimatedHours}h
+                          </span>
+                        )}
+                      </div>
+
+                      <div className="flex items-center gap-2">
+                        {task.tags.length > 0 && (
+                          <div className="flex gap-2">
+                            {task.tags.slice(0, 3).map((tag) => (
+                              <span
+                                key={tag}
+                                className="inline-flex items-center px-2 py-0.5 rounded text-xs bg-gray-100 text-gray-700"
+                              >
+                                {tag}
+                              </span>
+                            ))}
+                          </div>
+                        )}
+                        <div className="flex gap-1 ml-auto">
+                          <button
+                            onClick={() => handleViewTask(task)}
+                            className="p-1.5 hover:bg-white/80 rounded-lg transition-colors"
+                            title="View Details"
+                          >
+                            <IconEye size={16} className="text-gray-600" />
+                          </button>
+                          <button
+                            onClick={() => handleEditTask(task)}
+                            className="p-1.5 hover:bg-white/80 rounded-lg transition-colors"
+                            title="Edit Task"
+                          >
+                            <IconEdit size={16} className="text-gray-600" />
+                          </button>
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            </Card>
-          ))}
+              </Card>
+            ))}
 
-          {filteredTasks.length === 0 && (
-            <Card padding="lg" shadow="sm">
-              <div className="text-center py-12">
-                <IconChecklist size={48} className="mx-auto text-gray-400 mb-4" />
-                <p className="text-gray-600">No tasks found</p>
-              </div>
-            </Card>
-          )}
-        </div>
+            {filteredTasks.length === 0 && (
+              <Card padding="lg" shadow="sm">
+                <div className="text-center py-12">
+                  <IconChecklist size={48} className="mx-auto text-gray-400 mb-4" />
+                  <p className="text-gray-600">No tasks found</p>
+                </div>
+              </Card>
+            )}
+          </div>
+        ) : (
+          <TaskKanbanBoard tasks={filteredTasks} onTaskClick={handleViewTask} />
+        )}
 
         {/* Results Count */}
         <div className="text-sm text-gray-600 text-center">

@@ -49,6 +49,38 @@ const projectsSlice = createSlice({
     deleteProject: (state, action: PayloadAction<string>) => {
       state.projects = state.projects.filter(p => p.id !== action.payload);
     },
+    duplicateProject: (state, action: PayloadAction<string>) => {
+      const originalProject = state.projects.find(p => p.id === action.payload);
+      if (originalProject) {
+        const now = new Date().toISOString();
+        const duplicatedProject: Project = {
+          ...originalProject,
+          id: `project-${Date.now()}`,
+          name: `${originalProject.name} (Copy)`,
+          currentStage: 'LOBBY', // Reset to initial stage
+          score: 0, // Reset score
+          scoreBreakdown: undefined,
+          lastScoredAt: undefined,
+          isHot: false,
+          ddProgress: 0,
+          ddCompletedAt: undefined,
+          stageHistory: [{
+            id: `stage-${Date.now()}`,
+            projectId: `project-${Date.now()}`,
+            fromStage: null,
+            toStage: 'LOBBY',
+            changedBy: 'user-001',
+            changedByName: 'Current User',
+            changedAt: now,
+            reason: 'Project duplicated',
+          }],
+          createdAt: now,
+          updatedAt: now,
+          createdBy: 'user-001',
+        };
+        state.projects.unshift(duplicatedProject); // Add to beginning of list
+      }
+    },
     setSelectedProject: (state, action: PayloadAction<string | null>) => {
       state.selectedProjectId = action.payload;
     },
@@ -189,6 +221,7 @@ export const {
   addProject,
   updateProject,
   deleteProject,
+  duplicateProject,
   setSelectedProject,
   moveToStage,
   bulkMoveToStage,

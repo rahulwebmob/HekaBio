@@ -70,6 +70,8 @@ const gateSlice = createSlice({
         concerns?: string[];
         recommendations?: string[];
         conditions?: string[];
+        projectId?: string;
+        companyId?: string;
       }>
     ) => {
       const review = state.reviews.find((r) => r.id === action.payload.reviewId);
@@ -82,6 +84,13 @@ const gateSlice = createSlice({
         review.conditions = action.payload.conditions;
         review.reviewDate = new Date().toISOString();
         review.updatedAt = new Date().toISOString();
+
+        // Auto-create follow-up task based on decision
+        // Note: Task creation is handled via middleware in real implementation
+        // Here we just mark that a task should be created
+        if (action.payload.decision !== 'PENDING' && action.payload.decision !== 'REJECTED') {
+          review.followUpRequired = true;
+        }
       }
     },
 

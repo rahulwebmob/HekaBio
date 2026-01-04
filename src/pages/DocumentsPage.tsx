@@ -24,6 +24,7 @@ import { getDocumentCategoryColor, formatFileSize } from '../types/document.type
 import type { DocumentCategory, DocumentStatus, Document } from '../types/document.types';
 import DocumentFormDrawer from '../components/features/documents/DocumentFormDrawer';
 import DocumentDetailDrawer from '../components/features/documents/DocumentDetailDrawer';
+import { DocumentPreviewModal } from '../components/features/documents';
 
 export default function DocumentsPage() {
   const dispatch = useAppDispatch();
@@ -36,6 +37,7 @@ export default function DocumentsPage() {
   // Drawer states
   const [isFormDrawerOpen, setIsFormDrawerOpen] = useState(false);
   const [isDetailDrawerOpen, setIsDetailDrawerOpen] = useState(false);
+  const [isPreviewModalOpen, setIsPreviewModalOpen] = useState(false);
   const [selectedDocument, setSelectedDocument] = useState<Document | null>(null);
   const [isEditMode, setIsEditMode] = useState(false);
 
@@ -124,6 +126,17 @@ export default function DocumentsPage() {
 
   const handleCloseDetailDrawer = () => {
     setIsDetailDrawerOpen(false);
+    setSelectedDocument(null);
+  };
+
+  const handlePreview = (doc: Document) => {
+    setSelectedDocument(doc);
+    setIsPreviewModalOpen(true);
+    dispatch(incrementViewCount(doc.id));
+  };
+
+  const handleClosePreviewModal = () => {
+    setIsPreviewModalOpen(false);
     setSelectedDocument(null);
   };
 
@@ -367,12 +380,12 @@ export default function DocumentsPage() {
                           <button
                             onClick={(e) => {
                               e.stopPropagation();
-                              handleViewDetails(doc);
+                              handlePreview(doc);
                             }}
                             className="p-1.5 hover:bg-white/80 rounded-lg transition-colors backdrop-blur-sm"
-                            title="View Details"
+                            title="Preview"
                           >
-                            <IconEye size={16} className="text-gray-600" />
+                            <IconEye size={16} className="text-brand-600" />
                           </button>
                           <button
                             onClick={(e) => {
@@ -422,6 +435,23 @@ export default function DocumentsPage() {
         onClose={handleCloseDetailDrawer}
         document={selectedDocument}
         onEdit={handleEditDocument}
+      />
+
+      {/* Preview Modal */}
+      <DocumentPreviewModal
+        isOpen={isPreviewModalOpen}
+        onClose={handleClosePreviewModal}
+        document={
+          selectedDocument
+            ? {
+                id: selectedDocument.id,
+                name: selectedDocument.name,
+                type: selectedDocument.mimeType,
+                url: selectedDocument.fileUrl,
+                size: selectedDocument.fileSize,
+              }
+            : null
+        }
       />
     </AppLayout>
   );
