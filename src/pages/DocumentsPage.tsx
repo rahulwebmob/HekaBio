@@ -14,13 +14,16 @@ import {
   IconFilter,
   IconLock,
   IconShield,
+  IconEdit,
 } from '@tabler/icons-react';
 import { useAppSelector, useAppDispatch } from '../app/store';
 import { incrementViewCount, incrementDownloadCount } from '../store/slices/documentsSlice';
 import { AppLayout } from '../components/layout';
 import { Card, Badge, Button, Input, Select } from '../components/ui';
 import { getDocumentCategoryColor, formatFileSize } from '../types/document.types';
-import type { DocumentCategory, DocumentStatus } from '../types/document.types';
+import type { DocumentCategory, DocumentStatus, Document } from '../types/document.types';
+import DocumentFormDrawer from '../components/features/documents/DocumentFormDrawer';
+import DocumentDetailDrawer from '../components/features/documents/DocumentDetailDrawer';
 
 export default function DocumentsPage() {
   const dispatch = useAppDispatch();
@@ -29,6 +32,12 @@ export default function DocumentsPage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [categoryFilter, setCategoryFilter] = useState<string>('');
   const [statusFilter, setStatusFilter] = useState<string>('');
+
+  // Drawer states
+  const [isFormDrawerOpen, setIsFormDrawerOpen] = useState(false);
+  const [isDetailDrawerOpen, setIsDetailDrawerOpen] = useState(false);
+  const [selectedDocument, setSelectedDocument] = useState<Document | null>(null);
+  const [isEditMode, setIsEditMode] = useState(false);
 
   // Filter documents
   const filteredDocuments = useMemo(() => {
@@ -83,12 +92,39 @@ export default function DocumentsPage() {
     }
   };
 
-  const handleView = (docId: string) => {
-    dispatch(incrementViewCount(docId));
+  // Handler functions
+  const handleOpenUpload = () => {
+    setSelectedDocument(null);
+    setIsEditMode(false);
+    setIsFormDrawerOpen(true);
+  };
+
+  const handleViewDetails = (doc: Document) => {
+    setSelectedDocument(doc);
+    setIsDetailDrawerOpen(true);
+    dispatch(incrementViewCount(doc.id));
+  };
+
+  const handleEditDocument = (doc: Document) => {
+    setSelectedDocument(doc);
+    setIsEditMode(true);
+    setIsDetailDrawerOpen(false);
+    setIsFormDrawerOpen(true);
   };
 
   const handleDownload = (docId: string) => {
     dispatch(incrementDownloadCount(docId));
+  };
+
+  const handleCloseFormDrawer = () => {
+    setIsFormDrawerOpen(false);
+    setSelectedDocument(null);
+    setIsEditMode(false);
+  };
+
+  const handleCloseDetailDrawer = () => {
+    setIsDetailDrawerOpen(false);
+    setSelectedDocument(null);
   };
 
   const formatDate = (date: string) => {
@@ -110,7 +146,7 @@ export default function DocumentsPage() {
               Manage contracts, proposals, and other files
             </p>
           </div>
-          <Button variant="primary" leftIcon={<IconPlus size={18} />}>
+          <Button variant="primary" leftIcon={<IconPlus size={18} />} onClick={handleOpenUpload}>
             Upload Document
           </Button>
         </div>
@@ -252,7 +288,7 @@ export default function DocumentsPage() {
                     <tr
                       key={doc.id}
                       className="hover:bg-white/50 transition-all duration-200 backdrop-blur-sm cursor-pointer"
-                      onClick={() => handleView(doc.id)}
+                      onClick={() => handleViewDetails(doc)}
                     >
                       {/* Document Name */}
                       <td className="px-6 py-4">
@@ -331,12 +367,22 @@ export default function DocumentsPage() {
                           <button
                             onClick={(e) => {
                               e.stopPropagation();
-                              handleView(doc.id);
+                              handleViewDetails(doc);
                             }}
                             className="p-1.5 hover:bg-white/80 rounded-lg transition-colors backdrop-blur-sm"
-                            title="View"
+                            title="View Details"
                           >
                             <IconEye size={16} className="text-gray-600" />
+                          </button>
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleEditDocument(doc);
+                            }}
+                            className="p-1.5 hover:bg-white/80 rounded-lg transition-colors backdrop-blur-sm"
+                            title="Edit"
+                          >
+                            <IconEdit size={16} className="text-gray-600" />
                           </button>
                           <button
                             onClick={(e) => {
@@ -363,6 +409,20 @@ export default function DocumentsPage() {
           Showing {filteredDocuments.length} of {documents.length} documents
         </div>
       </div>
+
+      {/* Drawers */}
+      <DocumentFormDrawer
+        isOpen={isFormDrawerOpen}
+        onClose={handleCloseFormDrawer}
+        document={isEditMode ? selectedDocument : null}
+      />
+
+      <DocumentDetailDrawer
+        isOpen={isDetailDrawerOpen}
+        onClose={handleCloseDetailDrawer}
+        document={selectedDocument}
+        onEdit={handleEditDocument}
+      />
     </AppLayout>
   );
 }

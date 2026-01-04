@@ -18,6 +18,7 @@ import { StageLabels } from '../types/project.types';
 import { AppLayout } from '../components/layout';
 import { Card, Button, Badge } from '../components/ui';
 import { ProjectCard } from '../components/common';
+// Charts removed - focusing on core functionality
 
 export default function DashboardPage() {
   const { user } = useAuth();
@@ -156,12 +157,12 @@ export default function DashboardPage() {
               onClick={stat.onClick}
               className="cursor-pointer"
             >
-              <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center justify-between mb-3">
                 <div className={`flex items-center justify-center w-12 h-12 rounded-lg ${stat.bgColor}`}>
                   <stat.icon size={24} stroke={1.5} className={stat.color} />
                 </div>
               </div>
-              <div>
+              <div className="mb-3">
                 <p className="text-sm font-medium text-gray-600 mb-1">{stat.title}</p>
                 <p className={`text-3xl font-bold ${stat.color}`}>{stat.value}</p>
               </div>

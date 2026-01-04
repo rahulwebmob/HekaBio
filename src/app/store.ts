@@ -17,6 +17,11 @@ import notificationsReducer from '../store/slices/notificationsSlice';
 import pipelineReducer from '../store/slices/pipelineSlice';
 import calendarReducer from '../store/slices/calendarSlice';
 import documentsReducer from '../store/slices/documentsSlice';
+import gateReducer from '../store/slices/gateSlice';
+import ndaReducer from '../store/slices/ndaSlice';
+import ddReducer from '../store/slices/ddSlice';
+import contractReducer from '../store/slices/contractSlice';
+import extractionReducer from '../store/slices/extractionSlice';
 
 export const store = configureStore({
   reducer: {
@@ -30,6 +35,11 @@ export const store = configureStore({
     pipeline: pipelineReducer,
     calendar: calendarReducer,
     documents: documentsReducer,
+    gate: gateReducer,
+    nda: ndaReducer,
+    dd: ddReducer,
+    contract: contractReducer,
+    extraction: extractionReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

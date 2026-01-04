@@ -18,7 +18,8 @@ import {
 import { useAppSelector } from '../app/store';
 import { AppLayout } from '../components/layout';
 import { Input, Select, Card, Badge, Button } from '../components/ui';
-import type { CommunicationType, CommunicationStatus } from '../types/communication.types';
+import type { Communication, CommunicationType, CommunicationStatus } from '../types/communication.types';
+import EmailComposerDrawer from '../components/features/communications/EmailComposerDrawer';
 
 export default function CommunicationsPage() {
   const communications = useAppSelector((state) => state.communications.communications);
@@ -27,6 +28,11 @@ export default function CommunicationsPage() {
   const [typeFilter, setTypeFilter] = useState<string>('');
   const [statusFilter, setStatusFilter] = useState<string>('');
   const [showArchived, setShowArchived] = useState(false);
+
+  // Email composer drawer state
+  const [isComposerOpen, setIsComposerOpen] = useState(false);
+  const [editingCommunication, setEditingCommunication] = useState<Communication | null>(null);
+  const [replyToCommunication, setReplyToCommunication] = useState<Communication | null>(null);
 
   // Filter communications
   const filteredCommunications = useMemo(() => {
@@ -105,6 +111,19 @@ export default function CommunicationsPage() {
     });
   };
 
+  // Handler functions for email composer
+  const handleNewEmail = () => {
+    setEditingCommunication(null);
+    setReplyToCommunication(null);
+    setIsComposerOpen(true);
+  };
+
+  const handleCloseComposer = () => {
+    setIsComposerOpen(false);
+    setEditingCommunication(null);
+    setReplyToCommunication(null);
+  };
+
   return (
     <AppLayout>
       <div className="space-y-6">
@@ -116,7 +135,7 @@ export default function CommunicationsPage() {
               Track emails, calls, and communication history
             </p>
           </div>
-          <Button variant="primary" leftIcon={<IconSend size={18} />}>
+          <Button variant="primary" leftIcon={<IconSend size={18} />} onClick={handleNewEmail}>
             New Email
           </Button>
         </div>
@@ -315,6 +334,14 @@ export default function CommunicationsPage() {
           Showing {filteredCommunications.length} of {communications.length} communications
         </div>
       </div>
+
+      {/* Email Composer Drawer */}
+      <EmailComposerDrawer
+        isOpen={isComposerOpen}
+        onClose={handleCloseComposer}
+        communication={editingCommunication}
+        replyTo={replyToCommunication}
+      />
     </AppLayout>
   );
 }

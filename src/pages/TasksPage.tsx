@@ -14,12 +14,16 @@ import {
   IconPlus,
   IconCalendar,
   IconUser,
+  IconEdit,
+  IconEye,
 } from '@tabler/icons-react';
 import { useAppSelector, useAppDispatch } from '../app/store';
 import { updateTaskStatus, toggleChecklistItem } from '../store/slices/tasksSlice';
 import { AppLayout } from '../components/layout';
 import { Input, Select, Card, Badge, Button } from '../components/ui';
-import type { TaskStatus, TaskPriority } from '../types/task.types';
+import type { Task, TaskStatus, TaskPriority } from '../types/task.types';
+import TaskFormDrawer from '../components/features/tasks/TaskFormDrawer';
+import TaskDetailDrawer from '../components/features/tasks/TaskDetailDrawer';
 
 export default function TasksPage() {
   const dispatch = useAppDispatch();
@@ -29,6 +33,12 @@ export default function TasksPage() {
   const [statusFilter, setStatusFilter] = useState<string>('');
   const [priorityFilter, setPriorityFilter] = useState<string>('');
   const [showCompleted, setShowCompleted] = useState(false);
+
+  // Drawer states
+  const [isFormDrawerOpen, setIsFormDrawerOpen] = useState(false);
+  const [isDetailDrawerOpen, setIsDetailDrawerOpen] = useState(false);
+  const [selectedTask, setSelectedTask] = useState<Task | null>(null);
+  const [isEditMode, setIsEditMode] = useState(false);
 
   // Filter tasks
   const filteredTasks = useMemo(() => {
@@ -99,6 +109,36 @@ export default function TasksPage() {
     dispatch(updateTaskStatus({ taskId, status: newStatus }));
   };
 
+  // Handler functions for drawers
+  const handleOpenNewTask = () => {
+    setSelectedTask(null);
+    setIsEditMode(false);
+    setIsFormDrawerOpen(true);
+  };
+
+  const handleViewTask = (task: Task) => {
+    setSelectedTask(task);
+    setIsDetailDrawerOpen(true);
+  };
+
+  const handleEditTask = (task: Task) => {
+    setSelectedTask(task);
+    setIsEditMode(true);
+    setIsDetailDrawerOpen(false);
+    setIsFormDrawerOpen(true);
+  };
+
+  const handleCloseFormDrawer = () => {
+    setIsFormDrawerOpen(false);
+    setSelectedTask(null);
+    setIsEditMode(false);
+  };
+
+  const handleCloseDetailDrawer = () => {
+    setIsDetailDrawerOpen(false);
+    setSelectedTask(null);
+  };
+
   return (
     <AppLayout>
       <div className="space-y-6">
@@ -110,7 +150,7 @@ export default function TasksPage() {
               Manage and track your tasks and to-dos
             </p>
           </div>
-          <Button variant="primary" leftIcon={<IconPlus size={18} />}>
+          <Button variant="primary" leftIcon={<IconPlus size={18} />} onClick={handleOpenNewTask}>
             New Task
           </Button>
         </div>
@@ -327,18 +367,36 @@ export default function TasksPage() {
                       )}
                     </div>
 
-                    {task.tags.length > 0 && (
-                      <div className="flex gap-2">
-                        {task.tags.slice(0, 3).map((tag) => (
-                          <span
-                            key={tag}
-                            className="inline-flex items-center px-2 py-0.5 rounded text-xs bg-gray-100 text-gray-700"
-                          >
-                            {tag}
-                          </span>
-                        ))}
+                    <div className="flex items-center gap-2">
+                      {task.tags.length > 0 && (
+                        <div className="flex gap-2">
+                          {task.tags.slice(0, 3).map((tag) => (
+                            <span
+                              key={tag}
+                              className="inline-flex items-center px-2 py-0.5 rounded text-xs bg-gray-100 text-gray-700"
+                            >
+                              {tag}
+                            </span>
+                          ))}
+                        </div>
+                      )}
+                      <div className="flex gap-1 ml-auto">
+                        <button
+                          onClick={() => handleViewTask(task)}
+                          className="p-1.5 hover:bg-white/80 rounded-lg transition-colors"
+                          title="View Details"
+                        >
+                          <IconEye size={16} className="text-gray-600" />
+                        </button>
+                        <button
+                          onClick={() => handleEditTask(task)}
+                          className="p-1.5 hover:bg-white/80 rounded-lg transition-colors"
+                          title="Edit Task"
+                        >
+                          <IconEdit size={16} className="text-gray-600" />
+                        </button>
                       </div>
-                    )}
+                    </div>
                   </div>
                 </div>
               </div>
@@ -360,6 +418,20 @@ export default function TasksPage() {
           Showing {filteredTasks.length} of {tasks.length} tasks
         </div>
       </div>
+
+      {/* Drawers */}
+      <TaskFormDrawer
+        isOpen={isFormDrawerOpen}
+        onClose={handleCloseFormDrawer}
+        task={isEditMode ? selectedTask : null}
+      />
+
+      <TaskDetailDrawer
+        isOpen={isDetailDrawerOpen}
+        onClose={handleCloseDetailDrawer}
+        task={selectedTask}
+        onEdit={handleEditTask}
+      />
     </AppLayout>
   );
 }

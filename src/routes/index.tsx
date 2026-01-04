@@ -30,6 +30,9 @@ const NotificationsPage = lazy(() => import('../pages/NotificationsPage'));
 const PipelinePage = lazy(() => import('../pages/PipelinePage'));
 const CalendarPage = lazy(() => import('../pages/CalendarPage'));
 const DocumentsPage = lazy(() => import('../pages/DocumentsPage'));
+const ContractsPage = lazy(() => import('../pages/ContractsPage'));
+const NDAPage = lazy(() => import('../pages/NDAPage'));
+const DDWorkspacePage = lazy(() => import('../pages/DDWorkspacePage'));
 
 // 404 Page
 const NotFoundPage = lazy(() => import('../pages/NotFoundPage'));
@@ -163,6 +166,30 @@ export const routes: RouteConfig[] = [
     element: DocumentsPage,
     isPublic: false,
     title: 'Documents - HekaBio',
+  },
+
+  // Contracts
+  {
+    path: '/contracts',
+    element: ContractsPage,
+    isPublic: false,
+    title: 'Contracts - HekaBio',
+  },
+
+  // NDAs
+  {
+    path: '/ndas',
+    element: NDAPage,
+    isPublic: false,
+    title: 'NDAs - HekaBio',
+  },
+
+  // Due Diligence
+  {
+    path: '/dd-workspace',
+    element: DDWorkspacePage,
+    isPublic: false,
+    title: 'Due Diligence - HekaBio',
   },
 
   // Admin: Survey Templates & Builder

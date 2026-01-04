@@ -7,7 +7,13 @@ import { useState, useEffect } from 'react';
 import { useAppDispatch } from '../../../app/store';
 import { addDocument, updateDocument } from '../../../store/slices/documentsSlice';
 import { Drawer, Input, Select, Button } from '../../ui';
-import type { Document, DocumentCategory, AccessLevel } from '../../../types/document.types';
+import type {
+  Document,
+  DocumentCategory,
+  AccessLevel,
+  FileType,
+} from '../../../types/document.types';
+import { getFileTypeFromMime } from '../../../types/document.types';
 
 interface DocumentFormDrawerProps {
   isOpen: boolean;
@@ -15,7 +21,11 @@ interface DocumentFormDrawerProps {
   document?: Document | null;
 }
 
-export default function DocumentFormDrawer({ isOpen, onClose, document }: DocumentFormDrawerProps) {
+export default function DocumentFormDrawer({
+  isOpen,
+  onClose,
+  document,
+}: DocumentFormDrawerProps) {
   const dispatch = useAppDispatch();
   const isEdit = !!document;
 
@@ -27,10 +37,9 @@ export default function DocumentFormDrawer({ isOpen, onClose, document }: Docume
     tags: [] as string[],
     fileUrl: '',
     fileName: '',
-    fileType: 'application/pdf',
+    mimeType: 'application/pdf',
     fileSize: 0,
     companyId: '',
-    companyName: '',
   });
 
   const [tagInput, setTagInput] = useState('');
@@ -39,6 +48,7 @@ export default function DocumentFormDrawer({ isOpen, onClose, document }: Docume
   // Populate form when editing
   useEffect(() => {
     if (document && isOpen) {
+      const currentVersion = document.versions.find((v) => v.isCurrent);
       setFormData({
         name: document.name,
         description: document.description || '',
@@ -46,11 +56,10 @@ export default function DocumentFormDrawer({ isOpen, onClose, document }: Docume
         accessLevel: document.accessLevel,
         tags: document.tags,
         fileUrl: document.fileUrl,
-        fileName: document.fileName,
-        fileType: document.fileType,
+        fileName: currentVersion?.fileName || '',
+        mimeType: document.mimeType,
         fileSize: document.fileSize,
-        companyId: document.company?.id || '',
-        companyName: document.company?.name || '',
+        companyId: document.companyId || '',
       });
     } else if (!isOpen) {
       // Reset form when drawer closes
@@ -62,10 +71,9 @@ export default function DocumentFormDrawer({ isOpen, onClose, document }: Docume
         tags: [],
         fileUrl: '',
         fileName: '',
-        fileType: 'application/pdf',
+        mimeType: 'application/pdf',
         fileSize: 0,
         companyId: '',
-        companyName: '',
       });
       setTagInput('');
       setErrors({});
@@ -86,14 +94,14 @@ export default function DocumentFormDrawer({ isOpen, onClose, document }: Docume
       // Simulate file upload - in real app, you'd upload to server
       const fileName = file.name;
       const fileSize = file.size;
-      const fileType = file.type;
+      const mimeType = file.type;
       const fileUrl = URL.createObjectURL(file); // Mock URL
 
       setFormData((prev) => ({
         ...prev,
         fileName,
         fileSize,
-        fileType,
+        mimeType,
         fileUrl,
         name: prev.name || fileName.replace(/\.[^/.]+$/, ''), // Use filename as name if empty
       }));
@@ -147,22 +155,21 @@ export default function DocumentFormDrawer({ isOpen, onClose, document }: Docume
             category: formData.category,
             accessLevel: formData.accessLevel,
             tags: formData.tags,
-            company: formData.companyId
-              ? { id: formData.companyId, name: formData.companyName }
-              : undefined,
+            companyId: formData.companyId || undefined,
           },
         })
       );
     } else {
       // Create new document
+      const fileType: FileType = getFileTypeFromMime(formData.mimeType);
       const newDocument: Document = {
         id: `doc-${Date.now()}`,
         name: formData.name,
         description: formData.description,
         category: formData.category,
         status: 'DRAFT',
-        fileName: formData.fileName,
-        fileType: formData.fileType,
+        mimeType: formData.mimeType,
+        fileType,
         fileSize: formData.fileSize,
         fileUrl: formData.fileUrl,
         currentVersion: '1.0',
@@ -172,35 +179,39 @@ export default function DocumentFormDrawer({ isOpen, onClose, document }: Docume
           {
             id: `ver-${Date.now()}`,
             versionNumber: '1.0',
+            fileName: formData.fileName,
             fileUrl: formData.fileUrl,
             fileSize: formData.fileSize,
             uploadedBy: 'user-001',
             uploadedByName: 'Current User',
             uploadedAt: new Date().toISOString(),
-            changeLog: 'Initial version',
+            changeNotes: 'Initial version',
             isCurrent: true,
           },
         ],
-        uploadedBy: 'user-001',
-        uploadedByName: 'Current User',
+        ownerId: 'user-001',
+        ownerName: 'Current User',
         permissions: [
           {
             userId: 'user-001',
             userName: 'Current User',
-            role: 'OWNER',
-            grantedAt: new Date().toISOString(),
-            grantedBy: 'user-001',
+            canView: true,
+            canEdit: true,
+            canDelete: true,
+            canShare: true,
           },
         ],
         comments: [],
         requiresApproval: false,
         viewCount: 0,
         downloadCount: 0,
+        isPublic: false,
+        isEncrypted: false,
+        isPasswordProtected: false,
         createdAt: new Date().toISOString(),
+        createdBy: 'user-001',
         updatedAt: new Date().toISOString(),
-        company: formData.companyId
-          ? { id: formData.companyId, name: formData.companyName }
-          : undefined,
+        companyId: formData.companyId || undefined,
       };
 
       dispatch(addDocument(newDocument));
@@ -350,22 +361,6 @@ export default function DocumentFormDrawer({ isOpen, onClose, document }: Docume
               </span>
             ))}
           </div>
-        </div>
-
-        {/* Company (Optional) */}
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Associated Company (Optional)
-          </label>
-          <Input
-            value={formData.companyName}
-            onChange={(e) => handleInputChange('companyName', e.target.value)}
-            placeholder="Enter company name"
-            fullWidth
-          />
-          <p className="mt-1 text-xs text-gray-500">
-            Link this document to a specific company
-          </p>
         </div>
       </div>
     </Drawer>

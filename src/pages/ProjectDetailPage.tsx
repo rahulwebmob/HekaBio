@@ -14,6 +14,7 @@ import {
   IconCalendar,
   IconTargetArrow,
   IconWorld,
+  IconShieldCheck,
 } from '@tabler/icons-react';
 import { useAppSelector, useAppDispatch } from '../app/store';
 import { deleteProject } from '../store/slices/projectsSlice';
@@ -21,6 +22,7 @@ import { AppLayout } from '../components/layout';
 import { Button, Card, Badge, Modal } from '../components/ui';
 import { ProjectFormModal } from '../components/features';
 import { StageTimeline, StageHistory } from '../components/common';
+import { GateReviewPanel, GateHistoryTimeline } from '../components/features/gates';
 import { StageLabels } from '../types/project.types';
 
 export default function ProjectDetailPage() {
@@ -31,6 +33,8 @@ export default function ProjectDetailPage() {
   const project = useAppSelector((state) =>
     state.projects.projects.find((p) => p.id === id)
   );
+
+  const gateReviews = useAppSelector((state) => state.gate.reviews);
 
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
@@ -105,7 +109,7 @@ export default function ProjectDetailPage() {
                 leftIcon={<IconWorld size={18} />}
                 onClick={() => navigate(`/projects/${project.id}/japan-screening`)}
               >
-                🇯🇵 Japan Screening
+                 Japan Screening
               </Button>
             )}
             <Button
@@ -414,6 +418,62 @@ export default function ProjectDetailPage() {
             >
               <StageHistory stageHistory={project.stageHistory} />
             </Card>
+
+            {/* Gate Reviews */}
+            <Card
+              padding="lg"
+              shadow="sm"
+              header={
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 bg-brand-100 rounded-lg flex items-center justify-center">
+                    <IconShieldCheck size={20} className="text-brand-600" />
+                  </div>
+                  <div className="flex-1">
+                    <h2 className="text-xl font-semibold text-gray-900">Gate Reviews</h2>
+                    <p className="text-sm text-gray-600 mt-1">
+                      Multi-stage vetting and approval process
+                    </p>
+                  </div>
+                </div>
+              }
+            >
+              <div className="space-y-6">
+                {/* Gate Review Panels */}
+                <div className="space-y-4">
+                  <GateReviewPanel
+                    projectId={project.id}
+                    gateNumber={1}
+                    existingReview={gateReviews.find(
+                      (r) => r.projectId === project.id && r.gateNumber === 1
+                    )}
+                  />
+                  <GateReviewPanel
+                    projectId={project.id}
+                    gateNumber={2}
+                    existingReview={gateReviews.find(
+                      (r) => r.projectId === project.id && r.gateNumber === 2
+                    )}
+                  />
+                  <GateReviewPanel
+                    projectId={project.id}
+                    gateNumber={3}
+                    existingReview={gateReviews.find(
+                      (r) => r.projectId === project.id && r.gateNumber === 3
+                    )}
+                  />
+                </div>
+
+                {/* Gate History Timeline */}
+                {gateReviews.filter((r) => r.projectId === project.id).length > 0 && (
+                  <div className="pt-6 border-t border-gray-200">
+                    <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                      Review History
+                    </h3>
+                    <GateHistoryTimeline reviews={gateReviews} projectId={project.id} />
+                  </div>
+                )}
+              </div>
+            </Card>
           </div>
 
           {/* Sidebar */}
@@ -464,6 +524,79 @@ export default function ProjectDetailPage() {
                         className="bg-brand-500 h-2 rounded-full"
                         style={{ width: `${project.ddProgress}%` }}
                       />
+                    </div>
+                  </div>
+                )}
+
+                {/* Gate Status */}
+                {(project.currentGate || project.gate1Status || project.gate2Status || project.gate3Status) && (
+                  <div className="pt-4 border-t border-gray-200">
+                    <p className="text-sm text-gray-600 mb-3">Gate Progress</p>
+                    <div className="space-y-2">
+                      {project.gate1Status && (
+                        <div className="flex items-center justify-between">
+                          <span className="text-xs text-gray-600">Gate 1</span>
+                          <Badge
+                            variant={
+                              project.gate1Status === 'APPROVED'
+                                ? 'success'
+                                : project.gate1Status === 'REJECTED'
+                                ? 'error'
+                                : project.gate1Status === 'CONDITIONAL'
+                                ? 'warning'
+                                : 'default'
+                            }
+                            size="sm"
+                          >
+                            {project.gate1Status}
+                          </Badge>
+                        </div>
+                      )}
+                      {project.gate2Status && (
+                        <div className="flex items-center justify-between">
+                          <span className="text-xs text-gray-600">Gate 2</span>
+                          <Badge
+                            variant={
+                              project.gate2Status === 'APPROVED'
+                                ? 'success'
+                                : project.gate2Status === 'REJECTED'
+                                ? 'error'
+                                : project.gate2Status === 'CONDITIONAL'
+                                ? 'warning'
+                                : 'default'
+                            }
+                            size="sm"
+                          >
+                            {project.gate2Status}
+                          </Badge>
+                        </div>
+                      )}
+                      {project.gate3Status && (
+                        <div className="flex items-center justify-between">
+                          <span className="text-xs text-gray-600">Gate 3</span>
+                          <Badge
+                            variant={
+                              project.gate3Status === 'APPROVED'
+                                ? 'success'
+                                : project.gate3Status === 'REJECTED'
+                                ? 'error'
+                                : project.gate3Status === 'CONDITIONAL'
+                                ? 'warning'
+                                : 'default'
+                            }
+                            size="sm"
+                          >
+                            {project.gate3Status}
+                          </Badge>
+                        </div>
+                      )}
+                      {project.currentGate && (
+                        <div className="mt-2 pt-2 border-t border-gray-100">
+                          <span className="text-xs text-gray-600">
+                            Current: <span className="font-semibold">Gate {project.currentGate}</span>
+                          </span>
+                        </div>
+                      )}
                     </div>
                   </div>
                 )}

@@ -16,6 +16,9 @@ import {
   IconCalendar,
   IconChartDots,
   IconFolder,
+  IconShieldCheck,
+  IconClipboardCheck,
+  IconContract,
 } from '@tabler/icons-react';
 import { ChevronLeftIcon, GridIcon, UserIcon } from '../../icons';
 import { useSidebar } from '../../contexts/SidebarContext';
@@ -82,6 +85,21 @@ const menuItems: MenuItem[] = [
     label: 'Documents',
     icon: <IconFolder size={20} stroke={1.5} />,
     path: '/documents',
+  },
+  {
+    label: 'Contracts',
+    icon: <IconContract size={20} stroke={1.5} />,
+    path: '/contracts',
+  },
+  {
+    label: 'NDAs',
+    icon: <IconShieldCheck size={20} stroke={1.5} />,
+    path: '/ndas',
+  },
+  {
+    label: 'Due Diligence',
+    icon: <IconClipboardCheck size={20} stroke={1.5} />,
+    path: '/dd-workspace',
   },
   {
     label: 'Companies',

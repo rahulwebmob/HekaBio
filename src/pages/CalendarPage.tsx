@@ -3,7 +3,7 @@
  * Event scheduling and calendar management
  */
 
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import {
   IconPlus,
   IconChevronLeft,
@@ -26,10 +26,18 @@ import { AppLayout } from '../components/layout';
 import { Card, Badge, Button } from '../components/ui';
 import type { CalendarEvent } from '../types/calendar.types';
 import { getEventTypeColor } from '../types/calendar.types';
+import EventFormDrawer from '../components/features/calendar/EventFormDrawer';
+import EventDetailDrawer from '../components/features/calendar/EventDetailDrawer';
 
 export default function CalendarPage() {
   const dispatch = useAppDispatch();
   const { events, selectedDate } = useAppSelector((state) => state.calendar);
+
+  // Drawer states
+  const [isFormDrawerOpen, setIsFormDrawerOpen] = useState(false);
+  const [isDetailDrawerOpen, setIsDetailDrawerOpen] = useState(false);
+  const [selectedEvent, setSelectedEvent] = useState<CalendarEvent | null>(null);
+  const [isEditMode, setIsEditMode] = useState(false);
 
   // Get current month and year from selectedDate
   const currentDate = useMemo(() => new Date(selectedDate), [selectedDate]);
@@ -169,6 +177,36 @@ export default function CalendarPage() {
     return <IconMapPin size={14} className="text-gray-600" />;
   };
 
+  // Handler functions for drawers
+  const handleOpenNewEvent = () => {
+    setSelectedEvent(null);
+    setIsEditMode(false);
+    setIsFormDrawerOpen(true);
+  };
+
+  const handleViewEvent = (event: CalendarEvent) => {
+    setSelectedEvent(event);
+    setIsDetailDrawerOpen(true);
+  };
+
+  const handleEditEvent = (event: CalendarEvent) => {
+    setSelectedEvent(event);
+    setIsEditMode(true);
+    setIsDetailDrawerOpen(false);
+    setIsFormDrawerOpen(true);
+  };
+
+  const handleCloseFormDrawer = () => {
+    setIsFormDrawerOpen(false);
+    setSelectedEvent(null);
+    setIsEditMode(false);
+  };
+
+  const handleCloseDetailDrawer = () => {
+    setIsDetailDrawerOpen(false);
+    setSelectedEvent(null);
+  };
+
   return (
     <AppLayout>
       <div className="space-y-6">
@@ -178,7 +216,7 @@ export default function CalendarPage() {
             <h1 className="text-3xl font-semibold text-gray-900">Calendar</h1>
             <p className="text-gray-600 mt-1">Manage meetings, calls, and events</p>
           </div>
-          <Button variant="primary" leftIcon={<IconPlus size={18} />}>
+          <Button variant="primary" leftIcon={<IconPlus size={18} />} onClick={handleOpenNewEvent}>
             New Event
           </Button>
         </div>
@@ -308,10 +346,14 @@ export default function CalendarPage() {
                               {dayEvents.slice(0, 2).map((event) => (
                                 <div
                                   key={event.id}
-                                  className={`text-xs px-1 py-0.5 rounded truncate ${getEventTypeColor(
+                                  className={`text-xs px-1 py-0.5 rounded truncate cursor-pointer hover:opacity-80 transition-opacity ${getEventTypeColor(
                                     event.type
                                   )}`}
                                   title={event.title}
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleViewEvent(event);
+                                  }}
                                 >
                                   {event.title}
                                 </div>
@@ -340,10 +382,11 @@ export default function CalendarPage() {
                 {upcomingEvents.map((event) => (
                   <div
                     key={event.id}
-                    className="border-l-4 pl-3 py-2 hover:bg-gray-50 rounded transition-colors"
+                    className="border-l-4 pl-3 py-2 hover:bg-gray-50 rounded transition-colors cursor-pointer"
                     style={{
                       borderLeftColor: event.color || '#3B82F6',
                     }}
+                    onClick={() => handleViewEvent(event)}
                   >
                     <div className="flex items-start justify-between gap-2 mb-1">
                       <h4 className="font-semibold text-sm text-gray-900">{event.title}</h4>
@@ -408,6 +451,20 @@ export default function CalendarPage() {
           </div>
         </div>
       </div>
+
+      {/* Drawers */}
+      <EventFormDrawer
+        isOpen={isFormDrawerOpen}
+        onClose={handleCloseFormDrawer}
+        event={isEditMode ? selectedEvent : null}
+      />
+
+      <EventDetailDrawer
+        isOpen={isDetailDrawerOpen}
+        onClose={handleCloseDetailDrawer}
+        event={selectedEvent}
+        onEdit={handleEditEvent}
+      />
     </AppLayout>
   );
 }

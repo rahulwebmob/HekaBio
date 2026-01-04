@@ -20,6 +20,7 @@ import { AppLayout } from '../components/layout';
 import { Card, Badge, Button } from '../components/ui';
 import type { PipelineStage, PipelineOpportunity } from '../types/pipeline.types';
 import { PIPELINE_STAGE_CONFIG, getActiveStages } from '../types/pipeline.types';
+import { OpportunityDetailDrawer, OpportunityFormDrawer } from '../components/features/pipeline';
 
 export default function PipelinePage() {
   const dispatch = useAppDispatch();
@@ -28,6 +29,13 @@ export default function PipelinePage() {
   const [showClosedDeals, setShowClosedDeals] = useState(false);
   const [draggedOpportunity, setDraggedOpportunity] = useState<string | null>(null);
   const [dragOverStage, setDragOverStage] = useState<PipelineStage | null>(null);
+
+  // Opportunity detail drawer state
+  const [isDetailDrawerOpen, setIsDetailDrawerOpen] = useState(false);
+  const [selectedOpportunity, setSelectedOpportunity] = useState<PipelineOpportunity | null>(null);
+
+  // Opportunity form drawer state
+  const [isFormDrawerOpen, setIsFormDrawerOpen] = useState(false);
 
   // Get stages to display
   const activeStages = getActiveStages();
@@ -164,6 +172,22 @@ export default function PipelinePage() {
     setDragOverStage(null);
   };
 
+  // Handler functions for opportunity detail drawer
+  const handleViewOpportunity = (opportunity: PipelineOpportunity) => {
+    setSelectedOpportunity(opportunity);
+    setIsDetailDrawerOpen(true);
+  };
+
+  const handleEditOpportunity = (opportunity: PipelineOpportunity) => {
+    // TODO: Open form drawer for editing
+    console.log('Edit opportunity:', opportunity);
+  };
+
+  const handleCloseDetailDrawer = () => {
+    setIsDetailDrawerOpen(false);
+    setSelectedOpportunity(null);
+  };
+
   return (
     <AppLayout>
       <div className="space-y-6">
@@ -184,7 +208,7 @@ export default function PipelinePage() {
             >
               {showClosedDeals ? 'Hide' : 'Show'} Closed Deals
             </Button>
-            <Button variant="primary" leftIcon={<IconPlus size={18} />}>
+            <Button variant="primary" leftIcon={<IconPlus size={18} />} onClick={() => setIsFormDrawerOpen(true)}>
               New Opportunity
             </Button>
           </div>
@@ -295,6 +319,7 @@ export default function PipelinePage() {
                         draggable
                         onDragStart={(e) => handleDragStart(e, opp.id)}
                         onDragEnd={handleDragEnd}
+                        onClick={() => handleViewOpportunity(opp)}
                       >
                         <div className="space-y-2">
                           {/* Title and Priority */}
@@ -394,6 +419,20 @@ export default function PipelinePage() {
           </div>
         </Card>
       </div>
+
+      {/* Opportunity Detail Drawer */}
+      <OpportunityDetailDrawer
+        isOpen={isDetailDrawerOpen}
+        onClose={handleCloseDetailDrawer}
+        opportunity={selectedOpportunity}
+        onEdit={handleEditOpportunity}
+      />
+
+      {/* Opportunity Form Drawer */}
+      <OpportunityFormDrawer
+        isOpen={isFormDrawerOpen}
+        onClose={() => setIsFormDrawerOpen(false)}
+      />
     </AppLayout>
   );
 }

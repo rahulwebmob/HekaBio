@@ -116,6 +116,13 @@ export interface Project {
   contractStatus?: ContractStatus;
   contractDecisionAt?: Timestamp;
 
+  // Gate Reviews
+  currentGate?: 1 | 2 | 3; // Current gate the project is at
+  gate1Status?: 'PENDING' | 'APPROVED' | 'REJECTED' | 'CONDITIONAL' | 'DEFERRED';
+  gate2Status?: 'PENDING' | 'APPROVED' | 'REJECTED' | 'CONDITIONAL' | 'DEFERRED';
+  gate3Status?: 'PENDING' | 'APPROVED' | 'REJECTED' | 'CONDITIONAL' | 'DEFERRED';
+  gateReviewIds?: ID[]; // References to GateReview records
+
   // Metadata
   createdAt: Timestamp;
   updatedAt?: Timestamp;
