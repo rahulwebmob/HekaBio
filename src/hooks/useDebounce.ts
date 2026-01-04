@@ -35,6 +35,7 @@ export function useDebounce<T>(value: T, delay: number = 300): T {
  * @param delay - The delay in milliseconds (default: 300ms)
  * @returns A debounced version of the callback
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function useDebouncedCallback<T extends (...args: any[]) => any>(
   callback: T,
   delay: number = 300

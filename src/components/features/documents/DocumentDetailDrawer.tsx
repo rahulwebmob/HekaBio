@@ -34,6 +34,7 @@ import { Drawer, Badge, Button } from '../../ui';
 import type { Document, DocumentStatus } from '../../../types/document.types';
 import { getDocumentCategoryColor, formatFileSize } from '../../../types/document.types';
 import { DocumentVersionHistory, UploadNewVersion } from './';
+import { announceToScreenReader } from '../../../utils/accessibility';
 
 interface DocumentDetailDrawerProps {
   isOpen: boolean;
@@ -78,6 +79,7 @@ export default function DocumentDetailDrawer({
 
   const handleDelete = () => {
     dispatch(deleteDocument(document.id));
+    announceToScreenReader(`Document "${document.name}" has been deleted`, 'assertive');
     onClose();
   };
 
@@ -89,6 +91,7 @@ export default function DocumentDetailDrawer({
         approvedByName: 'Current User',
       })
     );
+    announceToScreenReader(`Document "${document.name}" has been approved`, 'polite');
   };
 
   const handleReject = () => {
@@ -102,11 +105,13 @@ export default function DocumentDetailDrawer({
           reason,
         })
       );
+      announceToScreenReader(`Document "${document.name}" has been rejected`, 'polite');
     }
   };
 
   const handleArchive = () => {
     dispatch(archiveDocument(document.id));
+    announceToScreenReader(`Document "${document.name}" has been archived`, 'polite');
   };
 
   const handleAddComment = () => {
@@ -123,6 +128,7 @@ export default function DocumentDetailDrawer({
           },
         })
       );
+      announceToScreenReader('Comment added successfully', 'polite');
       setCommentText('');
     }
   };

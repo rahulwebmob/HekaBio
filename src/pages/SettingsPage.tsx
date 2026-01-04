@@ -563,6 +563,7 @@ function DashboardTab({ widgets, layout, onToggleWidget, onLayoutChange }: Dashb
           Choose which widgets to display on your dashboard
         </p>
         <div className="space-y-2">
+          {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
           {widgets.map((widget: any) => (
             <div
               key={widget.id}

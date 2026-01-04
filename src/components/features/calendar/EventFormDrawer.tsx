@@ -3,7 +3,7 @@
  * For creating and editing calendar events
  */
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useAppDispatch } from '../../../app/store';
 import { addEvent, updateEvent } from '../../../store/slices/calendarSlice';
 import { Drawer, Input, Select, Button } from '../../ui';
@@ -25,32 +25,13 @@ export default function EventFormDrawer({ isOpen, onClose, event }: EventFormDra
   const dispatch = useAppDispatch();
   const isEdit = !!event;
 
-  const [formData, setFormData] = useState({
-    title: '',
-    description: '',
-    type: 'MEETING' as EventType,
-    status: 'SCHEDULED' as EventStatus,
-    priority: 'MEDIUM' as EventPriority,
-    startDate: '',
-    startTime: '',
-    endDate: '',
-    endTime: '',
-    allDay: false,
-    locationType: 'ONLINE' as LocationType,
-    locationUrl: '',
-    locationAddress: '',
-    agenda: '',
-  });
-
-  const [errors, setErrors] = useState<Record<string, string>>({});
-
-  // Populate form when editing
-  useEffect(() => {
-    if (event && isOpen) {
+  // Initialize form data from event prop
+  const initialFormData = useMemo(() => {
+    if (event) {
       const startDate = new Date(event.startTime);
       const endDate = new Date(event.endTime);
 
-      setFormData({
+      return {
         title: event.title,
         description: event.description || '',
         type: event.type,
@@ -61,35 +42,44 @@ export default function EventFormDrawer({ isOpen, onClose, event }: EventFormDra
         endDate: endDate.toISOString().split('T')[0],
         endTime: endDate.toTimeString().slice(0, 5),
         allDay: event.allDay,
-        locationType: event.location?.type || 'ONLINE',
+        locationType: event.location?.type || 'ONLINE' as LocationType,
         locationUrl: event.location?.meetingUrl || '',
         locationAddress: event.location?.address || '',
         agenda: event.agenda || '',
-      });
-    } else if (!isOpen) {
-      // Reset form when drawer closes
-      const now = new Date();
-      const oneHourLater = new Date(now.getTime() + 60 * 60 * 1000);
+      };
+    }
 
-      setFormData({
-        title: '',
-        description: '',
-        type: 'MEETING',
-        status: 'SCHEDULED',
-        priority: 'MEDIUM',
-        startDate: now.toISOString().split('T')[0],
-        startTime: now.toTimeString().slice(0, 5),
-        endDate: oneHourLater.toISOString().split('T')[0],
-        endTime: oneHourLater.toTimeString().slice(0, 5),
-        allDay: false,
-        locationType: 'ONLINE',
-        locationUrl: '',
-        locationAddress: '',
-        agenda: '',
-      });
+    const now = new Date();
+    const oneHourLater = new Date(now.getTime() + 60 * 60 * 1000);
+
+    return {
+      title: '',
+      description: '',
+      type: 'MEETING' as EventType,
+      status: 'SCHEDULED' as EventStatus,
+      priority: 'MEDIUM' as EventPriority,
+      startDate: now.toISOString().split('T')[0],
+      startTime: now.toTimeString().slice(0, 5),
+      endDate: oneHourLater.toISOString().split('T')[0],
+      endTime: oneHourLater.toTimeString().slice(0, 5),
+      allDay: false,
+      locationType: 'ONLINE' as LocationType,
+      locationUrl: '',
+      locationAddress: '',
+      agenda: '',
+    };
+  }, [event]);
+
+  const [formData, setFormData] = useState(initialFormData);
+  const [errors, setErrors] = useState<Record<string, string>>({});
+
+  // Reset form when drawer closes or event changes
+  useEffect(() => {
+    if (isOpen) {
+      setFormData(initialFormData);
       setErrors({});
     }
-  }, [event, isOpen]);
+  }, [isOpen, initialFormData]);
 
   const handleInputChange = (field: string, value: string | boolean) => {
     setFormData((prev) => ({ ...prev, [field]: value }));

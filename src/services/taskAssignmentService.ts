@@ -252,7 +252,7 @@ export function assignDDSpecialist(sectionType?: 'scientific' | 'regulatory' | '
     case 'financial':
       role = 'dd_specialist_financial';
       break;
-    default:
+    default: {
       // Random DD specialist type
       const roles: UserRole[] = [
         'dd_specialist_scientific',
@@ -261,6 +261,7 @@ export function assignDDSpecialist(sectionType?: 'scientific' | 'regulatory' | '
         'dd_specialist_financial',
       ];
       role = roles[Math.floor(Math.random() * roles.length)];
+    }
   }
 
   const ddSpecialists = getUsersByRole(role);

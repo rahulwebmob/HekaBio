@@ -76,6 +76,19 @@ export default function GateReviewPanel({
   const [conditionInput, setConditionInput] = useState('');
   const [taskInput, setTaskInput] = useState('');
 
+  // Group checklist by category (must be before early returns)
+  const checklistByCategory = useMemo(() => {
+    if (!currentReview) return {};
+    const grouped: Record<string, typeof currentReview.checklist> = {};
+    currentReview.checklist.forEach((item) => {
+      if (!grouped[item.category]) {
+        grouped[item.category] = [];
+      }
+      grouped[item.category].push(item);
+    });
+    return grouped;
+  }, [currentReview]);
+
   // Initialize review if doesn't exist
   useEffect(() => {
     if (!currentReview) {
@@ -189,31 +202,6 @@ export default function GateReviewPanel({
     };
     return colors[color] || colors.blue;
   };
-
-  // Group checklist by category
-  const checklistByCategory = useMemo(() => {
-    if (!currentReview) return {};
-    const grouped: Record<string, typeof currentReview.checklist> = {};
-    currentReview.checklist.forEach((item) => {
-      if (!grouped[item.category]) {
-        grouped[item.category] = [];
-      }
-      grouped[item.category].push(item);
-    });
-    return grouped;
-  }, [currentReview]);
-
-  // Show loading state while review is being created
-  if (!currentReview) {
-    return (
-      <Card padding="lg">
-        <div className="text-center py-8 text-gray-600">
-          <IconClock size={32} className="mx-auto mb-2 text-gray-400" />
-          <p>Initializing gate review...</p>
-        </div>
-      </Card>
-    );
-  }
 
   return (
     <div className="space-y-4">

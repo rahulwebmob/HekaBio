@@ -236,7 +236,8 @@ export interface DDActivity {
   actorId: ID;
   actorName: string;
 
-  // Details
+  // Details - flexible metadata for custom audit fields
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   metadata?: Record<string, any>;
 
   // Timestamp

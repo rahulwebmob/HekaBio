@@ -97,6 +97,7 @@ export function Table<T extends { id: string }>({
                 >
                   {column.render
                     ? column.render(row)
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
                     : (row as any)[column.key]}
                 </td>
               ))}

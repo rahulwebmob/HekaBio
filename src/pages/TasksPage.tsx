@@ -25,6 +25,12 @@ import { AppLayout } from '../components/layout';
 import { Input, Select, Card, Badge, Button } from '../components/ui';
 import type { Task, TaskStatus, TaskPriority } from '../types/task.types';
 import { TaskFormDrawer, TaskDetailDrawer, TaskKanbanBoard } from '../components/features/tasks';
+import {
+  getProgressAriaLabel,
+  getButtonAriaLabel,
+  getListCountAriaLabel,
+  announceToScreenReader,
+} from '../utils/accessibility';
 
 export default function TasksPage() {
   const dispatch = useAppDispatch();
@@ -107,8 +113,23 @@ export default function TasksPage() {
   };
 
   const handleToggleStatus = (taskId: string, currentStatus: TaskStatus) => {
+    const task = tasks.find(t => t.id === taskId);
     const newStatus: TaskStatus = currentStatus === 'TODO' ? 'IN_PROGRESS' : currentStatus === 'IN_PROGRESS' ? 'COMPLETED' : 'TODO';
     dispatch(updateTaskStatus({ taskId, status: newStatus }));
+
+    if (task) {
+      const statusMessages: Record<TaskStatus, string> = {
+        TODO: 'to do',
+        IN_PROGRESS: 'in progress',
+        COMPLETED: 'completed',
+        BLOCKED: 'blocked',
+        CANCELLED: 'cancelled',
+      };
+      announceToScreenReader(
+        `Task "${task.title}" marked as ${statusMessages[newStatus]}`,
+        newStatus === 'COMPLETED' ? 'assertive' : 'polite'
+      );
+    }
   };
 
   // Handler functions for drawers
@@ -154,7 +175,7 @@ export default function TasksPage() {
           </div>
           <div className="flex items-center gap-3">
             {/* View Toggle */}
-            <div className="flex items-center border border-gray-300 rounded-lg overflow-hidden">
+            <div className="flex items-center border border-gray-300 rounded-lg overflow-hidden" role="group" aria-label="View options">
               <button
                 onClick={() => setView('list')}
                 className={`px-4 py-2 flex items-center gap-2 transition-colors ${
@@ -162,7 +183,8 @@ export default function TasksPage() {
                     ? 'bg-brand-500 text-white'
                     : 'bg-white text-gray-600 hover:bg-gray-50'
                 }`}
-                title="List View"
+                aria-label="Switch to list view"
+                aria-pressed={view === 'list'}
               >
                 <IconList size={18} />
                 <span className="text-sm font-medium">List</span>
@@ -174,27 +196,28 @@ export default function TasksPage() {
                     ? 'bg-brand-500 text-white'
                     : 'bg-white text-gray-600 hover:bg-gray-50'
                 }`}
-                title="Kanban View"
+                aria-label="Switch to kanban view"
+                aria-pressed={view === 'kanban'}
               >
                 <IconLayoutKanban size={18} />
                 <span className="text-sm font-medium">Kanban</span>
               </button>
             </div>
-            <Button variant="primary" leftIcon={<IconPlus size={18} />} onClick={handleOpenNewTask}>
+            <Button variant="primary" leftIcon={<IconPlus size={18} />} onClick={handleOpenNewTask} aria-label="Create new task">
               New Task
             </Button>
           </div>
         </div>
 
         {/* Statistics Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4" role="region" aria-label="Task statistics">
           <Card padding="md" shadow="sm">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-gray-600">Total</p>
-                <p className="text-2xl font-bold text-gray-900">{stats.total}</p>
+                <p className="text-2xl font-bold text-gray-900" aria-label={`${stats.total} total tasks`}>{stats.total}</p>
               </div>
-              <div className="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center">
+              <div className="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center" aria-hidden="true">
                 <IconChecklist size={20} className="text-gray-600" />
               </div>
             </div>
@@ -204,9 +227,9 @@ export default function TasksPage() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-gray-600">To Do</p>
-                <p className="text-2xl font-bold text-gray-700">{stats.todo}</p>
+                <p className="text-2xl font-bold text-gray-700" aria-label={`${stats.todo} tasks to do`}>{stats.todo}</p>
               </div>
-              <div className="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center">
+              <div className="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center" aria-hidden="true">
                 <IconClock size={20} className="text-gray-600" />
               </div>
             </div>
@@ -216,9 +239,9 @@ export default function TasksPage() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-gray-600">In Progress</p>
-                <p className="text-2xl font-bold text-blue-600">{stats.inProgress}</p>
+                <p className="text-2xl font-bold text-blue-600" aria-label={`${stats.inProgress} tasks in progress`}>{stats.inProgress}</p>
               </div>
-              <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+              <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center" aria-hidden="true">
                 <IconProgress size={20} className="text-blue-600" />
               </div>
             </div>
@@ -228,9 +251,9 @@ export default function TasksPage() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-gray-600">Completed</p>
-                <p className="text-2xl font-bold text-success-600">{stats.completed}</p>
+                <p className="text-2xl font-bold text-success-600" aria-label={`${stats.completed} tasks completed`}>{stats.completed}</p>
               </div>
-              <div className="w-10 h-10 bg-success-100 rounded-lg flex items-center justify-center">
+              <div className="w-10 h-10 bg-success-100 rounded-lg flex items-center justify-center" aria-hidden="true">
                 <IconCheck size={20} className="text-success-600" />
               </div>
             </div>
@@ -240,9 +263,9 @@ export default function TasksPage() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-gray-600">Overdue</p>
-                <p className="text-2xl font-bold text-error-600">{stats.overdue}</p>
+                <p className="text-2xl font-bold text-error-600" aria-label={`${stats.overdue} overdue tasks`}>{stats.overdue}</p>
               </div>
-              <div className="w-10 h-10 bg-error-100 rounded-lg flex items-center justify-center">
+              <div className="w-10 h-10 bg-error-100 rounded-lg flex items-center justify-center" aria-hidden="true">
                 <IconAlertCircle size={20} className="text-error-600" />
               </div>
             </div>
@@ -251,7 +274,7 @@ export default function TasksPage() {
 
         {/* Filters */}
         <Card padding="md" shadow="sm">
-          <div className="space-y-4">
+          <div className="space-y-4" role="search" aria-label="Filter tasks">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
               <Input
                 placeholder="Search tasks..."
@@ -259,6 +282,7 @@ export default function TasksPage() {
                 onChange={(e) => setSearchTerm(e.target.value)}
                 leftIcon={<IconSearch size={18} />}
                 fullWidth
+                aria-label="Search tasks by title, description, or company"
               />
             </div>
 
@@ -275,6 +299,7 @@ export default function TasksPage() {
                 value={statusFilter}
                 onChange={(e) => setStatusFilter(e.target.value)}
                 fullWidth
+                aria-label="Filter tasks by status"
               />
               <Select
                 placeholder="Filter by priority"
@@ -288,6 +313,7 @@ export default function TasksPage() {
                 value={priorityFilter}
                 onChange={(e) => setPriorityFilter(e.target.value)}
                 fullWidth
+                aria-label="Filter tasks by priority"
               />
               <div className="flex items-center gap-2">
                 <input
@@ -296,8 +322,9 @@ export default function TasksPage() {
                   checked={showCompleted}
                   onChange={(e) => setShowCompleted(e.target.checked)}
                   className="w-4 h-4 text-brand-600 border-gray-300 rounded focus:ring-brand-500"
+                  aria-describedby="showCompleted-description"
                 />
-                <label htmlFor="showCompleted" className="text-sm text-gray-700">
+                <label htmlFor="showCompleted" className="text-sm text-gray-700" id="showCompleted-description">
                   Show Completed
                 </label>
               </div>
@@ -307,13 +334,14 @@ export default function TasksPage() {
 
         {/* Tasks Display - List or Kanban View */}
         {view === 'list' ? (
-          <div className="space-y-3">
+          <div className="space-y-3" role="list" aria-label={getListCountAriaLabel(filteredTasks.length, 'task')}>
             {filteredTasks.map((task) => (
               <Card
                 key={task.id}
                 padding="md"
                 shadow="sm"
                 className="hover:shadow-md transition-shadow"
+                role="listitem"
               >
                 <div className="flex items-start gap-4">
                   <button
@@ -323,6 +351,8 @@ export default function TasksPage() {
                         ? 'bg-success-500 border-success-500'
                         : 'border-gray-300 hover:border-brand-500'
                     }`}
+                    aria-label={task.status === 'COMPLETED' ? `Mark task "${task.title}" as incomplete` : `Mark task "${task.title}" as complete`}
+                    aria-pressed={task.status === 'COMPLETED'}
                   >
                     {task.status === 'COMPLETED' && <IconCheck size={16} className="text-white" />}
                   </button>
@@ -344,18 +374,20 @@ export default function TasksPage() {
                     </div>
 
                     {task.checklist && task.checklist.length > 0 && (
-                      <div className="mb-3 space-y-1">
+                      <div className="mb-3 space-y-1" role="group" aria-label="Task checklist">
                         {task.checklist.map((item) => (
                           <div key={item.id} className="flex items-center gap-2">
                             <input
                               type="checkbox"
+                              id={`checklist-${item.id}`}
                               checked={item.completed}
                               onChange={() => dispatch(toggleChecklistItem({ taskId: task.id, checklistId: item.id }))}
                               className="w-4 h-4 text-brand-600 border-gray-300 rounded focus:ring-brand-500"
+                              aria-label={item.completed ? `Completed: ${item.text}` : item.text}
                             />
-                            <span className={`text-sm ${item.completed ? 'line-through text-gray-500' : 'text-gray-700'}`}>
+                            <label htmlFor={`checklist-${item.id}`} className={`text-sm ${item.completed ? 'line-through text-gray-500' : 'text-gray-700'}`}>
                               {item.text}
-                            </span>
+                            </label>
                           </div>
                         ))}
                       </div>
@@ -368,7 +400,7 @@ export default function TasksPage() {
                           <span className="text-xs text-gray-600">Progress</span>
                           <span className="text-xs font-semibold text-gray-700">{task.progress}%</span>
                         </div>
-                        <div className="w-full bg-gray-200 rounded-full h-2">
+                        <div className="w-full bg-gray-200 rounded-full h-2" role="progressbar" aria-valuenow={task.progress} aria-valuemin={0} aria-valuemax={100} aria-label={getProgressAriaLabel(task.progress)}>
                           <div
                             className="bg-brand-500 h-2 rounded-full transition-all"
                             style={{ width: `${task.progress}%` }}
@@ -416,14 +448,14 @@ export default function TasksPage() {
                           <button
                             onClick={() => handleViewTask(task)}
                             className="p-1.5 hover:bg-white/80 rounded-lg transition-colors"
-                            title="View Details"
+                            aria-label={getButtonAriaLabel('View details for', task.title)}
                           >
                             <IconEye size={16} className="text-gray-600" />
                           </button>
                           <button
                             onClick={() => handleEditTask(task)}
                             className="p-1.5 hover:bg-white/80 rounded-lg transition-colors"
-                            title="Edit Task"
+                            aria-label={getButtonAriaLabel('Edit', task.title)}
                           >
                             <IconEdit size={16} className="text-gray-600" />
                           </button>
@@ -437,8 +469,8 @@ export default function TasksPage() {
 
             {filteredTasks.length === 0 && (
               <Card padding="lg" shadow="sm">
-                <div className="text-center py-12">
-                  <IconChecklist size={48} className="mx-auto text-gray-400 mb-4" />
+                <div className="text-center py-12" role="status">
+                  <IconChecklist size={48} className="mx-auto text-gray-400 mb-4" aria-hidden="true" />
                   <p className="text-gray-600">No tasks found</p>
                 </div>
               </Card>
@@ -449,7 +481,7 @@ export default function TasksPage() {
         )}
 
         {/* Results Count */}
-        <div className="text-sm text-gray-600 text-center">
+        <div className="text-sm text-gray-600 text-center" role="status" aria-live="polite" aria-atomic="true">
           Showing {filteredTasks.length} of {tasks.length} tasks
         </div>
       </div>

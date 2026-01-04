@@ -6,6 +6,7 @@
 import { useEffect, useState } from 'react';
 import type { ReactNode } from 'react';
 import { CloseIcon } from '../../icons';
+import { useFocusTrap } from '../../hooks/useFocusTrap';
 
 interface DrawerProps {
   isOpen: boolean;
@@ -28,6 +29,7 @@ const Drawer = ({
 }: DrawerProps) => {
   const [shouldMount, setShouldMount] = useState(false);
   const [shouldAnimate, setShouldAnimate] = useState(false);
+  const containerRef = useFocusTrap(isOpen && shouldAnimate);
 
   const sizeStyles = {
     sm: 'max-w-md',
@@ -97,20 +99,25 @@ const Drawer = ({
 
       {/* Drawer */}
       <div
+        ref={containerRef}
         className={`fixed inset-y-0 right-0 z-[9999] w-full ${sizeStyles[size]} will-change-transform`}
         style={{
           transform: shouldAnimate ? 'translateX(0)' : 'translateX(100%)',
           transition: 'transform 500ms cubic-bezier(0.4, 0, 0.2, 1)',
         }}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby={title ? 'drawer-title' : undefined}
       >
         <div className="h-full bg-gray-50/95 shadow-2xl flex flex-col border-l border-gray-200/30">
           {/* Header */}
           {title && (
             <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200/30 bg-white/30 flex-shrink-0">
-              <h2 className="text-xl font-semibold text-gray-900">{title}</h2>
+              <h2 id="drawer-title" className="text-xl font-semibold text-gray-900">{title}</h2>
               <button
                 onClick={onClose}
                 className="text-gray-400 hover:text-gray-700 transition-all duration-200 p-1.5 rounded-lg hover:bg-white/50"
+                aria-label="Close drawer"
               >
                 <CloseIcon className="w-5.5 h-5.5" />
               </button>

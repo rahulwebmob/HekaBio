@@ -3,7 +3,7 @@
  * Reusable dropdown select with label and error states
  */
 
-import { forwardRef } from 'react';
+import { forwardRef, useId } from 'react';
 import type { SelectHTMLAttributes } from 'react';
 
 interface SelectOption {
@@ -32,10 +32,16 @@ const Select = forwardRef<HTMLSelectElement, SelectProps>(
       fullWidth = false,
       className = '',
       disabled,
+      id: providedId,
       ...props
     },
     ref
   ) => {
+    const generatedId = useId();
+    const selectId = providedId || generatedId;
+    const errorId = `${selectId}-error`;
+    const helperId = `${selectId}-helper`;
+
     const baseStyles = 'px-4 py-2.5 border rounded-lg text-sm text-gray-900 focus:outline-none focus:ring-4 transition-all duration-200 ease-out disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-gray-50/30 bg-white/80 cursor-pointer hover:bg-white hover:border-gray-400 hover:shadow-sm';
 
     const errorStyles = error
@@ -44,10 +50,14 @@ const Select = forwardRef<HTMLSelectElement, SelectProps>(
 
     const widthStyle = fullWidth ? 'w-full' : '';
 
+    const ariaDescribedBy = [];
+    if (error) ariaDescribedBy.push(errorId);
+    if (helperText && !error) ariaDescribedBy.push(helperId);
+
     return (
       <div className={fullWidth ? 'w-full' : ''}>
         {label && (
-          <label className="block text-sm font-semibold text-gray-900 mb-3">
+          <label htmlFor={selectId} className="block text-sm font-semibold text-gray-900 mb-3">
             {label}
           </label>
         )}
@@ -55,8 +65,11 @@ const Select = forwardRef<HTMLSelectElement, SelectProps>(
         <div className="relative group">
           <select
             ref={ref}
+            id={selectId}
             className={`${baseStyles} ${errorStyles} ${widthStyle} ${className} pr-10`}
             disabled={disabled}
+            aria-invalid={error ? 'true' : 'false'}
+            aria-describedby={ariaDescribedBy.length > 0 ? ariaDescribedBy.join(' ') : undefined}
             style={{
               backgroundImage: `url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e")`,
               backgroundPosition: 'right 0.75rem center',
@@ -83,7 +96,7 @@ const Select = forwardRef<HTMLSelectElement, SelectProps>(
               </option>
             ))}
           </select>
-          <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+          <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none" aria-hidden="true">
             <svg
               className="w-5 h-5 text-gray-400 group-hover:text-gray-600 transition-colors duration-300"
               xmlns="http://www.w3.org/2000/svg"
@@ -102,11 +115,15 @@ const Select = forwardRef<HTMLSelectElement, SelectProps>(
         </div>
 
         {error && (
-          <p className="mt-1.5 text-xs text-error-500">{error}</p>
+          <p id={errorId} className="mt-1.5 text-xs text-error-500" role="alert">
+            {error}
+          </p>
         )}
 
         {helperText && !error && (
-          <p className="mt-1.5 text-xs text-gray-600">{helperText}</p>
+          <p id={helperId} className="mt-1.5 text-xs text-gray-600">
+            {helperText}
+          </p>
         )}
       </div>
     );

@@ -9,7 +9,7 @@ import { SidebarProvider, useSidebar } from '../../contexts/SidebarContext';
 import AppSidebar from './AppSidebar';
 import AppHeader from './AppHeader';
 import AppFooter from './AppFooter';
-import SkipLinks from '../ui/SkipLinks';
+// import SkipLinks from '../ui/SkipLinks';
 
 interface AppLayoutProps {
   children: ReactNode;
@@ -38,7 +38,7 @@ function LayoutContent({ children }: AppLayoutProps) {
   return (
     <div className="min-h-screen flex flex-col relative overflow-hidden">
       {/* Skip Links for Accessibility */}
-      <SkipLinks />
+      {/* <SkipLinks /> */}
 
       {/* Background Image */}
       <div

@@ -8,6 +8,8 @@ import type { Contact } from '../types/addressBook.types';
 /**
  * Convert array of objects to CSV string
  */
+// Generic CSV record type - intentionally flexible
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function arrayToCSV<T extends Record<string, any>>(
   data: T[],
   headers: { key: keyof T; label: string }[]
@@ -54,6 +56,7 @@ export function csvToArray<T>(csv: string, headers: string[]): Partial<T>[] {
 
   return dataLines.map(line => {
     const values = parseCSVLine(line);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const obj: any = {};
 
     headers.forEach((header, index) => {
@@ -161,6 +164,8 @@ export function parseContactsCSV(csvContent: string): Partial<Contact>[] {
 
   // Transform and validate data
   return rawData.map(row => {
+    // Type assertion for CSV parsing - Partial<Contact> to any for flexible access
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const anyRow = row as any;
     return {
       firstName: row.firstName || '',

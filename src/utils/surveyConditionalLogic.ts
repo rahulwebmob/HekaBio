@@ -114,7 +114,7 @@ const evaluateCondition = (
       return actualStr !== expectedStr;
     case 'CONTAINS':
       return actualStr.toLowerCase().includes(expectedStr.toLowerCase());
-    case 'GREATER_THAN':
+    case 'GREATER_THAN': {
       // Try numeric comparison if both can be parsed as numbers
       const actualNum = parseFloat(actualStr);
       const expectedNum = parseFloat(expectedStr);
@@ -122,13 +122,15 @@ const evaluateCondition = (
         return actualNum > expectedNum;
       }
       return actualStr > expectedStr; // Lexicographic comparison
-    case 'LESS_THAN':
+    }
+    case 'LESS_THAN': {
       const actualNum2 = parseFloat(actualStr);
       const expectedNum2 = parseFloat(expectedStr);
       if (!isNaN(actualNum2) && !isNaN(expectedNum2)) {
         return actualNum2 < expectedNum2;
       }
       return actualStr < expectedStr; // Lexicographic comparison
+    }
     default:
       return false;
   }

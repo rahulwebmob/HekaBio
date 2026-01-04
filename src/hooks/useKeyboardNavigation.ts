@@ -27,7 +27,7 @@ export const useKeyboardNavigation = ({
       if (itemCount === 0) return;
 
       switch (event.key) {
-        case 'ArrowDown':
+        case 'ArrowDown': {
           event.preventDefault();
           activeIndexRef.current = loop
             ? (activeIndexRef.current + 1) % itemCount
@@ -38,8 +38,9 @@ export const useKeyboardNavigation = ({
           ) as HTMLElement;
           nextElement?.focus();
           break;
+        }
 
-        case 'ArrowUp':
+        case 'ArrowUp': {
           event.preventDefault();
           activeIndexRef.current = loop
             ? (activeIndexRef.current - 1 + itemCount) % itemCount
@@ -50,6 +51,7 @@ export const useKeyboardNavigation = ({
           ) as HTMLElement;
           prevElement?.focus();
           break;
+        }
 
         case 'Enter':
         case ' ':
@@ -62,7 +64,7 @@ export const useKeyboardNavigation = ({
           onEscape?.();
           break;
 
-        case 'Home':
+        case 'Home': {
           event.preventDefault();
           activeIndexRef.current = 0;
           const firstElement = document.querySelector(
@@ -70,8 +72,9 @@ export const useKeyboardNavigation = ({
           ) as HTMLElement;
           firstElement?.focus();
           break;
+        }
 
-        case 'End':
+        case 'End': {
           event.preventDefault();
           activeIndexRef.current = itemCount - 1;
           const lastElement = document.querySelector(
@@ -79,6 +82,7 @@ export const useKeyboardNavigation = ({
           ) as HTMLElement;
           lastElement?.focus();
           break;
+        }
       }
     },
     [itemCount, loop, onSelect, onEscape]

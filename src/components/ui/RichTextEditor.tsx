@@ -32,6 +32,35 @@ export interface RichTextEditorProps {
   disabled?: boolean;
 }
 
+// MenuButton component - extracted to avoid recreation on each render
+const MenuButton = ({
+  onClick,
+  isActive = false,
+  disabled = false,
+  children,
+  title,
+}: {
+  onClick: () => void;
+  isActive?: boolean;
+  disabled?: boolean;
+  children: React.ReactNode;
+  title: string;
+}) => (
+  <button
+    type="button"
+    onClick={onClick}
+    disabled={disabled}
+    title={title}
+    className={`p-2 rounded transition-colors ${
+      isActive
+        ? 'bg-brand-100 text-brand-700'
+        : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'
+    } ${disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
+  >
+    {children}
+  </button>
+);
+
 export default function RichTextEditor({
   value,
   onChange,
@@ -58,34 +87,6 @@ export default function RichTextEditor({
   if (!editor) {
     return null;
   }
-
-  const MenuButton = ({
-    onClick,
-    isActive = false,
-    disabled = false,
-    children,
-    title,
-  }: {
-    onClick: () => void;
-    isActive?: boolean;
-    disabled?: boolean;
-    children: React.ReactNode;
-    title: string;
-  }) => (
-    <button
-      type="button"
-      onClick={onClick}
-      disabled={disabled}
-      title={title}
-      className={`p-2 rounded transition-colors ${
-        isActive
-          ? 'bg-brand-100 text-brand-700'
-          : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'
-      } ${disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
-    >
-      {children}
-    </button>
-  );
 
   return (
     <div

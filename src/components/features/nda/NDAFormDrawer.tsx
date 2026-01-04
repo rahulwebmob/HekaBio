@@ -64,7 +64,7 @@ export default function NDAFormDrawer({
       })
     );
 
-    // Reset form
+  // Reset form
     setCompanyId(initialCompanyId || '');
     setProjectId(initialProjectId || '');
     setTitle('');
@@ -76,7 +76,7 @@ export default function NDAFormDrawer({
   };
 
   const handleClose = () => {
-    // Reset form on close
+  // Reset form on close
     setCompanyId(initialCompanyId || '');
     setProjectId(initialProjectId || '');
     setTitle('');

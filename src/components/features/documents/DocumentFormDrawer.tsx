@@ -62,7 +62,7 @@ export default function DocumentFormDrawer({
         companyId: document.companyId || '',
       });
     } else if (!isOpen) {
-      // Reset form when drawer closes
+  // Reset form when drawer closes
       setFormData({
         name: '',
         description: '',

@@ -61,8 +61,10 @@ const extractionSlice = createSlice({
     },
 
     // Verify field
+    // editedValue is intentionally flexible for dynamic extraction data
     verifyField: (
       state,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       action: PayloadAction<{ extractionId: string; fieldName: string; editedValue?: any }>
     ) => {
       const extraction = state.extractions.find((e) => e.id === action.payload.extractionId);

@@ -3,7 +3,7 @@
  * For composing and sending emails
  */
 
-import { useState, useEffect } from 'react';
+import { useState, useMemo } from 'react';
 import { IconPaperclip, IconX } from '@tabler/icons-react';
 import { useAppDispatch, useAppSelector } from '../../../app/store';
 import { addCommunication, updateCommunication } from '../../../store/slices/communicationsSlice';
@@ -32,76 +32,60 @@ export default function EmailComposerDrawer({
   const isEdit = !!communication;
   const isReply = !!replyTo;
 
-  const [formData, setFormData] = useState({
-    to: '',
-    cc: '',
-    bcc: '',
-    subject: '',
-    body: '',
-    priority: 'MEDIUM' as CommunicationPriority,
-    companyId: '',
-    needsFollowUp: false,
-    followUpDate: '',
-    tags: [] as string[],
-  });
+  // Compute initial form data
+  const initialFormData = useMemo(() => {
+    if (communication) {
+      // Editing existing draft
+      return {
+        to: communication.to.join(', '),
+        cc: communication.cc?.join(', ') || '',
+        bcc: communication.bcc?.join(', ') || '',
+        subject: communication.subject,
+        body: communication.body,
+        priority: communication.priority,
+        companyId: communication.companyId,
+        needsFollowUp: communication.needsFollowUp,
+        followUpDate: communication.followUpDate
+          ? new Date(communication.followUpDate).toISOString().split('T')[0]
+          : '',
+        tags: communication.tags,
+      };
+    } else if (replyTo) {
+      // Replying to an email
+      return {
+        to: replyTo.from,
+        cc: '',
+        bcc: '',
+        subject: replyTo.subject.startsWith('Re:')
+          ? replyTo.subject
+          : `Re: ${replyTo.subject}`,
+        body: `\n\n--- Original Message ---\n${replyTo.body}`,
+        priority: replyTo.priority,
+        companyId: replyTo.companyId,
+        needsFollowUp: false,
+        followUpDate: '',
+        tags: replyTo.tags,
+      };
+    } else {
+      // New email - reset form
+      return {
+        to: '',
+        cc: '',
+        bcc: '',
+        subject: '',
+        body: '',
+        priority: 'MEDIUM' as CommunicationPriority,
+        companyId: '',
+        needsFollowUp: false,
+        followUpDate: '',
+        tags: [] as string[],
+      };
+    }
+  }, [communication, replyTo]);
 
+  const [formData, setFormData] = useState(initialFormData);
   const [tagInput, setTagInput] = useState('');
   const [errors, setErrors] = useState<Record<string, string>>({});
-
-  // Populate form when editing or replying
-  useEffect(() => {
-    if (isOpen) {
-      if (communication) {
-        // Editing existing draft
-        setFormData({
-          to: communication.to.join(', '),
-          cc: communication.cc?.join(', ') || '',
-          bcc: communication.bcc?.join(', ') || '',
-          subject: communication.subject,
-          body: communication.body,
-          priority: communication.priority,
-          companyId: communication.companyId,
-          needsFollowUp: communication.needsFollowUp,
-          followUpDate: communication.followUpDate
-            ? new Date(communication.followUpDate).toISOString().split('T')[0]
-            : '',
-          tags: communication.tags,
-        });
-      } else if (replyTo) {
-        // Replying to an email
-        setFormData({
-          to: replyTo.from,
-          cc: '',
-          bcc: '',
-          subject: replyTo.subject.startsWith('Re:')
-            ? replyTo.subject
-            : `Re: ${replyTo.subject}`,
-          body: `\n\n--- Original Message ---\n${replyTo.body}`,
-          priority: replyTo.priority,
-          companyId: replyTo.companyId,
-          needsFollowUp: false,
-          followUpDate: '',
-          tags: replyTo.tags,
-        });
-      } else {
-        // New email - reset form
-        setFormData({
-          to: '',
-          cc: '',
-          bcc: '',
-          subject: '',
-          body: '',
-          priority: 'MEDIUM',
-          companyId: '',
-          needsFollowUp: false,
-          followUpDate: '',
-          tags: [],
-        });
-      }
-      setTagInput('');
-      setErrors({});
-    }
-  }, [communication, replyTo, isOpen]);
 
   const handleInputChange = (field: string, value: string | boolean) => {
     setFormData((prev) => ({ ...prev, [field]: value }));

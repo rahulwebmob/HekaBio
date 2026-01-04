@@ -62,7 +62,7 @@ export default function TaskFormDrawer({ isOpen, onClose, task }: TaskFormDrawer
         notes: task.notes || '',
       });
     } else if (!isOpen) {
-      // Reset form when drawer closes
+  // Reset form when drawer closes
       setFormData({
         title: '',
         description: '',

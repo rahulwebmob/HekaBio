@@ -65,7 +65,7 @@ export default function ContractFormDrawer({
       })
     );
 
-    // Reset form
+  // Reset form
     setCompanyId(initialCompanyId || '');
     setProjectId(initialProjectId || '');
     setTitle('');
@@ -80,7 +80,7 @@ export default function ContractFormDrawer({
   };
 
   const handleClose = () => {
-    // Reset form on close
+  // Reset form on close
     setCompanyId(initialCompanyId || '');
     setProjectId(initialProjectId || '');
     setTitle('');

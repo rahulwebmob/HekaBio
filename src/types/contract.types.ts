@@ -261,7 +261,8 @@ export interface ContractActivity {
   actorId?: ID;
   actorName: string;
 
-  // Details
+  // Details - flexible metadata for custom fields
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   metadata?: Record<string, any>;
 
   // Timestamp
