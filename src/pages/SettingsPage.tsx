@@ -266,7 +266,9 @@ function NotificationsTab({ preferences, onChange }: NotificationsTabProps) {
             </label>
             <select
               value={preferences.emailDigestFrequency}
-              onChange={(e) => onChange({ emailDigestFrequency: e.target.value as 'none' | 'daily' | 'weekly' })}
+              onChange={(e) =>
+                onChange({ emailDigestFrequency: e.target.value as 'none' | 'daily' | 'weekly' })
+              }
               disabled={!preferences.emailEnabled}
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500"
             >
@@ -455,12 +457,12 @@ function DisplayTab({ preferences, onChange }: DisplayTabProps) {
         <h3 className="text-lg font-semibold text-gray-900 mb-4">Default Views</h3>
         <div className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Project View
-            </label>
+            <label className="block text-sm font-medium text-gray-700 mb-2">Project View</label>
             <select
               value={preferences.defaultProjectView}
-              onChange={(e) => onChange({ defaultProjectView: e.target.value as 'grid' | 'list' | 'table' })}
+              onChange={(e) =>
+                onChange({ defaultProjectView: e.target.value as 'grid' | 'list' | 'table' })
+              }
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500"
             >
               <option value="grid">Grid</option>
@@ -482,12 +484,12 @@ function DisplayTab({ preferences, onChange }: DisplayTabProps) {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Items Per Page
-            </label>
+            <label className="block text-sm font-medium text-gray-700 mb-2">Items Per Page</label>
             <select
               value={preferences.itemsPerPage}
-              onChange={(e) => onChange({ itemsPerPage: parseInt(e.target.value) as 10 | 25 | 50 | 100 })}
+              onChange={(e) =>
+                onChange({ itemsPerPage: parseInt(e.target.value) as 10 | 25 | 50 | 100 })
+              }
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500"
             >
               <option value="10">10</option>
@@ -506,7 +508,11 @@ function DisplayTab({ preferences, onChange }: DisplayTabProps) {
             <label className="block text-sm font-medium text-gray-700 mb-2">Date Format</label>
             <select
               value={preferences.dateFormat}
-              onChange={(e) => onChange({ dateFormat: e.target.value as 'MM/DD/YYYY' | 'DD/MM/YYYY' | 'YYYY-MM-DD' })}
+              onChange={(e) =>
+                onChange({
+                  dateFormat: e.target.value as 'MM/DD/YYYY' | 'DD/MM/YYYY' | 'YYYY-MM-DD',
+                })
+              }
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500"
             >
               <option value="MM/DD/YYYY">MM/DD/YYYY</option>

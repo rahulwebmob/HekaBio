@@ -31,10 +31,7 @@ const tasksSlice = createSlice({
     deleteTask: (state, action: PayloadAction<string>) => {
       state.tasks = state.tasks.filter((t) => t.id !== action.payload);
     },
-    updateTaskStatus: (
-      state,
-      action: PayloadAction<{ taskId: string; status: TaskStatus }>
-    ) => {
+    updateTaskStatus: (state, action: PayloadAction<{ taskId: string; status: TaskStatus }>) => {
       const task = state.tasks.find((t) => t.id === action.payload.taskId);
       if (task) {
         task.status = action.payload.status;
@@ -49,10 +46,7 @@ const tasksSlice = createSlice({
         }
       }
     },
-    updateTaskProgress: (
-      state,
-      action: PayloadAction<{ taskId: string; progress: number }>
-    ) => {
+    updateTaskProgress: (state, action: PayloadAction<{ taskId: string; progress: number }>) => {
       const task = state.tasks.find((t) => t.id === action.payload.taskId);
       if (task) {
         task.progress = action.payload.progress;

@@ -47,10 +47,18 @@ export const CURRENT_SCORING_MODEL: ScoringModel = {
       weight: 20,
       maxScore: 20,
       criteria: [
-        { condition: 'Phase III completed or approved', points: 20, description: 'Strong clinical validation' },
+        {
+          condition: 'Phase III completed or approved',
+          points: 20,
+          description: 'Strong clinical validation',
+        },
         { condition: 'Phase II completed', points: 15, description: 'Good clinical data' },
         { condition: 'Phase I completed', points: 10, description: 'Initial clinical data' },
-        { condition: 'Preclinical with strong data', points: 7, description: 'Promising preclinical' },
+        {
+          condition: 'Preclinical with strong data',
+          points: 7,
+          description: 'Promising preclinical',
+        },
         { condition: 'Early preclinical', points: 3, description: 'Early stage' },
         { condition: 'Discovery/research', points: 1, description: 'Very early stage' },
       ],
@@ -62,8 +70,16 @@ export const CURRENT_SCORING_MODEL: ScoringModel = {
       weight: 15,
       maxScore: 15,
       criteria: [
-        { condition: 'Granted patents in major markets', points: 15, description: 'Strong IP protection' },
-        { condition: 'Patents pending in major markets', points: 12, description: 'Good IP strategy' },
+        {
+          condition: 'Granted patents in major markets',
+          points: 15,
+          description: 'Strong IP protection',
+        },
+        {
+          condition: 'Patents pending in major markets',
+          points: 12,
+          description: 'Good IP strategy',
+        },
         { condition: 'Provisional patents filed', points: 8, description: 'Initial IP protection' },
         { condition: 'Trade secrets/know-how', points: 5, description: 'Some IP value' },
         { condition: 'Limited or no IP', points: 2, description: 'Weak IP position' },
@@ -76,7 +92,11 @@ export const CURRENT_SCORING_MODEL: ScoringModel = {
       weight: 15,
       maxScore: 15,
       criteria: [
-        { condition: 'Major pharma partnership', points: 15, description: 'Strong market validation' },
+        {
+          condition: 'Major pharma partnership',
+          points: 15,
+          description: 'Strong market validation',
+        },
         { condition: 'Series B+ funding (>$30M)', points: 12, description: 'Well-funded' },
         { condition: 'Series A funding ($10-30M)', points: 9, description: 'Funded' },
         { condition: 'Seed/angel funding (<$10M)', points: 6, description: 'Early funding' },
@@ -91,9 +111,21 @@ export const CURRENT_SCORING_MODEL: ScoringModel = {
       weight: 20,
       maxScore: 20,
       criteria: [
-        { condition: 'Perfect fit: Japan interest + therapeutic area + unmet need', points: 20, description: 'Ideal strategic match' },
-        { condition: 'Strong fit: 2 of 3 criteria met', points: 15, description: 'Good strategic match' },
-        { condition: 'Moderate fit: 1 of 3 criteria met', points: 10, description: 'Some strategic value' },
+        {
+          condition: 'Perfect fit: Japan interest + therapeutic area + unmet need',
+          points: 20,
+          description: 'Ideal strategic match',
+        },
+        {
+          condition: 'Strong fit: 2 of 3 criteria met',
+          points: 15,
+          description: 'Good strategic match',
+        },
+        {
+          condition: 'Moderate fit: 1 of 3 criteria met',
+          points: 10,
+          description: 'Some strategic value',
+        },
         { condition: 'Adjacent opportunity', points: 5, description: 'Peripheral fit' },
         { condition: 'Limited strategic alignment', points: 2, description: 'Weak strategic fit' },
       ],
@@ -106,7 +138,11 @@ export const CURRENT_SCORING_MODEL: ScoringModel = {
       maxScore: 15,
       criteria: [
         { condition: 'Approved in major markets', points: 15, description: 'Regulatory success' },
-        { condition: 'Orphan/breakthrough designation', points: 12, description: 'Favorable pathway' },
+        {
+          condition: 'Orphan/breakthrough designation',
+          points: 12,
+          description: 'Favorable pathway',
+        },
         { condition: 'Clear regulatory pathway', points: 10, description: 'Well-defined path' },
         { condition: 'Standard regulatory pathway', points: 7, description: 'Normal pathway' },
         { condition: 'Complex/uncertain pathway', points: 4, description: 'Regulatory challenges' },
@@ -120,7 +156,11 @@ export const CURRENT_SCORING_MODEL: ScoringModel = {
       weight: 15,
       maxScore: 15,
       criteria: [
-        { condition: 'Revenue-generating + >2yr runway', points: 15, description: 'Financially strong' },
+        {
+          condition: 'Revenue-generating + >2yr runway',
+          points: 15,
+          description: 'Financially strong',
+        },
         { condition: '>2 years runway', points: 12, description: 'Good runway' },
         { condition: '1-2 years runway', points: 9, description: 'Adequate runway' },
         { condition: '6-12 months runway', points: 5, description: 'Short runway' },

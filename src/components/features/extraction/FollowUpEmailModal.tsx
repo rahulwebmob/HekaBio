@@ -33,7 +33,9 @@ export default function FollowUpEmailModal({
   const followUpLink = `${window.location.origin}/follow-up/${gapAnalysis.projectId}`;
 
   const handleCopy = async () => {
-    await navigator.clipboard.writeText(emailContent.replace('[Follow-up Form Link]', followUpLink));
+    await navigator.clipboard.writeText(
+      emailContent.replace('[Follow-up Form Link]', followUpLink)
+    );
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
@@ -110,9 +112,7 @@ export default function FollowUpEmailModal({
           <div className="grid grid-cols-3 gap-3 text-xs">
             <div>
               <span className="text-gray-600">Critical:</span>
-              <span className="ml-2 font-semibold text-error-600">
-                {gapAnalysis.criticalGaps}
-              </span>
+              <span className="ml-2 font-semibold text-error-600">{gapAnalysis.criticalGaps}</span>
             </div>
             <div>
               <span className="text-gray-600">Important:</span>
@@ -122,9 +122,7 @@ export default function FollowUpEmailModal({
             </div>
             <div>
               <span className="text-gray-600">Optional:</span>
-              <span className="ml-2 font-semibold text-gray-600">
-                {gapAnalysis.optionalGaps}
-              </span>
+              <span className="ml-2 font-semibold text-gray-600">{gapAnalysis.optionalGaps}</span>
             </div>
           </div>
         </div>

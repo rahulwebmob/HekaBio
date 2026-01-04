@@ -208,7 +208,11 @@ export default function PipelinePage() {
             >
               {showClosedDeals ? 'Hide' : 'Show'} Closed Deals
             </Button>
-            <Button variant="primary" leftIcon={<IconPlus size={18} />} onClick={() => setIsFormDrawerOpen(true)}>
+            <Button
+              variant="primary"
+              leftIcon={<IconPlus size={18} />}
+              onClick={() => setIsFormDrawerOpen(true)}
+            >
               New Opportunity
             </Button>
           </div>
@@ -260,9 +264,7 @@ export default function PipelinePage() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-gray-600">Win Rate</p>
-                <p className="text-2xl font-bold text-success-600">
-                  {metrics.winRate.toFixed(0)}%
-                </p>
+                <p className="text-2xl font-bold text-success-600">{metrics.winRate.toFixed(0)}%</p>
                 <p className="text-xs text-gray-500">{metrics.wonCount} deals won</p>
               </div>
               <div className="w-10 h-10 bg-success-100 rounded-lg flex items-center justify-center">
@@ -374,7 +376,9 @@ export default function PipelinePage() {
                                 </span>
                               ))}
                               {opp.tags.length > 2 && (
-                                <span className="text-xs text-gray-500">+{opp.tags.length - 2}</span>
+                                <span className="text-xs text-gray-500">
+                                  +{opp.tags.length - 2}
+                                </span>
                               )}
                             </div>
                           )}
@@ -395,9 +399,7 @@ export default function PipelinePage() {
                     ))}
 
                     {stageOpps.length === 0 && (
-                      <div className="text-center py-8 text-gray-400 text-sm">
-                        No opportunities
-                      </div>
+                      <div className="text-center py-8 text-gray-400 text-sm">No opportunities</div>
                     )}
                   </div>
                 </div>
@@ -411,9 +413,12 @@ export default function PipelinePage() {
           <div className="flex items-start gap-3">
             <IconTrendingUp size={20} className="text-blue-600 mt-0.5" />
             <div>
-              <p className="text-sm text-blue-900 font-medium mb-1">Drag & Drop to Move Opportunities</p>
+              <p className="text-sm text-blue-900 font-medium mb-1">
+                Drag & Drop to Move Opportunities
+              </p>
               <p className="text-xs text-blue-700">
-                Drag opportunity cards between stages to update their pipeline status. The probability will automatically adjust based on the stage.
+                Drag opportunity cards between stages to update their pipeline status. The
+                probability will automatically adjust based on the stage.
               </p>
             </div>
           </div>
@@ -429,10 +434,7 @@ export default function PipelinePage() {
       />
 
       {/* Opportunity Form Drawer */}
-      <OpportunityFormDrawer
-        isOpen={isFormDrawerOpen}
-        onClose={() => setIsFormDrawerOpen(false)}
-      />
+      <OpportunityFormDrawer isOpen={isFormDrawerOpen} onClose={() => setIsFormDrawerOpen(false)} />
     </AppLayout>
   );
 }

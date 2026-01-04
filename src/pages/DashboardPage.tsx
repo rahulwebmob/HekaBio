@@ -5,12 +5,7 @@
 
 import { useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import {
-  IconFlask,
-  IconBuildingHospital,
-  IconTrendingUp,
-  IconChartBar,
-} from '@tabler/icons-react';
+import { IconFlask, IconBuildingHospital, IconTrendingUp, IconChartBar } from '@tabler/icons-react';
 import { useAuth } from '../hooks/useAuth';
 import { useAppSelector } from '../app/store';
 import { RoleLabels } from '../types/auth.types';
@@ -35,21 +30,26 @@ export default function DashboardPage() {
     const diamondProjects = projects.filter((p) => p.isDiamond).length;
     const stalledProjects = projects.filter((p) => p.isStalled).length;
     const activeProjects = projects.filter((p) => !p.isStalled).length;
-    const avgScore = projects.length > 0
-      ? Math.round(projects.reduce((sum, p) => sum + p.score, 0) / projects.length)
-      : 0;
+    const avgScore =
+      projects.length > 0
+        ? Math.round(projects.reduce((sum, p) => sum + p.score, 0) / projects.length)
+        : 0;
 
     const pendingSurveys = surveys.filter(
       (s) => s.status === 'NOT_STARTED' || s.status === 'IN_PROGRESS'
     ).length;
 
     // Projects by tag
-    const strategicPortfolio = projects.filter(p => p.tags.includes('Strategic Portfolio')).length;
-    const finders = projects.filter(p => p.tags.includes('Finders')).length;
-    const developmentServices = projects.filter(p => p.tags.includes('Development Services')).length;
+    const strategicPortfolio = projects.filter((p) =>
+      p.tags.includes('Strategic Portfolio')
+    ).length;
+    const finders = projects.filter((p) => p.tags.includes('Finders')).length;
+    const developmentServices = projects.filter((p) =>
+      p.tags.includes('Development Services')
+    ).length;
 
     // Projects with Japan interest
-    const japanInterest = projects.filter(p => p.japanInterest).length;
+    const japanInterest = projects.filter((p) => p.japanInterest).length;
 
     return {
       totalProjects: projects.length,
@@ -138,11 +138,10 @@ export default function DashboardPage() {
       <div className="space-y-6">
         {/* Welcome Section */}
         <div>
-          <h2 className="text-3xl font-semibold text-gray-900 mb-2">
-            Welcome, {user?.firstName}!
-          </h2>
+          <h2 className="text-3xl font-semibold text-gray-900 mb-2">Welcome, {user?.firstName}!</h2>
           <p className="text-base text-gray-600">
-            Your role: <span className="font-medium text-gray-900">{user?.role && RoleLabels[user.role]}</span>
+            Your role:{' '}
+            <span className="font-medium text-gray-900">{user?.role && RoleLabels[user.role]}</span>
           </p>
         </div>
 
@@ -158,7 +157,9 @@ export default function DashboardPage() {
               className="cursor-pointer"
             >
               <div className="flex items-center justify-between mb-3">
-                <div className={`flex items-center justify-center w-12 h-12 rounded-lg ${stat.bgColor}`}>
+                <div
+                  className={`flex items-center justify-center w-12 h-12 rounded-lg ${stat.bgColor}`}
+                >
                   <stat.icon size={24} stroke={1.5} className={stat.color} />
                 </div>
               </div>
@@ -180,11 +181,7 @@ export default function DashboardPage() {
               header={
                 <div className="flex items-center justify-between">
                   <h3 className="text-xl font-semibold text-gray-900">Recent Projects</h3>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => navigate('/projects')}
-                  >
+                  <Button variant="ghost" size="sm" onClick={() => navigate('/projects')}>
                     View All
                   </Button>
                 </div>
@@ -206,13 +203,8 @@ export default function DashboardPage() {
                     <IconFlask size={32} className="text-gray-400" />
                   </div>
                   <h3 className="text-lg font-semibold text-gray-900 mb-2">No projects yet</h3>
-                  <p className="text-gray-600 mb-6">
-                    Get started by creating your first project
-                  </p>
-                  <Button
-                    variant="primary"
-                    onClick={() => navigate('/projects/new')}
-                  >
+                  <p className="text-gray-600 mb-6">Get started by creating your first project</p>
+                  <Button variant="primary" onClick={() => navigate('/projects/new')}>
                     Create Project
                   </Button>
                 </div>
@@ -226,9 +218,7 @@ export default function DashboardPage() {
             <Card
               padding="lg"
               shadow="sm"
-              header={
-                <h3 className="text-xl font-semibold text-gray-900">Pipeline Overview</h3>
-              }
+              header={<h3 className="text-xl font-semibold text-gray-900">Pipeline Overview</h3>}
             >
               {pipelineStats.length > 0 ? (
                 <div className="space-y-4">
@@ -258,9 +248,7 @@ export default function DashboardPage() {
             <Card
               padding="lg"
               shadow="sm"
-              header={
-                <h3 className="text-xl font-semibold text-gray-900">Quick Stats</h3>
-              }
+              header={<h3 className="text-xl font-semibold text-gray-900">Quick Stats</h3>}
             >
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
@@ -295,12 +283,17 @@ export default function DashboardPage() {
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-sm text-gray-600">Average Score</span>
-                  <span className={`text-lg font-bold ${
-                    stats.avgScore >= 80 ? 'text-success-600' :
-                    stats.avgScore >= 70 ? 'text-brand-600' :
-                    stats.avgScore >= 60 ? 'text-warning-600' :
-                    'text-gray-600'
-                  }`}>
+                  <span
+                    className={`text-lg font-bold ${
+                      stats.avgScore >= 80
+                        ? 'text-success-600'
+                        : stats.avgScore >= 70
+                          ? 'text-brand-600'
+                          : stats.avgScore >= 60
+                            ? 'text-warning-600'
+                            : 'text-gray-600'
+                    }`}
+                  >
                     {stats.avgScore}
                   </span>
                 </div>
@@ -311,37 +304,19 @@ export default function DashboardPage() {
             <Card
               padding="lg"
               shadow="sm"
-              header={
-                <h3 className="text-xl font-semibold text-gray-900">Quick Actions</h3>
-              }
+              header={<h3 className="text-xl font-semibold text-gray-900">Quick Actions</h3>}
             >
               <div className="space-y-3">
-                <Button
-                  variant="outline"
-                  fullWidth
-                  onClick={() => navigate('/projects/new')}
-                >
+                <Button variant="outline" fullWidth onClick={() => navigate('/projects/new')}>
                   New Project
                 </Button>
-                <Button
-                  variant="outline"
-                  fullWidth
-                  onClick={() => navigate('/companies/new')}
-                >
+                <Button variant="outline" fullWidth onClick={() => navigate('/companies/new')}>
                   New Company
                 </Button>
-                <Button
-                  variant="outline"
-                  fullWidth
-                  onClick={() => navigate('/surveys')}
-                >
+                <Button variant="outline" fullWidth onClick={() => navigate('/surveys')}>
                   View Surveys
                 </Button>
-                <Button
-                  variant="outline"
-                  fullWidth
-                  onClick={() => navigate('/contacts')}
-                >
+                <Button variant="outline" fullWidth onClick={() => navigate('/contacts')}>
                   View Contacts
                 </Button>
               </div>

@@ -87,12 +87,12 @@ export function ScoreBreakdown({
                       </span>
                     )}
                   </div>
-                  {!compact && (
-                    <p className="text-xs text-gray-600 mt-0.5">{factor.description}</p>
-                  )}
+                  {!compact && <p className="text-xs text-gray-600 mt-0.5">{factor.description}</p>}
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className={`${compact ? 'text-lg' : 'text-xl'} font-bold ${getTextColor(percentage)}`}>
+                  <span
+                    className={`${compact ? 'text-lg' : 'text-xl'} font-bold ${getTextColor(percentage)}`}
+                  >
                     {score}
                   </span>
                   <span className="text-sm text-gray-500">/ {factor.maxScore}</span>

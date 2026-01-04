@@ -8,11 +8,14 @@ import { IconFlask } from '@tabler/icons-react';
 import { useAppDispatch, useAppSelector } from '../../app/store';
 import { addProject, updateProject } from '../../store/slices/projectsSlice';
 import { Button, Input, Select, Modal } from '../ui';
-import {
-  StageLabels,
-  StageWorkflows,
+import { StageLabels, StageWorkflows } from '../../types/project.types';
+import type {
+  Project,
+  ProjectTag,
+  Stage,
+  JapanMarketFit,
+  NDAStatus,
 } from '../../types/project.types';
-import type { Project, ProjectTag, Stage, JapanMarketFit, NDAStatus } from '../../types/project.types';
 
 interface ProjectFormModalProps {
   isOpen: boolean;
@@ -105,7 +108,7 @@ export function ProjectFormModal({ isOpen, onClose, project, onSuccess }: Projec
         setAvailableStages(stages);
 
         if (formData.currentStage && !stages.includes(formData.currentStage)) {
-          setFormData(prev => ({ ...prev, currentStage: '' }));
+          setFormData((prev) => ({ ...prev, currentStage: '' }));
         }
       }, 0);
 
@@ -113,7 +116,7 @@ export function ProjectFormModal({ isOpen, onClose, project, onSuccess }: Projec
     } else {
       const timeoutId = setTimeout(() => {
         setAvailableStages([]);
-        setFormData(prev => ({ ...prev, currentStage: '' }));
+        setFormData((prev) => ({ ...prev, currentStage: '' }));
       }, 0);
 
       return () => clearTimeout(timeoutId);
@@ -165,7 +168,10 @@ export function ProjectFormModal({ isOpen, onClose, project, onSuccess }: Projec
     }
 
     const partnerTags = formData.partnerTags
-      ? formData.partnerTags.split(',').map((tag) => tag.trim()).filter((tag) => tag.length > 0)
+      ? formData.partnerTags
+          .split(',')
+          .map((tag) => tag.trim())
+          .filter((tag) => tag.length > 0)
       : [];
 
     const projectData: Project = {
@@ -182,9 +188,10 @@ export function ProjectFormModal({ isOpen, onClose, project, onSuccess }: Projec
       japanInterest: formData.japanInterest,
       japanMarketFit: formData.japanMarketFit || undefined,
       japanSummary: formData.japanSummary.trim() || undefined,
-      japanScreeningCompletedAt: formData.japanMarketFit && formData.japanMarketFit !== 'NOT_ASSESSED'
-        ? new Date().toISOString()
-        : undefined,
+      japanScreeningCompletedAt:
+        formData.japanMarketFit && formData.japanMarketFit !== 'NOT_ASSESSED'
+          ? new Date().toISOString()
+          : undefined,
       partnerTags,
       ndaStatus: formData.ndaStatus,
       ndaRequestedAt: isEdit ? project.ndaRequestedAt : undefined,
@@ -332,9 +339,7 @@ export function ProjectFormModal({ isOpen, onClose, project, onSuccess }: Projec
             />
 
             <div className="md:col-span-2">
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Description
-              </label>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Description</label>
               <textarea
                 value={formData.description}
                 onChange={(e) => setFormData({ ...formData, description: e.target.value })}
@@ -361,9 +366,7 @@ export function ProjectFormModal({ isOpen, onClose, project, onSuccess }: Projec
                   onChange={(e) => setFormData({ ...formData, japanInterest: e.target.checked })}
                   className="w-4 h-4 text-brand-600 border-gray-300 rounded focus:ring-brand-500"
                 />
-                <span className="text-sm font-medium text-gray-700">
-                  Japan Market Interest
-                </span>
+                <span className="text-sm font-medium text-gray-700">Japan Market Interest</span>
               </label>
             </div>
 
@@ -372,7 +375,9 @@ export function ProjectFormModal({ isOpen, onClose, project, onSuccess }: Projec
               placeholder="Select fit"
               options={japanFitOptions}
               value={formData.japanMarketFit}
-              onChange={(e) => setFormData({ ...formData, japanMarketFit: e.target.value as JapanMarketFit })}
+              onChange={(e) =>
+                setFormData({ ...formData, japanMarketFit: e.target.value as JapanMarketFit })
+              }
               fullWidth
               disabled={!formData.japanInterest}
             />
@@ -438,9 +443,7 @@ export function ProjectFormModal({ isOpen, onClose, project, onSuccess }: Projec
             />
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-3">
-                Project Flags
-              </label>
+              <label className="block text-sm font-medium text-gray-700 mb-3">Project Flags</label>
               <div className="space-y-2">
                 <label className="flex items-center gap-3">
                   <input

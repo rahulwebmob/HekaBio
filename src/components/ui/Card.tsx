@@ -51,20 +51,12 @@ const Card = ({
       }}
       {...props}
     >
-      {header && (
-        <div className="px-6 py-4 border-b border-white/30 bg-white/20">
-          {header}
-        </div>
-      )}
+      {header && <div className="px-6 py-4 border-b border-white/30 bg-white/20">{header}</div>}
 
-      <div className={paddingStyles[padding]}>
-        {children}
-      </div>
+      <div className={paddingStyles[padding]}>{children}</div>
 
       {footer && (
-        <div className="px-6 py-4 border-t border-white/30 bg-white/20 rounded-b-lg">
-          {footer}
-        </div>
+        <div className="px-6 py-4 border-t border-white/30 bg-white/20 rounded-b-lg">{footer}</div>
       )}
     </div>
   );

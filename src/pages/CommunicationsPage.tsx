@@ -19,7 +19,11 @@ import {
 import { useAppSelector } from '../app/store';
 import { AppLayout } from '../components/layout';
 import { Input, Select, Card, Badge, Button } from '../components/ui';
-import type { Communication, CommunicationType, CommunicationStatus } from '../types/communication.types';
+import type {
+  Communication,
+  CommunicationType,
+  CommunicationStatus,
+} from '../types/communication.types';
 import { EmailComposerDrawer, EmailTemplatesManager } from '../components/features/communications';
 
 export default function CommunicationsPage() {
@@ -80,7 +84,10 @@ export default function CommunicationsPage() {
   };
 
   const getStatusBadge = (status: CommunicationStatus) => {
-    const variants: Record<CommunicationStatus, { variant: 'default' | 'info' | 'success' | 'warning' | 'error'; label: string }> = {
+    const variants: Record<
+      CommunicationStatus,
+      { variant: 'default' | 'info' | 'success' | 'warning' | 'error'; label: string }
+    > = {
       DRAFT: { variant: 'default', label: 'Draft' },
       SENT: { variant: 'info', label: 'Sent' },
       DELIVERED: { variant: 'info', label: 'Delivered' },
@@ -89,7 +96,11 @@ export default function CommunicationsPage() {
       FAILED: { variant: 'error', label: 'Failed' },
     };
     const config = variants[status];
-    return <Badge variant={config.variant} size="sm">{config.label}</Badge>;
+    return (
+      <Badge variant={config.variant} size="sm">
+        {config.label}
+      </Badge>
+    );
   };
 
   const getPriorityColor = (priority: string) => {
@@ -135,9 +146,7 @@ export default function CommunicationsPage() {
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-3xl font-semibold text-gray-900">Communications</h1>
-            <p className="text-gray-600 mt-1">
-              Track emails, calls, and communication history
-            </p>
+            <p className="text-gray-600 mt-1">Track emails, calls, and communication history</p>
           </div>
           <div className="flex gap-3">
             <Button
@@ -268,12 +277,16 @@ export default function CommunicationsPage() {
               padding="md"
               shadow="sm"
               className="hover:shadow-md transition-shadow cursor-pointer"
-              onClick={() => {/* TODO: Navigate to detail */}}
+              onClick={() => {
+                /* TODO: Navigate to detail */
+              }}
             >
               <div className="flex items-start gap-4">
-                <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
-                  comm.isPinned ? 'bg-brand-100' : 'bg-gray-100'
-                }`}>
+                <div
+                  className={`w-10 h-10 rounded-lg flex items-center justify-center ${
+                    comm.isPinned ? 'bg-brand-100' : 'bg-gray-100'
+                  }`}
+                >
                   {getTypeIcon(comm.type)}
                 </div>
 
@@ -302,9 +315,7 @@ export default function CommunicationsPage() {
                     </div>
                   </div>
 
-                  <p className="text-sm text-gray-700 line-clamp-2 mb-2">
-                    {comm.body}
-                  </p>
+                  <p className="text-sm text-gray-700 line-clamp-2 mb-2">{comm.body}</p>
 
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-4 text-xs text-gray-500">

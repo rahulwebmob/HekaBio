@@ -29,12 +29,7 @@ export function DeleteConfirmModal({
   };
 
   return (
-    <Modal
-      isOpen={isOpen}
-      onClose={onClose}
-      title={title}
-      size="sm"
-    >
+    <Modal isOpen={isOpen} onClose={onClose} title={title} size="sm">
       <div className="space-y-6">
         {/* Warning Icon */}
         <div className="flex items-center justify-center">
@@ -51,23 +46,15 @@ export function DeleteConfirmModal({
               {itemName}
             </p>
           )}
-          <p className="text-sm text-error-600 font-medium">
-            This action cannot be undone.
-          </p>
+          <p className="text-sm text-error-600 font-medium">This action cannot be undone.</p>
         </div>
 
         {/* Actions */}
         <div className="flex items-center justify-end gap-3 pt-4 border-t border-gray-200">
-          <Button
-            variant="ghost"
-            onClick={onClose}
-          >
+          <Button variant="ghost" onClick={onClose}>
             Cancel
           </Button>
-          <Button
-            variant="danger"
-            onClick={handleConfirm}
-          >
+          <Button variant="danger" onClick={handleConfirm}>
             Delete
           </Button>
         </div>

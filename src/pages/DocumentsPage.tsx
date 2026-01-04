@@ -70,7 +70,10 @@ export default function DocumentsPage() {
   }, [documents]);
 
   const getStatusBadge = (status: DocumentStatus) => {
-    const variants: Record<DocumentStatus, { variant: 'default' | 'info' | 'success' | 'warning' | 'error'; label: string }> = {
+    const variants: Record<
+      DocumentStatus,
+      { variant: 'default' | 'info' | 'success' | 'warning' | 'error'; label: string }
+    > = {
       DRAFT: { variant: 'default', label: 'Draft' },
       UNDER_REVIEW: { variant: 'warning', label: 'Under Review' },
       APPROVED: { variant: 'success', label: 'Approved' },
@@ -80,7 +83,11 @@ export default function DocumentsPage() {
       EXPIRED: { variant: 'error', label: 'Expired' },
     };
     const config = variants[status];
-    return <Badge variant={config.variant} size="sm">{config.label}</Badge>;
+    return (
+      <Badge variant={config.variant} size="sm">
+        {config.label}
+      </Badge>
+    );
   };
 
   const getAccessLevelIcon = (accessLevel: string) => {
@@ -155,9 +162,7 @@ export default function DocumentsPage() {
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-3xl font-semibold text-gray-900">Documents</h1>
-            <p className="text-gray-600 mt-1">
-              Manage contracts, proposals, and other files
-            </p>
+            <p className="text-gray-600 mt-1">Manage contracts, proposals, and other files</p>
           </div>
           <Button variant="primary" leftIcon={<IconPlus size={18} />} onClick={handleOpenUpload}>
             Upload Document
@@ -182,7 +187,9 @@ export default function DocumentsPage() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-gray-600">Total Size</p>
-                <p className="text-2xl font-bold text-blue-600">{formatFileSize(stats.totalSize)}</p>
+                <p className="text-2xl font-bold text-blue-600">
+                  {formatFileSize(stats.totalSize)}
+                </p>
               </div>
               <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
                 <IconFolderOpen size={20} className="text-blue-600" />
@@ -306,7 +313,9 @@ export default function DocumentsPage() {
                       {/* Document Name */}
                       <td className="px-6 py-4">
                         <div className="flex items-center gap-3">
-                          <div className={`p-2 rounded-lg flex-shrink-0 ${getDocumentCategoryColor(doc.category as DocumentCategory)}`}>
+                          <div
+                            className={`p-2 rounded-lg flex-shrink-0 ${getDocumentCategoryColor(doc.category as DocumentCategory)}`}
+                          >
                             <IconFileText size={18} />
                           </div>
                           <div className="min-w-0">
@@ -316,9 +325,7 @@ export default function DocumentsPage() {
                               </p>
                               {getAccessLevelIcon(doc.accessLevel)}
                             </div>
-                            <p className="text-xs text-gray-500">
-                              v{doc.currentVersion}
-                            </p>
+                            <p className="text-xs text-gray-500">v{doc.currentVersion}</p>
                           </div>
                         </div>
                       </td>
@@ -342,9 +349,7 @@ export default function DocumentsPage() {
                       </td>
 
                       {/* Status */}
-                      <td className="px-6 py-4">
-                        {getStatusBadge(doc.status)}
-                      </td>
+                      <td className="px-6 py-4">{getStatusBadge(doc.status)}</td>
 
                       {/* Size */}
                       <td className="px-6 py-4">
@@ -355,9 +360,7 @@ export default function DocumentsPage() {
 
                       {/* Modified Date */}
                       <td className="px-6 py-4">
-                        <span className="text-sm text-gray-600">
-                          {formatDate(doc.updatedAt)}
-                        </span>
+                        <span className="text-sm text-gray-600">{formatDate(doc.updatedAt)}</span>
                       </td>
 
                       {/* Stats */}

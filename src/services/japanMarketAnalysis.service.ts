@@ -9,9 +9,7 @@ import type { Project } from '../types/project.types';
 /**
  * Mock AI market analysis - simulates analyzing project for Japan market fit
  */
-export async function analyzeJapanMarketFit(
-  project: Project
-): Promise<JapanMarketAnalysis> {
+export async function analyzeJapanMarketFit(project: Project): Promise<JapanMarketAnalysis> {
   // Simulate processing delay (3-5 seconds)
   const processingTime = 3 + Math.random() * 2;
   await new Promise((resolve) => setTimeout(resolve, processingTime * 1000));

@@ -33,11 +33,7 @@ export const useFocusTrap = (isActive: boolean) => {
       return Array.from(
         containerRef.current.querySelectorAll<HTMLElement>(focusableSelectors)
       ).filter((el) => {
-        return (
-          el.offsetWidth > 0 ||
-          el.offsetHeight > 0 ||
-          el.getClientRects().length > 0
-        );
+        return el.offsetWidth > 0 || el.offsetHeight > 0 || el.getClientRects().length > 0;
       });
     };
 

@@ -10,21 +10,21 @@ export type NDAType = 'MUTUAL' | 'ONE_WAY_INCOMING' | 'ONE_WAY_OUTGOING';
 
 // NDA Status
 export type NDAStatus =
-  | 'DRAFT'           // Being prepared
-  | 'PENDING_REVIEW'  // Sent for internal review
+  | 'DRAFT' // Being prepared
+  | 'PENDING_REVIEW' // Sent for internal review
   | 'PENDING_SIGNATURES' // Sent to parties for signature
-  | 'PARTIALLY_SIGNED'   // Some parties have signed
-  | 'FULLY_SIGNED'       // All parties have signed
-  | 'EXPIRED'            // Past expiry date
-  | 'DECLINED'           // Declined by one or more parties
-  | 'TERMINATED'         // Terminated early
-  | 'SUPERSEDED';        // Replaced by newer NDA
+  | 'PARTIALLY_SIGNED' // Some parties have signed
+  | 'FULLY_SIGNED' // All parties have signed
+  | 'EXPIRED' // Past expiry date
+  | 'DECLINED' // Declined by one or more parties
+  | 'TERMINATED' // Terminated early
+  | 'SUPERSEDED'; // Replaced by newer NDA
 
 // Signatory Status
 export type SignatoryStatus =
-  | 'PENDING'   // Awaiting signature
-  | 'SIGNED'    // Signed
-  | 'DECLINED'  // Declined to sign
+  | 'PENDING' // Awaiting signature
+  | 'SIGNED' // Signed
+  | 'DECLINED' // Declined to sign
   | 'WITHDRAWN'; // Signature request withdrawn
 
 // Signatory
@@ -160,9 +160,19 @@ export interface NDAActivity {
   ndaId: ID;
 
   // Activity details
-  type: 'CREATED' | 'SENT' | 'VIEWED' | 'SIGNED' | 'DECLINED' | 'REMINDED' |
-        'EXPIRED' | 'TERMINATED' | 'DOCUMENT_UPLOADED' | 'STATUS_CHANGED' |
-        'COMMENT_ADDED' | 'APPROVED';
+  type:
+    | 'CREATED'
+    | 'SENT'
+    | 'VIEWED'
+    | 'SIGNED'
+    | 'DECLINED'
+    | 'REMINDED'
+    | 'EXPIRED'
+    | 'TERMINATED'
+    | 'DOCUMENT_UPLOADED'
+    | 'STATUS_CHANGED'
+    | 'COMMENT_ADDED'
+    | 'APPROVED';
   description: string;
 
   // Actor
@@ -247,7 +257,9 @@ export const SIGNATORY_STATUS_LABELS: Record<SignatoryStatus, string> = {
 };
 
 // Get NDA status color variant for Badge component
-export function getNDAStatusVariant(status: NDAStatus): 'default' | 'info' | 'success' | 'warning' | 'error' {
+export function getNDAStatusVariant(
+  status: NDAStatus
+): 'default' | 'info' | 'success' | 'warning' | 'error' {
   switch (status) {
     case 'FULLY_SIGNED':
       return 'success';
@@ -276,11 +288,7 @@ export function isNDAExpired(nda: NDA): boolean {
 
 // Check if NDA is pending action
 export function isNDAPendingAction(nda: NDA): boolean {
-  return [
-    'PENDING_REVIEW',
-    'PENDING_SIGNATURES',
-    'PARTIALLY_SIGNED',
-  ].includes(nda.status);
+  return ['PENDING_REVIEW', 'PENDING_SIGNATURES', 'PARTIALLY_SIGNED'].includes(nda.status);
 }
 
 // Get signing progress

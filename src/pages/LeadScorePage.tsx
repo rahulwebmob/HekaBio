@@ -39,9 +39,7 @@ export default function LeadScorePage() {
     const warmProjects = projects.filter((p) => getScoreCategory(p.score) === 'warm');
     const coldProjects = projects.filter((p) => getScoreCategory(p.score) === 'cold');
     const avgScore =
-      projects.length > 0
-        ? projects.reduce((sum, p) => sum + p.score, 0) / projects.length
-        : 0;
+      projects.length > 0 ? projects.reduce((sum, p) => sum + p.score, 0) / projects.length : 0;
 
     return {
       total: projects.length,
@@ -60,9 +58,7 @@ export default function LeadScorePage() {
     if (searchQuery) {
       const query = searchQuery.toLowerCase();
       filtered = filtered.filter(
-        (p) =>
-          p.name.toLowerCase().includes(query) ||
-          p.company.name.toLowerCase().includes(query)
+        (p) => p.name.toLowerCase().includes(query) || p.company.name.toLowerCase().includes(query)
       );
     }
 
@@ -156,8 +152,8 @@ export default function LeadScorePage() {
                 category === 'hot'
                   ? 'text-error-600'
                   : category === 'warm'
-                  ? 'text-warning-600'
-                  : 'text-blue-600'
+                    ? 'text-warning-600'
+                    : 'text-blue-600'
               }`}
             >
               {project.score}
@@ -170,9 +166,7 @@ export default function LeadScorePage() {
       key: 'name',
       header: 'Project',
       sortable: true,
-      render: (project) => (
-        <p className="text-sm font-medium text-gray-900">{project.name}</p>
-      ),
+      render: (project) => <p className="text-sm font-medium text-gray-900">{project.name}</p>,
     },
     {
       key: 'company',
@@ -253,16 +247,10 @@ export default function LeadScorePage() {
               <div className="bg-gray-100 w-10 h-10 rounded-lg flex items-center justify-center">
                 <IconTrendingUp size={20} className="text-gray-600" />
               </div>
-              <div className="text-2xl font-bold text-gray-700">
-                {stats.total}
-              </div>
+              <div className="text-2xl font-bold text-gray-700">{stats.total}</div>
             </div>
-            <h3 className="font-semibold text-gray-900 mb-1 text-sm">
-              Total Projects
-            </h3>
-            <p className="text-xs text-gray-600">
-              All projects tracked
-            </p>
+            <h3 className="font-semibold text-gray-900 mb-1 text-sm">Total Projects</h3>
+            <p className="text-xs text-gray-600">All projects tracked</p>
           </div>
 
           {/* Hot Leads Card */}
@@ -271,9 +259,10 @@ export default function LeadScorePage() {
             className={`
               bg-white/80 backdrop-blur-xl rounded-lg p-5 text-left transition-all duration-200
               border cursor-pointer
-              ${filterCategory === 'hot'
-                ? 'border-brand-400 shadow-md bg-white/95'
-                : 'border-white/40 hover:border-gray-300 hover:shadow-sm'
+              ${
+                filterCategory === 'hot'
+                  ? 'border-brand-400 shadow-md bg-white/95'
+                  : 'border-white/40 hover:border-gray-300 hover:shadow-sm'
               }
             `}
           >
@@ -281,16 +270,10 @@ export default function LeadScorePage() {
               <div className="bg-error-100 w-10 h-10 rounded-lg flex items-center justify-center">
                 <IconFlame size={20} className="text-error-600" />
               </div>
-              <div className="text-2xl font-bold text-error-700">
-                {stats.hot}
-              </div>
+              <div className="text-2xl font-bold text-error-700">{stats.hot}</div>
             </div>
-            <h3 className="font-semibold text-gray-900 mb-1 text-sm">
-              Hot Leads
-            </h3>
-            <p className="text-xs text-gray-600">
-              Score ≥ 80
-            </p>
+            <h3 className="font-semibold text-gray-900 mb-1 text-sm">Hot Leads</h3>
+            <p className="text-xs text-gray-600">Score ≥ 80</p>
           </button>
 
           {/* Warm Leads Card */}
@@ -299,9 +282,10 @@ export default function LeadScorePage() {
             className={`
               bg-white/80 backdrop-blur-xl rounded-lg p-5 text-left transition-all duration-200
               border cursor-pointer
-              ${filterCategory === 'warm'
-                ? 'border-brand-400 shadow-md bg-white/95'
-                : 'border-white/40 hover:border-gray-300 hover:shadow-sm'
+              ${
+                filterCategory === 'warm'
+                  ? 'border-brand-400 shadow-md bg-white/95'
+                  : 'border-white/40 hover:border-gray-300 hover:shadow-sm'
               }
             `}
           >
@@ -309,16 +293,10 @@ export default function LeadScorePage() {
               <div className="bg-warning-100 w-10 h-10 rounded-lg flex items-center justify-center">
                 <IconThermometer size={20} className="text-warning-600" />
               </div>
-              <div className="text-2xl font-bold text-warning-700">
-                {stats.warm}
-              </div>
+              <div className="text-2xl font-bold text-warning-700">{stats.warm}</div>
             </div>
-            <h3 className="font-semibold text-gray-900 mb-1 text-sm">
-              Warm Leads
-            </h3>
-            <p className="text-xs text-gray-600">
-              Score 60-79
-            </p>
+            <h3 className="font-semibold text-gray-900 mb-1 text-sm">Warm Leads</h3>
+            <p className="text-xs text-gray-600">Score 60-79</p>
           </button>
 
           {/* Cold Leads Card */}
@@ -327,9 +305,10 @@ export default function LeadScorePage() {
             className={`
               bg-white/80 backdrop-blur-xl rounded-lg p-5 text-left transition-all duration-200
               border cursor-pointer
-              ${filterCategory === 'cold'
-                ? 'border-brand-400 shadow-md bg-white/95'
-                : 'border-white/40 hover:border-gray-300 hover:shadow-sm'
+              ${
+                filterCategory === 'cold'
+                  ? 'border-brand-400 shadow-md bg-white/95'
+                  : 'border-white/40 hover:border-gray-300 hover:shadow-sm'
               }
             `}
           >
@@ -337,16 +316,10 @@ export default function LeadScorePage() {
               <div className="bg-blue-100 w-10 h-10 rounded-lg flex items-center justify-center">
                 <IconSnowflake size={20} className="text-blue-600" />
               </div>
-              <div className="text-2xl font-bold text-blue-700">
-                {stats.cold}
-              </div>
+              <div className="text-2xl font-bold text-blue-700">{stats.cold}</div>
             </div>
-            <h3 className="font-semibold text-gray-900 mb-1 text-sm">
-              Cold Leads
-            </h3>
-            <p className="text-xs text-gray-600">
-              Score &lt; 60
-            </p>
+            <h3 className="font-semibold text-gray-900 mb-1 text-sm">Cold Leads</h3>
+            <p className="text-xs text-gray-600">Score &lt; 60</p>
           </button>
 
           {/* Average Score Card */}
@@ -355,16 +328,10 @@ export default function LeadScorePage() {
               <div className="bg-brand-100 w-10 h-10 rounded-lg flex items-center justify-center">
                 <IconTrendingUp size={20} className="text-brand-600" />
               </div>
-              <div className="text-2xl font-bold text-brand-700">
-                {stats.avgScore}
-              </div>
+              <div className="text-2xl font-bold text-brand-700">{stats.avgScore}</div>
             </div>
-            <h3 className="font-semibold text-gray-900 mb-1 text-sm">
-              Average Score
-            </h3>
-            <p className="text-xs text-gray-600">
-              Across all projects
-            </p>
+            <h3 className="font-semibold text-gray-900 mb-1 text-sm">Average Score</h3>
+            <p className="text-xs text-gray-600">Across all projects</p>
           </div>
         </div>
 
@@ -429,7 +396,6 @@ export default function LeadScorePage() {
         <div className="text-sm text-gray-600 text-center">
           Showing {filteredProjects.length} of {projects.length} projects
         </div>
-
       </div>
     </AppLayout>
   );

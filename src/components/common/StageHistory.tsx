@@ -59,9 +59,7 @@ export function StageHistory({ stageHistory, compact = false }: StageHistoryProp
                   <IconArrowRight size={14} className="text-gray-400" />
                 </>
               )}
-              <span className="font-semibold text-gray-900">
-                {StageLabels[change.toStage]}
-              </span>
+              <span className="font-semibold text-gray-900">{StageLabels[change.toStage]}</span>
             </div>
             <span className="text-gray-500">{getRelativeTime(change.changedAt)}</span>
           </div>

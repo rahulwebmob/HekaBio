@@ -74,8 +74,8 @@ export function BulkStageMovementModal({
         <div className="bg-brand-50 border border-brand-200 rounded-lg p-4">
           <p className="text-sm text-brand-900">
             You are about to move <strong>{selectedCount}</strong> project
-            {selectedCount > 1 ? 's' : ''} to a new stage. All projects must be in the same
-            workflow ({projectTag}) for bulk movement.
+            {selectedCount > 1 ? 's' : ''} to a new stage. All projects must be in the same workflow
+            ({projectTag}) for bulk movement.
           </p>
         </div>
 
@@ -87,10 +87,7 @@ export function BulkStageMovementModal({
           <Select
             value={newStage}
             onChange={(e) => setNewStage(e.target.value as Stage)}
-            options={[
-              { value: '', label: 'Select a stage...' },
-              ...stageOptions,
-            ]}
+            options={[{ value: '', label: 'Select a stage...' }, ...stageOptions]}
             fullWidth
             required
           />
@@ -135,9 +132,7 @@ export function BulkStageMovementModal({
               <span className="text-gray-600">Moving to:</span>
               <div className="flex items-center gap-2">
                 <IconArrowRight size={16} className="text-brand-600" />
-                <span className="font-semibold text-brand-700">
-                  {StageLabels[newStage]}
-                </span>
+                <span className="font-semibold text-brand-700">{StageLabels[newStage]}</span>
               </div>
             </div>
           </div>
@@ -145,12 +140,7 @@ export function BulkStageMovementModal({
 
         {/* Actions */}
         <div className="flex items-center justify-end gap-3 pt-4 border-t border-gray-200">
-          <Button
-            type="button"
-            variant="ghost"
-            onClick={handleClose}
-            disabled={isSubmitting}
-          >
+          <Button type="button" variant="ghost" onClick={handleClose} disabled={isSubmitting}>
             Cancel
           </Button>
           <Button

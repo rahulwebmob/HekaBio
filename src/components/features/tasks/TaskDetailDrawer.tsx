@@ -30,12 +30,7 @@ interface TaskDetailDrawerProps {
   onEdit?: (task: Task) => void;
 }
 
-export default function TaskDetailDrawer({
-  isOpen,
-  onClose,
-  task,
-  onEdit,
-}: TaskDetailDrawerProps) {
+export default function TaskDetailDrawer({ isOpen, onClose, task, onEdit }: TaskDetailDrawerProps) {
   const dispatch = useAppDispatch();
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
@@ -103,7 +98,8 @@ export default function TaskDetailDrawer({
     });
   };
 
-  const isOverdue = task.dueDate && new Date(task.dueDate) < new Date() && task.status !== 'COMPLETED';
+  const isOverdue =
+    task.dueDate && new Date(task.dueDate) < new Date() && task.status !== 'COMPLETED';
 
   return (
     <Drawer

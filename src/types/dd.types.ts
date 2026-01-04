@@ -29,11 +29,11 @@ export type DDItemStatus =
 
 // DD Assessment Rating
 export type DDAssessmentRating =
-  | 'EXCELLENT'     // 5 - No issues, exceeds expectations
-  | 'GOOD'          // 4 - Minor issues, meets expectations
-  | 'ACCEPTABLE'    // 3 - Some concerns, acceptable
-  | 'CONCERNING'    // 2 - Significant concerns
-  | 'CRITICAL';     // 1 - Critical issues, deal-breaker
+  | 'EXCELLENT' // 5 - No issues, exceeds expectations
+  | 'GOOD' // 4 - Minor issues, meets expectations
+  | 'ACCEPTABLE' // 3 - Some concerns, acceptable
+  | 'CONCERNING' // 2 - Significant concerns
+  | 'CRITICAL'; // 1 - Critical issues, deal-breaker
 
 // DD Risk Level
 export type DDRiskLevel = 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL';
@@ -227,9 +227,18 @@ export interface DDActivity {
   ddItemId?: ID;
 
   // Activity details
-  type: 'CREATED' | 'UPDATED' | 'STATUS_CHANGED' | 'ASSIGNED' | 'DOCUMENT_UPLOADED' |
-        'COMPLETED' | 'REVIEWED' | 'COMMENT_ADDED' | 'RATING_CHANGED' |
-        'BLOCKED' | 'UNBLOCKED';
+  type:
+    | 'CREATED'
+    | 'UPDATED'
+    | 'STATUS_CHANGED'
+    | 'ASSIGNED'
+    | 'DOCUMENT_UPLOADED'
+    | 'COMPLETED'
+    | 'REVIEWED'
+    | 'COMMENT_ADDED'
+    | 'RATING_CHANGED'
+    | 'BLOCKED'
+    | 'UNBLOCKED';
   description: string;
 
   // Actor
@@ -316,7 +325,9 @@ export const DD_RISK_LEVEL_LABELS: Record<DDRiskLevel, string> = {
 };
 
 // Get status variant for Badge component
-export function getDDItemStatusVariant(status: DDItemStatus): 'default' | 'info' | 'success' | 'warning' | 'error' {
+export function getDDItemStatusVariant(
+  status: DDItemStatus
+): 'default' | 'info' | 'success' | 'warning' | 'error' {
   switch (status) {
     case 'COMPLETED':
       return 'success';
@@ -335,7 +346,9 @@ export function getDDItemStatusVariant(status: DDItemStatus): 'default' | 'info'
 }
 
 // Get rating variant for Badge component
-export function getDDRatingVariant(rating: DDAssessmentRating): 'default' | 'info' | 'success' | 'warning' | 'error' {
+export function getDDRatingVariant(
+  rating: DDAssessmentRating
+): 'default' | 'info' | 'success' | 'warning' | 'error' {
   switch (rating) {
     case 'EXCELLENT':
       return 'success';
@@ -353,7 +366,9 @@ export function getDDRatingVariant(rating: DDAssessmentRating): 'default' | 'inf
 }
 
 // Get risk level variant for Badge component
-export function getDDRiskLevelVariant(risk: DDRiskLevel): 'default' | 'info' | 'success' | 'warning' | 'error' {
+export function getDDRiskLevelVariant(
+  risk: DDRiskLevel
+): 'default' | 'info' | 'success' | 'warning' | 'error' {
   switch (risk) {
     case 'LOW':
       return 'success';
@@ -371,8 +386,8 @@ export function getDDRiskLevelVariant(risk: DDRiskLevel): 'default' | 'info' | '
 // Calculate completion percentage
 export function calculateDDCompletion(items: DDItem[]): number {
   if (items.length === 0) return 0;
-  const completed = items.filter((item) =>
-    item.status === 'COMPLETED' || item.status === 'NOT_APPLICABLE'
+  const completed = items.filter(
+    (item) => item.status === 'COMPLETED' || item.status === 'NOT_APPLICABLE'
   ).length;
   return Math.round((completed / items.length) * 100);
 }

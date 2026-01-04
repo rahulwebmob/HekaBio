@@ -177,7 +177,9 @@ export function createTaskFromStalledProject(
 ): AutoTaskConfig {
   const now = new Date();
   const lastActivity = new Date(lastActivityDate);
-  const daysSinceActivity = Math.floor((now.getTime() - lastActivity.getTime()) / (24 * 60 * 60 * 1000));
+  const daysSinceActivity = Math.floor(
+    (now.getTime() - lastActivity.getTime()) / (24 * 60 * 60 * 1000)
+  );
 
   return {
     title: `Review stalled project: ${projectName}`,
@@ -221,7 +223,7 @@ export function createTaskFromMissingData(
 ): AutoTaskConfig {
   return {
     title: `Request missing information for ${projectName}`,
-    description: `The following required information is missing:\n\n${missingFields.map(f => `- ${f}`).join('\n')}\n\nPlease send a follow-up email requesting this information.`,
+    description: `The following required information is missing:\n\n${missingFields.map((f) => `- ${f}`).join('\n')}\n\nPlease send a follow-up email requesting this information.`,
     type: 'FOLLOW_UP',
     priority: 'MEDIUM',
     assignedTo: 'user-1',

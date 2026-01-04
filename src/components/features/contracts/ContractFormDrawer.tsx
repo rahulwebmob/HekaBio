@@ -65,7 +65,7 @@ export default function ContractFormDrawer({
       })
     );
 
-  // Reset form
+    // Reset form
     setCompanyId(initialCompanyId || '');
     setProjectId(initialProjectId || '');
     setTitle('');
@@ -80,7 +80,7 @@ export default function ContractFormDrawer({
   };
 
   const handleClose = () => {
-  // Reset form on close
+    // Reset form on close
     setCompanyId(initialCompanyId || '');
     setProjectId(initialProjectId || '');
     setTitle('');
@@ -137,9 +137,7 @@ export default function ContractFormDrawer({
 
         {/* Project Selection (Optional) */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Project (Optional)
-          </label>
+          <label className="block text-sm font-medium text-gray-700 mb-2">Project (Optional)</label>
           <select
             value={projectId}
             onChange={(e) => setProjectId(e.target.value)}
@@ -193,9 +191,7 @@ export default function ContractFormDrawer({
 
         {/* Contract Status */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Status
-          </label>
+          <label className="block text-sm font-medium text-gray-700 mb-2">Status</label>
           <select
             value={status}
             onChange={(e) => setStatus(e.target.value as ContractStatus)}
@@ -212,9 +208,7 @@ export default function ContractFormDrawer({
         {/* Dates */}
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Effective Date
-            </label>
+            <label className="block text-sm font-medium text-gray-700 mb-2">Effective Date</label>
             <input
               type="date"
               value={effectiveDate}
@@ -224,9 +218,7 @@ export default function ContractFormDrawer({
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Expiration Date
-            </label>
+            <label className="block text-sm font-medium text-gray-700 mb-2">Expiration Date</label>
             <input
               type="date"
               value={expirationDate}
@@ -254,9 +246,7 @@ export default function ContractFormDrawer({
 
         {/* Key Terms */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Key Terms
-          </label>
+          <label className="block text-sm font-medium text-gray-700 mb-2">Key Terms</label>
           <textarea
             value={terms}
             onChange={(e) => setTerms(e.target.value)}

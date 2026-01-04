@@ -15,8 +15,8 @@ export type ContractType =
   | 'CONSULTING'
   | 'EMPLOYMENT'
   | 'NDA'
-  | 'MTA'  // Material Transfer Agreement
-  | 'CDA'  // Confidential Disclosure Agreement
+  | 'MTA' // Material Transfer Agreement
+  | 'CDA' // Confidential Disclosure Agreement
   | 'OTHER';
 
 // Contract Status
@@ -32,19 +32,10 @@ export type ContractStatus =
   | 'COMPLETED';
 
 // Payment Status
-export type PaymentStatus =
-  | 'PENDING'
-  | 'PAID'
-  | 'OVERDUE'
-  | 'CANCELLED';
+export type PaymentStatus = 'PENDING' | 'PAID' | 'OVERDUE' | 'CANCELLED';
 
 // Milestone Status
-export type MilestoneStatus =
-  | 'NOT_STARTED'
-  | 'IN_PROGRESS'
-  | 'COMPLETED'
-  | 'DELAYED'
-  | 'CANCELLED';
+export type MilestoneStatus = 'NOT_STARTED' | 'IN_PROGRESS' | 'COMPLETED' | 'DELAYED' | 'CANCELLED';
 
 // Contract Party
 export interface ContractParty {
@@ -252,9 +243,19 @@ export interface ContractActivity {
   contractId: ID;
 
   // Activity details
-  type: 'CREATED' | 'UPDATED' | 'STATUS_CHANGED' | 'SIGNED' | 'PAYMENT_MADE' |
-        'MILESTONE_COMPLETED' | 'RENEWED' | 'TERMINATED' | 'DOCUMENT_UPLOADED' |
-        'REVIEWED' | 'APPROVED' | 'REMINDER_SENT';
+  type:
+    | 'CREATED'
+    | 'UPDATED'
+    | 'STATUS_CHANGED'
+    | 'SIGNED'
+    | 'PAYMENT_MADE'
+    | 'MILESTONE_COMPLETED'
+    | 'RENEWED'
+    | 'TERMINATED'
+    | 'DOCUMENT_UPLOADED'
+    | 'REVIEWED'
+    | 'APPROVED'
+    | 'REMINDER_SENT';
   description: string;
 
   // Actor
@@ -341,7 +342,9 @@ export const MILESTONE_STATUS_LABELS: Record<MilestoneStatus, string> = {
 };
 
 // Get status variant for Badge component
-export function getContractStatusVariant(status: ContractStatus): 'default' | 'info' | 'success' | 'warning' | 'error' {
+export function getContractStatusVariant(
+  status: ContractStatus
+): 'default' | 'info' | 'success' | 'warning' | 'error' {
   switch (status) {
     case 'ACTIVE':
       return 'success';
@@ -364,7 +367,9 @@ export function getContractStatusVariant(status: ContractStatus): 'default' | 'i
 }
 
 // Get payment status variant
-export function getPaymentStatusVariant(status: PaymentStatus): 'default' | 'info' | 'success' | 'warning' | 'error' {
+export function getPaymentStatusVariant(
+  status: PaymentStatus
+): 'default' | 'info' | 'success' | 'warning' | 'error' {
   switch (status) {
     case 'PAID':
       return 'success';
@@ -380,7 +385,9 @@ export function getPaymentStatusVariant(status: PaymentStatus): 'default' | 'inf
 }
 
 // Get milestone status variant
-export function getMilestoneStatusVariant(status: MilestoneStatus): 'default' | 'info' | 'success' | 'warning' | 'error' {
+export function getMilestoneStatusVariant(
+  status: MilestoneStatus
+): 'default' | 'info' | 'success' | 'warning' | 'error' {
   switch (status) {
     case 'COMPLETED':
       return 'success';
@@ -429,7 +436,5 @@ export function getMilestoneCompletionPercentage(contract: Contract): number {
 // Get overdue payments
 export function getOverduePayments(contract: Contract): ContractPayment[] {
   const now = new Date();
-  return contract.payments.filter(
-    (p) => p.status === 'PENDING' && new Date(p.dueDate) < now
-  );
+  return contract.payments.filter((p) => p.status === 'PENDING' && new Date(p.dueDate) < now);
 }

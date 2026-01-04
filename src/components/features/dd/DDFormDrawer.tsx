@@ -63,7 +63,7 @@ export default function DDFormDrawer({
       })
     );
 
-  // Reset form
+    // Reset form
     setCompanyId(initialCompanyId || '');
     setProjectId(initialProjectId || '');
     setTitle('');
@@ -73,7 +73,7 @@ export default function DDFormDrawer({
   };
 
   const handleClose = () => {
-  // Reset form on close
+    // Reset form on close
     setCompanyId(initialCompanyId || '');
     setProjectId(initialProjectId || '');
     setTitle('');
@@ -145,9 +145,7 @@ export default function DDFormDrawer({
 
         {/* Description */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Description
-          </label>
+          <label className="block text-sm font-medium text-gray-700 mb-2">Description</label>
           <textarea
             value={description}
             onChange={(e) => setDescription(e.target.value)}

@@ -85,7 +85,9 @@ export function ScoreCard({
   if (compact) {
     return (
       <div className="flex items-center gap-4 p-4 bg-white border border-gray-200 rounded-lg">
-        <div className={`w-16 h-16 ${getCategoryBgColor()} rounded-xl flex items-center justify-center`}>
+        <div
+          className={`w-16 h-16 ${getCategoryBgColor()} rounded-xl flex items-center justify-center`}
+        >
           {getCategoryIcon()}
         </div>
         <div className="flex-1">
@@ -126,7 +128,9 @@ export function ScoreCard({
       <div className="relative z-10 space-y-6">
         {/* Score Display */}
         <div className="text-center">
-          <div className={`inline-flex w-24 h-24 ${getCategoryBgColor()} rounded-2xl items-center justify-center mb-4`}>
+          <div
+            className={`inline-flex w-24 h-24 ${getCategoryBgColor()} rounded-2xl items-center justify-center mb-4`}
+          >
             {getCategoryIcon()}
           </div>
           <div className="space-y-2">

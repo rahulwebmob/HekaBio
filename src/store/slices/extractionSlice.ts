@@ -5,7 +5,11 @@
 
 import { createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
-import type { ExtractionResult, ExtractedField, GapAnalysisResult } from '../../types/extraction.types';
+import type {
+  ExtractionResult,
+  ExtractedField,
+  GapAnalysisResult,
+} from '../../types/extraction.types';
 
 interface ExtractionState {
   extractions: ExtractionResult[];
@@ -95,9 +99,7 @@ const extractionSlice = createSlice({
     // Add gap analysis
     addGapAnalysis: (state, action: PayloadAction<GapAnalysisResult>) => {
       // Remove existing gap analysis for the project
-      state.gapAnalyses = state.gapAnalyses.filter(
-        (g) => g.projectId !== action.payload.projectId
-      );
+      state.gapAnalyses = state.gapAnalyses.filter((g) => g.projectId !== action.payload.projectId);
       state.gapAnalyses.push(action.payload);
     },
 

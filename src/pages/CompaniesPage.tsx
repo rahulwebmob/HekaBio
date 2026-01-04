@@ -4,10 +4,7 @@
  */
 
 import { useState, useMemo } from 'react';
-import {
-  IconSearch,
-  IconBuilding,
-} from '@tabler/icons-react';
+import { IconSearch, IconBuilding } from '@tabler/icons-react';
 import { PlusIcon, EyeIcon } from '../icons';
 import { useAppSelector } from '../app/store';
 import { AppLayout } from '../components/layout';
@@ -123,9 +120,7 @@ export default function CompaniesPage() {
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-3xl font-semibold text-gray-900">Companies</h1>
-            <p className="text-gray-600 mt-1">
-              Manage your company address book and relationships
-            </p>
+            <p className="text-gray-600 mt-1">Manage your company address book and relationships</p>
           </div>
           <Button
             variant="primary"
@@ -187,7 +182,11 @@ export default function CompaniesPage() {
               <span>
                 Showing {paginatedCompanies.length} of {filteredCompanies.length} companies
               </span>
-              {(searchTerm || roleFilter || categoryFilter || countryFilter || activeFilter !== 'all') && (
+              {(searchTerm ||
+                roleFilter ||
+                categoryFilter ||
+                countryFilter ||
+                activeFilter !== 'all') && (
                 <button
                   onClick={() => {
                     setSearchTerm('');

@@ -108,7 +108,11 @@ export default function ContractsPage() {
               Manage contracts, agreements, and legal documents
             </p>
           </div>
-          <Button variant="primary" leftIcon={<IconPlus size={18} />} onClick={() => setShowContractForm(true)}>
+          <Button
+            variant="primary"
+            leftIcon={<IconPlus size={18} />}
+            onClick={() => setShowContractForm(true)}
+          >
             New Contract
           </Button>
         </div>
@@ -248,7 +252,11 @@ export default function ContractsPage() {
                   : 'Create your first contract to get started'}
               </p>
               {!searchQuery && typeFilter === 'ALL' && statusFilter === 'ALL' && (
-                <Button variant="primary" leftIcon={<IconPlus size={18} />} onClick={() => setShowContractForm(true)}>
+                <Button
+                  variant="primary"
+                  leftIcon={<IconPlus size={18} />}
+                  onClick={() => setShowContractForm(true)}
+                >
                   New Contract
                 </Button>
               )}
@@ -295,7 +303,8 @@ export default function ContractsPage() {
                         )}
                         {overduePayments.length > 0 && (
                           <Badge variant="error" size="md">
-                            {overduePayments.length} Overdue Payment{overduePayments.length > 1 ? 's' : ''}
+                            {overduePayments.length} Overdue Payment
+                            {overduePayments.length > 1 ? 's' : ''}
                           </Badge>
                         )}
                       </div>
@@ -362,8 +371,8 @@ export default function ContractsPage() {
                                 paymentCompletion === 100
                                   ? 'bg-success-500'
                                   : overduePayments.length > 0
-                                  ? 'bg-error-500'
-                                  : 'bg-blue-500'
+                                    ? 'bg-error-500'
+                                    : 'bg-blue-500'
                               }`}
                               style={{ width: `${paymentCompletion}%` }}
                             />
@@ -383,8 +392,8 @@ export default function ContractsPage() {
                                 milestoneCompletion === 100
                                   ? 'bg-success-500'
                                   : milestoneCompletion >= 50
-                                  ? 'bg-blue-500'
-                                  : 'bg-warning-500'
+                                    ? 'bg-blue-500'
+                                    : 'bg-warning-500'
                               }`}
                               style={{ width: `${milestoneCompletion}%` }}
                             />
@@ -422,10 +431,7 @@ export default function ContractsPage() {
         )}
 
         {/* Contract Form Drawer */}
-        <ContractFormDrawer
-          isOpen={showContractForm}
-          onClose={() => setShowContractForm(false)}
-        />
+        <ContractFormDrawer isOpen={showContractForm} onClose={() => setShowContractForm(false)} />
       </div>
     </AppLayout>
   );

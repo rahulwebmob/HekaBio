@@ -78,7 +78,12 @@ const contractSlice = createSlice({
       state,
       action: PayloadAction<{
         contractId: string;
-        updates: Partial<Omit<Contract, 'id' | 'parties' | 'payments' | 'milestones' | 'documents' | 'createdAt' | 'createdBy'>>;
+        updates: Partial<
+          Omit<
+            Contract,
+            'id' | 'parties' | 'payments' | 'milestones' | 'documents' | 'createdAt' | 'createdBy'
+          >
+        >;
       }>
     ) => {
       const contract = state.contracts.find((c) => c.id === action.payload.contractId);
@@ -312,7 +317,9 @@ const contractSlice = createSlice({
     // Template management
     createContractTemplate: (
       state,
-      action: PayloadAction<Omit<ContractTemplate, 'id' | 'isActive' | 'usageCount' | 'createdAt' | 'createdBy'>>
+      action: PayloadAction<
+        Omit<ContractTemplate, 'id' | 'isActive' | 'usageCount' | 'createdAt' | 'createdBy'>
+      >
     ) => {
       const now = new Date().toISOString();
       const newTemplate: ContractTemplate = {

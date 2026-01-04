@@ -73,14 +73,8 @@ export default function SurveyBuilderPage() {
   };
 
   // Update section
-  const handleUpdateSection = (
-    sectionId: string,
-    field: keyof SurveySection,
-    value: string
-  ) => {
-    setSections(
-      sections.map((s) => (s.id === sectionId ? { ...s, [field]: value } : s))
-    );
+  const handleUpdateSection = (sectionId: string, field: keyof SurveySection, value: string) => {
+    setSections(sections.map((s) => (s.id === sectionId ? { ...s, [field]: value } : s)));
   };
 
   // Delete section
@@ -129,9 +123,7 @@ export default function SurveyBuilderPage() {
         s.id === sectionId
           ? {
               ...s,
-              questions: s.questions.map((q) =>
-                q.id === questionId ? { ...q, ...updates } : q
-              ),
+              questions: s.questions.map((q) => (q.id === questionId ? { ...q, ...updates } : q)),
             }
           : s
       )
@@ -142,9 +134,7 @@ export default function SurveyBuilderPage() {
   const handleDeleteQuestion = (sectionId: string, questionId: string) => {
     setSections(
       sections.map((s) =>
-        s.id === sectionId
-          ? { ...s, questions: s.questions.filter((q) => q.id !== questionId) }
-          : s
+        s.id === sectionId ? { ...s, questions: s.questions.filter((q) => q.id !== questionId) } : s
       )
     );
   };
@@ -315,9 +305,7 @@ export default function SurveyBuilderPage() {
         {/* Sections */}
         <div className="space-y-4">
           <div className="flex items-center justify-between">
-            <h2 className="text-lg font-semibold text-gray-900">
-              Sections ({sections.length})
-            </h2>
+            <h2 className="text-lg font-semibold text-gray-900">Sections ({sections.length})</h2>
             <Button
               variant="outline"
               size="sm"
@@ -331,7 +319,9 @@ export default function SurveyBuilderPage() {
           {sections.length === 0 ? (
             <Card padding="lg" shadow="sm">
               <div className="text-center py-8">
-                <p className="text-gray-600 mb-4">No sections yet. Add your first section to start building the survey.</p>
+                <p className="text-gray-600 mb-4">
+                  No sections yet. Add your first section to start building the survey.
+                </p>
                 <Button
                   variant="primary"
                   leftIcon={<IconPlus size={18} />}
@@ -352,9 +342,7 @@ export default function SurveyBuilderPage() {
                   <div className="flex-1 space-y-3">
                     <Input
                       value={section.title}
-                      onChange={(e) =>
-                        handleUpdateSection(section.id, 'title', e.target.value)
-                      }
+                      onChange={(e) => handleUpdateSection(section.id, 'title', e.target.value)}
                       placeholder="Section title"
                       fullWidth
                     />
@@ -542,11 +530,7 @@ export default function SurveyBuilderPage() {
           <Button variant="outline" onClick={() => navigate('/admin/survey-templates')}>
             Cancel
           </Button>
-          <Button
-            variant="primary"
-            leftIcon={<IconDeviceFloppy size={18} />}
-            onClick={handleSave}
-          >
+          <Button variant="primary" leftIcon={<IconDeviceFloppy size={18} />} onClick={handleSave}>
             Save Template
           </Button>
         </div>

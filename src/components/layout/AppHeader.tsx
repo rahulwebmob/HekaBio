@@ -115,16 +115,14 @@ export default function AppHeader() {
               className="relative p-2 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
               aria-label="Notifications"
             >
-              <IconBell size={22} stroke={1.5} />ra
+              <IconBell size={22} stroke={1.5} />
+              ra
             </button>
 
             {/* Notifications Dropdown */}
             {showNotifications && (
               <>
-                <div
-                  className="fixed inset-0 z-10"
-                  onClick={() => setShowNotifications(false)}
-                />
+                <div className="fixed inset-0 z-10" onClick={() => setShowNotifications(false)} />
                 <div className="absolute right-0 top-full mt-2 w-80 bg-white rounded-lg shadow-theme-lg border border-gray-200 z-20">
                   <div className="px-4 py-3 border-b border-gray-200">
                     <div className="flex items-center justify-between">
@@ -194,23 +192,20 @@ export default function AppHeader() {
               </div>
               <IconChevronDown
                 size={16}
-                className={`text-gray-500 transition-transform ${
-                  showUserMenu ? 'rotate-180' : ''
-                }`}
+                className={`text-gray-500 transition-transform ${showUserMenu ? 'rotate-180' : ''}`}
               />
             </button>
 
             {/* User Dropdown */}
             {showUserMenu && (
               <>
-                <div
-                  className="fixed inset-0 z-10"
-                  onClick={() => setShowUserMenu(false)}
-                />
+                <div className="fixed inset-0 z-10" onClick={() => setShowUserMenu(false)} />
                 <div className="absolute right-0 top-full mt-2 w-56 bg-white rounded-lg shadow-theme-lg border border-gray-200 z-20">
                   <div className="px-4 py-3 border-b border-gray-200">
                     <p className="text-sm font-medium text-gray-900">{user?.fullName || 'User'}</p>
-                    <p className="text-xs text-gray-500 mt-0.5">{user?.email || 'user@example.com'}</p>
+                    <p className="text-xs text-gray-500 mt-0.5">
+                      {user?.email || 'user@example.com'}
+                    </p>
                   </div>
                   <div className="py-2">
                     <button

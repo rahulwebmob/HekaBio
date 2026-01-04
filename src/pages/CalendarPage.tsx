@@ -17,11 +17,7 @@ import {
   IconCheck,
 } from '@tabler/icons-react';
 import { useAppSelector, useAppDispatch } from '../app/store';
-import {
-  navigatePrevious,
-  navigateNext,
-  navigateToToday,
-} from '../store/slices/calendarSlice';
+import { navigatePrevious, navigateNext, navigateToToday } from '../store/slices/calendarSlice';
 import { AppLayout } from '../components/layout';
 import { Card, Badge, Button } from '../components/ui';
 import type { CalendarEvent } from '../types/calendar.types';
@@ -280,11 +276,7 @@ export default function CalendarPage() {
               <div className="flex items-center justify-between mb-4">
                 <h2 className="text-xl font-semibold text-gray-900">{formatMonthYear()}</h2>
                 <div className="flex items-center gap-2">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => dispatch(navigateToToday())}
-                  >
+                  <Button variant="outline" size="sm" onClick={() => dispatch(navigateToToday())}>
                     Today
                   </Button>
                   <div className="flex items-center gap-1">
@@ -309,10 +301,7 @@ export default function CalendarPage() {
                 {/* Day headers */}
                 <div className="grid grid-cols-7 gap-1 mb-2">
                   {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((day) => (
-                    <div
-                      key={day}
-                      className="text-center text-xs font-semibold text-gray-600 py-2"
-                    >
+                    <div key={day} className="text-center text-xs font-semibold text-gray-600 py-2">
                       {day}
                     </div>
                   ))}
@@ -395,8 +384,8 @@ export default function CalendarPage() {
                           event.priority === 'URGENT'
                             ? 'error'
                             : event.priority === 'HIGH'
-                            ? 'warning'
-                            : 'default'
+                              ? 'warning'
+                              : 'default'
                         }
                         size="sm"
                       >
@@ -419,8 +408,8 @@ export default function CalendarPage() {
                             {event.location.type === 'ONLINE'
                               ? 'Online Meeting'
                               : event.location.type === 'PHONE'
-                              ? 'Phone Call'
-                              : event.location.address || 'In Person'}
+                                ? 'Phone Call'
+                                : event.location.address || 'In Person'}
                           </span>
                         </div>
                       )}
@@ -442,9 +431,7 @@ export default function CalendarPage() {
                 ))}
 
                 {upcomingEvents.length === 0 && (
-                  <div className="text-center py-8 text-gray-500 text-sm">
-                    No upcoming events
-                  </div>
+                  <div className="text-center py-8 text-gray-500 text-sm">No upcoming events</div>
                 )}
               </div>
             </Card>

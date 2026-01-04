@@ -91,7 +91,9 @@ export default function RichTextEditor({
   return (
     <div
       className={`border rounded-lg overflow-hidden ${
-        error ? 'border-error-500' : 'border-gray-300 focus-within:border-brand-500 focus-within:ring-2 focus-within:ring-brand-500'
+        error
+          ? 'border-error-500'
+          : 'border-gray-300 focus-within:border-brand-500 focus-within:ring-2 focus-within:ring-brand-500'
       } ${disabled ? 'bg-gray-50' : 'bg-white'}`}
     >
       {/* Toolbar */}

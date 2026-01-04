@@ -16,11 +16,7 @@ interface UploadNewVersionProps {
   document: Document | null;
 }
 
-export default function UploadNewVersion({
-  isOpen,
-  onClose,
-  document,
-}: UploadNewVersionProps) {
+export default function UploadNewVersion({ isOpen, onClose, document }: UploadNewVersionProps) {
   const dispatch = useAppDispatch();
 
   const [formData, setFormData] = useState({
@@ -148,9 +144,7 @@ export default function UploadNewVersion({
         {/* Current Version Info */}
         <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
           <p className="text-sm text-gray-600 mb-1">Current Version</p>
-          <p className="text-lg font-semibold text-gray-900">
-            Version {document.currentVersion}
-          </p>
+          <p className="text-lg font-semibold text-gray-900">Version {document.currentVersion}</p>
           <p className="text-xs text-gray-500 mt-1">
             New version will be: Version {incrementVersion(document.currentVersion)}
           </p>
@@ -175,17 +169,15 @@ export default function UploadNewVersion({
                 errors.file
                   ? 'border-error-300 bg-error-50'
                   : selectedFile
-                  ? 'border-brand-300 bg-brand-50'
-                  : 'border-gray-300 bg-gray-50 hover:border-brand-500 hover:bg-brand-50'
+                    ? 'border-brand-300 bg-brand-50'
+                    : 'border-gray-300 bg-gray-50 hover:border-brand-500 hover:bg-brand-50'
               }`}
             >
               {selectedFile ? (
                 <>
                   <IconFileText size={24} className="text-brand-600" />
                   <div className="text-left">
-                    <p className="text-sm font-medium text-brand-900">
-                      {selectedFile.name}
-                    </p>
+                    <p className="text-sm font-medium text-brand-900">{selectedFile.name}</p>
                     <p className="text-xs text-brand-600">
                       {(selectedFile.size / 1024).toFixed(1)} KB
                     </p>
@@ -195,12 +187,8 @@ export default function UploadNewVersion({
                 <>
                   <IconUpload size={24} className="text-gray-400" />
                   <div className="text-center">
-                    <p className="text-sm font-medium text-gray-700">
-                      Click to select file
-                    </p>
-                    <p className="text-xs text-gray-500">
-                      Accepted: {document.mimeType}
-                    </p>
+                    <p className="text-sm font-medium text-gray-700">Click to select file</p>
+                    <p className="text-xs text-gray-500">Accepted: {document.mimeType}</p>
                   </div>
                 </>
               )}
@@ -241,9 +229,7 @@ export default function UploadNewVersion({
 
         {/* Info Box */}
         <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-          <h4 className="font-semibold text-blue-900 mb-2">
-            About Uploading New Versions
-          </h4>
+          <h4 className="font-semibold text-blue-900 mb-2">About Uploading New Versions</h4>
           <ul className="text-sm text-blue-700 space-y-1 list-disc list-inside">
             <li>Previous versions will be preserved in version history</li>
             <li>The new version will automatically become the current version</li>

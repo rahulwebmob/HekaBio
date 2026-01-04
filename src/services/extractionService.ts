@@ -3,13 +3,18 @@
  * Simulates extracting data from uploaded documents (PDF/PPT)
  */
 
-import type { ExtractionResult, ExtractedField, GapAnalysisResult, FieldGap } from '../types/extraction.types';
+import type {
+  ExtractionResult,
+  ExtractedField,
+  GapAnalysisResult,
+  FieldGap,
+} from '../types/extraction.types';
 import { EXTRACTABLE_FIELDS } from '../types/extraction.types';
 
 /**
  * Simulate AI processing delay
  */
-const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 /**
  * Generate mock extracted data from a document
@@ -170,9 +175,9 @@ export const analyzeDataGaps = (
 ): GapAnalysisResult => {
   const allFieldNames = Object.keys(EXTRACTABLE_FIELDS);
 
-  const gaps: FieldGap[] = allFieldNames.map(fieldName => {
+  const gaps: FieldGap[] = allFieldNames.map((fieldName) => {
     const fieldConfig = EXTRACTABLE_FIELDS[fieldName as keyof typeof EXTRACTABLE_FIELDS];
-    const extracted = extractedFields.find(f => f.fieldName === fieldName);
+    const extracted = extractedFields.find((f) => f.fieldName === fieldName);
 
     return {
       fieldName,
@@ -184,13 +189,13 @@ export const analyzeDataGaps = (
     };
   });
 
-  const missingFields = gaps.filter(g => g.isMissing).length;
+  const missingFields = gaps.filter((g) => g.isMissing).length;
   const completedFields = allFieldNames.length - missingFields;
   const completionPercentage = Math.round((completedFields / allFieldNames.length) * 100);
 
-  const criticalGaps = gaps.filter(g => g.isMissing && g.importance === 'CRITICAL').length;
-  const importantGaps = gaps.filter(g => g.isMissing && g.importance === 'IMPORTANT').length;
-  const optionalGaps = gaps.filter(g => g.isMissing && g.importance === 'OPTIONAL').length;
+  const criticalGaps = gaps.filter((g) => g.isMissing && g.importance === 'CRITICAL').length;
+  const importantGaps = gaps.filter((g) => g.isMissing && g.importance === 'IMPORTANT').length;
+  const optionalGaps = gaps.filter((g) => g.isMissing && g.importance === 'OPTIONAL').length;
 
   return {
     projectId,
@@ -214,8 +219,12 @@ export const generateFollowUpEmail = (
   companyName: string,
   projectName: string
 ): string => {
-  const missingCritical = gapAnalysis.gaps.filter(g => g.isMissing && g.importance === 'CRITICAL');
-  const missingImportant = gapAnalysis.gaps.filter(g => g.isMissing && g.importance === 'IMPORTANT');
+  const missingCritical = gapAnalysis.gaps.filter(
+    (g) => g.isMissing && g.importance === 'CRITICAL'
+  );
+  const missingImportant = gapAnalysis.gaps.filter(
+    (g) => g.isMissing && g.importance === 'IMPORTANT'
+  );
 
   let email = `Dear ${companyName} Team,\n\n`;
   email += `Thank you for submitting information about ${projectName}. We have reviewed your materials and are very interested in learning more.\n\n`;

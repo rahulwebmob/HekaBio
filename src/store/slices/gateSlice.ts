@@ -155,8 +155,7 @@ const gateSlice = createSlice({
         ].filter((s) => s !== undefined) as number[];
 
         if (scores.length > 0) {
-          review.overallScore =
-            scores.reduce((sum, score) => sum + score, 0) / scores.length;
+          review.overallScore = scores.reduce((sum, score) => sum + score, 0) / scores.length;
         }
 
         review.updatedAt = new Date().toISOString();

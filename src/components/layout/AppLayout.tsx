@@ -29,11 +29,7 @@ function LayoutContent({ children }: AppLayoutProps) {
   }, [toggleCollapse]);
 
   // Calculate main content margin based on sidebar state
-  const mainMargin = !isMobileOpen
-    ? isCollapsed
-      ? 'lg:ml-20'
-      : 'lg:ml-64'
-    : '';
+  const mainMargin = !isMobileOpen ? (isCollapsed ? 'lg:ml-20' : 'lg:ml-64') : '';
 
   return (
     <div className="min-h-screen flex flex-col relative overflow-hidden">
@@ -56,7 +52,10 @@ function LayoutContent({ children }: AppLayoutProps) {
       <div className="fixed inset-0 z-0 glass-extreme" aria-hidden="true" />
 
       {/* Additional Glass Layer for Extra Effect */}
-      <div className="fixed inset-0 z-0 bg-gradient-to-br from-white/30 via-blue-50/10 to-cyan-50/20 glass-layer" aria-hidden="true" />
+      <div
+        className="fixed inset-0 z-0 bg-gradient-to-br from-white/30 via-blue-50/10 to-cyan-50/20 glass-layer"
+        aria-hidden="true"
+      />
 
       {/* Content */}
       <div className="relative z-10 min-h-screen flex flex-col">
@@ -67,10 +66,13 @@ function LayoutContent({ children }: AppLayoutProps) {
           <AppHeader />
 
           {/* Page Content */}
-          <main id="main-content" className="flex-1 p-4 lg:p-6" role="main" aria-label="Main content">
-            <div className="max-w-screen-2xl mx-auto">
-              {children}
-            </div>
+          <main
+            id="main-content"
+            className="flex-1 p-4 lg:p-6"
+            role="main"
+            aria-label="Main content"
+          >
+            <div className="max-w-screen-2xl mx-auto">{children}</div>
           </main>
 
           <AppFooter />

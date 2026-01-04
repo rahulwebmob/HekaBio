@@ -32,9 +32,7 @@ export default function CompanyDetailPage() {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
-  const company = useAppSelector((state) =>
-    state.addressBook.companies.find((c) => c.id === id)
-  );
+  const company = useAppSelector((state) => state.addressBook.companies.find((c) => c.id === id));
 
   const contacts = useAppSelector((state) =>
     state.addressBook.contacts.filter((c) => c.companyId === id)
@@ -86,9 +84,7 @@ export default function CompanyDetailPage() {
         <div className="flex items-start justify-between gap-4">
           <div>
             <h1 className="text-3xl font-semibold text-gray-900">{company.name}</h1>
-            {company.nameLocal && (
-              <p className="text-lg text-gray-600 mt-1">{company.nameLocal}</p>
-            )}
+            {company.nameLocal && <p className="text-lg text-gray-600 mt-1">{company.nameLocal}</p>}
           </div>
           <div className="flex items-center gap-2">
             <Button
@@ -282,9 +278,7 @@ export default function CompanyDetailPage() {
             <Card
               padding="lg"
               shadow="sm"
-              header={
-                <h2 className="text-lg font-semibold text-gray-900">Contact Information</h2>
-              }
+              header={<h2 className="text-lg font-semibold text-gray-900">Contact Information</h2>}
             >
               <div className="space-y-4">
                 <div>
@@ -355,9 +349,7 @@ export default function CompanyDetailPage() {
               <Card
                 padding="lg"
                 shadow="sm"
-                header={
-                  <h2 className="text-lg font-semibold text-gray-900">Primary Contact</h2>
-                }
+                header={<h2 className="text-lg font-semibold text-gray-900">Primary Contact</h2>}
               >
                 <div className="space-y-3">
                   <div>
@@ -447,9 +439,8 @@ export default function CompanyDetailPage() {
           </p>
           <div className="bg-error-50 border border-error-200 rounded-lg p-4">
             <p className="text-sm text-error-800">
-              <strong>Warning:</strong> This action cannot be undone. All associated contacts ({
-                contacts.length
-              }) will also be deleted.
+              <strong>Warning:</strong> This action cannot be undone. All associated contacts (
+              {contacts.length}) will also be deleted.
             </p>
           </div>
         </div>

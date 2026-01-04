@@ -15,12 +15,12 @@ export function arrayToCSV<T extends Record<string, any>>(
   headers: { key: keyof T; label: string }[]
 ): string {
   // Create header row
-  const headerRow = headers.map(h => h.label).join(',');
+  const headerRow = headers.map((h) => h.label).join(',');
 
   // Create data rows
-  const dataRows = data.map(item => {
+  const dataRows = data.map((item) => {
     return headers
-      .map(header => {
+      .map((header) => {
         const value = item[header.key];
         // Handle arrays, objects, null, undefined
         if (value === null || value === undefined) {
@@ -49,12 +49,12 @@ export function arrayToCSV<T extends Record<string, any>>(
  * Parse CSV string to array of objects
  */
 export function csvToArray<T>(csv: string, headers: string[]): Partial<T>[] {
-  const lines = csv.split('\n').filter(line => line.trim());
+  const lines = csv.split('\n').filter((line) => line.trim());
 
   // Skip header row
   const dataLines = lines.slice(1);
 
-  return dataLines.map(line => {
+  return dataLines.map((line) => {
     const values = parseCSVLine(line);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const obj: any = {};
@@ -163,7 +163,7 @@ export function parseContactsCSV(csvContent: string): Partial<Contact>[] {
   const rawData = csvToArray<Contact>(csvContent, headers);
 
   // Transform and validate data
-  return rawData.map(row => {
+  return rawData.map((row) => {
     // Type assertion for CSV parsing - Partial<Contact> to any for flexible access
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const anyRow = row as any;
@@ -175,7 +175,8 @@ export function parseContactsCSV(csvContent: string): Partial<Contact>[] {
       title: row.title,
       department: row.department,
       companyName: anyRow.companyName,
-      isPrimary: anyRow.isPrimary === 'true' || anyRow.isPrimary === 'TRUE' || anyRow.isPrimary === '1',
+      isPrimary:
+        anyRow.isPrimary === 'true' || anyRow.isPrimary === 'TRUE' || anyRow.isPrimary === '1',
       notes: row.notes,
     };
   });
@@ -198,9 +199,7 @@ export interface ContactValidationError {
   message: string;
 }
 
-export function validateContactsData(
-  contacts: Partial<Contact>[]
-): ContactValidationError[] {
+export function validateContactsData(contacts: Partial<Contact>[]): ContactValidationError[] {
   const errors: ContactValidationError[] = [];
 
   contacts.forEach((contact, index) => {

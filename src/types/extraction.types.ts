@@ -28,12 +28,7 @@ export interface ExtractionResult {
   processingTimeMs?: number;
 }
 
-export type ExtractionStatus =
-  | 'UPLOADING'
-  | 'PROCESSING'
-  | 'COMPLETED'
-  | 'FAILED'
-  | 'VERIFIED';
+export type ExtractionStatus = 'UPLOADING' | 'PROCESSING' | 'COMPLETED' | 'FAILED' | 'VERIFIED';
 
 // ===== Gap Analysis =====
 export interface FieldGap {
@@ -72,40 +67,136 @@ export interface GapAnalysisResult {
 // ===== Field Mappings =====
 export const EXTRACTABLE_FIELDS = {
   // Basic Info
-  productName: { label: 'Product Name', category: 'BASIC_INFO' as GapCategory, importance: 'CRITICAL' as GapImportance },
-  therapeuticArea: { label: 'Therapeutic Area', category: 'BASIC_INFO' as GapCategory, importance: 'CRITICAL' as GapImportance },
-  indication: { label: 'Indication', category: 'BASIC_INFO' as GapCategory, importance: 'CRITICAL' as GapImportance },
-  modality: { label: 'Modality', category: 'BASIC_INFO' as GapCategory, importance: 'IMPORTANT' as GapImportance },
-  moa: { label: 'Mechanism of Action', category: 'BASIC_INFO' as GapCategory, importance: 'IMPORTANT' as GapImportance },
+  productName: {
+    label: 'Product Name',
+    category: 'BASIC_INFO' as GapCategory,
+    importance: 'CRITICAL' as GapImportance,
+  },
+  therapeuticArea: {
+    label: 'Therapeutic Area',
+    category: 'BASIC_INFO' as GapCategory,
+    importance: 'CRITICAL' as GapImportance,
+  },
+  indication: {
+    label: 'Indication',
+    category: 'BASIC_INFO' as GapCategory,
+    importance: 'CRITICAL' as GapImportance,
+  },
+  modality: {
+    label: 'Modality',
+    category: 'BASIC_INFO' as GapCategory,
+    importance: 'IMPORTANT' as GapImportance,
+  },
+  moa: {
+    label: 'Mechanism of Action',
+    category: 'BASIC_INFO' as GapCategory,
+    importance: 'IMPORTANT' as GapImportance,
+  },
 
   // Clinical
-  developmentStage: { label: 'Development Stage', category: 'CLINICAL' as GapCategory, importance: 'CRITICAL' as GapImportance },
-  clinicalTrials: { label: 'Clinical Trials', category: 'CLINICAL' as GapCategory, importance: 'IMPORTANT' as GapImportance },
-  patientPopulation: { label: 'Patient Population', category: 'CLINICAL' as GapCategory, importance: 'IMPORTANT' as GapImportance },
-  primaryEndpoint: { label: 'Primary Endpoint', category: 'CLINICAL' as GapCategory, importance: 'IMPORTANT' as GapImportance },
-  clinicalData: { label: 'Clinical Data Summary', category: 'CLINICAL' as GapCategory, importance: 'CRITICAL' as GapImportance },
+  developmentStage: {
+    label: 'Development Stage',
+    category: 'CLINICAL' as GapCategory,
+    importance: 'CRITICAL' as GapImportance,
+  },
+  clinicalTrials: {
+    label: 'Clinical Trials',
+    category: 'CLINICAL' as GapCategory,
+    importance: 'IMPORTANT' as GapImportance,
+  },
+  patientPopulation: {
+    label: 'Patient Population',
+    category: 'CLINICAL' as GapCategory,
+    importance: 'IMPORTANT' as GapImportance,
+  },
+  primaryEndpoint: {
+    label: 'Primary Endpoint',
+    category: 'CLINICAL' as GapCategory,
+    importance: 'IMPORTANT' as GapImportance,
+  },
+  clinicalData: {
+    label: 'Clinical Data Summary',
+    category: 'CLINICAL' as GapCategory,
+    importance: 'CRITICAL' as GapImportance,
+  },
 
   // Regulatory
-  regulatoryStatus: { label: 'Regulatory Status', category: 'REGULATORY' as GapCategory, importance: 'CRITICAL' as GapImportance },
-  orphanDesignation: { label: 'Orphan Designation', category: 'REGULATORY' as GapCategory, importance: 'IMPORTANT' as GapImportance },
-  fastTrack: { label: 'Fast Track Status', category: 'REGULATORY' as GapCategory, importance: 'IMPORTANT' as GapImportance },
-  approvedRegions: { label: 'Approved Regions', category: 'REGULATORY' as GapCategory, importance: 'IMPORTANT' as GapImportance },
+  regulatoryStatus: {
+    label: 'Regulatory Status',
+    category: 'REGULATORY' as GapCategory,
+    importance: 'CRITICAL' as GapImportance,
+  },
+  orphanDesignation: {
+    label: 'Orphan Designation',
+    category: 'REGULATORY' as GapCategory,
+    importance: 'IMPORTANT' as GapImportance,
+  },
+  fastTrack: {
+    label: 'Fast Track Status',
+    category: 'REGULATORY' as GapCategory,
+    importance: 'IMPORTANT' as GapImportance,
+  },
+  approvedRegions: {
+    label: 'Approved Regions',
+    category: 'REGULATORY' as GapCategory,
+    importance: 'IMPORTANT' as GapImportance,
+  },
 
   // IP
-  patentStatus: { label: 'Patent Status', category: 'IP' as GapCategory, importance: 'CRITICAL' as GapImportance },
-  patentExpiry: { label: 'Patent Expiry', category: 'IP' as GapCategory, importance: 'CRITICAL' as GapImportance },
-  exclusivity: { label: 'Market Exclusivity', category: 'IP' as GapCategory, importance: 'IMPORTANT' as GapImportance },
+  patentStatus: {
+    label: 'Patent Status',
+    category: 'IP' as GapCategory,
+    importance: 'CRITICAL' as GapImportance,
+  },
+  patentExpiry: {
+    label: 'Patent Expiry',
+    category: 'IP' as GapCategory,
+    importance: 'CRITICAL' as GapImportance,
+  },
+  exclusivity: {
+    label: 'Market Exclusivity',
+    category: 'IP' as GapCategory,
+    importance: 'IMPORTANT' as GapImportance,
+  },
 
   // Commercial
-  marketSize: { label: 'Market Size', category: 'COMMERCIAL' as GapCategory, importance: 'IMPORTANT' as GapImportance },
-  competition: { label: 'Competitive Landscape', category: 'COMMERCIAL' as GapCategory, importance: 'IMPORTANT' as GapImportance },
-  pricing: { label: 'Pricing Strategy', category: 'COMMERCIAL' as GapCategory, importance: 'OPTIONAL' as GapImportance },
-  reimbursement: { label: 'Reimbursement Status', category: 'COMMERCIAL' as GapCategory, importance: 'IMPORTANT' as GapImportance },
+  marketSize: {
+    label: 'Market Size',
+    category: 'COMMERCIAL' as GapCategory,
+    importance: 'IMPORTANT' as GapImportance,
+  },
+  competition: {
+    label: 'Competitive Landscape',
+    category: 'COMMERCIAL' as GapCategory,
+    importance: 'IMPORTANT' as GapImportance,
+  },
+  pricing: {
+    label: 'Pricing Strategy',
+    category: 'COMMERCIAL' as GapCategory,
+    importance: 'OPTIONAL' as GapImportance,
+  },
+  reimbursement: {
+    label: 'Reimbursement Status',
+    category: 'COMMERCIAL' as GapCategory,
+    importance: 'IMPORTANT' as GapImportance,
+  },
 
   // Financial
-  fundingRaised: { label: 'Funding Raised', category: 'FINANCIAL' as GapCategory, importance: 'IMPORTANT' as GapImportance },
-  valuation: { label: 'Company Valuation', category: 'FINANCIAL' as GapCategory, importance: 'OPTIONAL' as GapImportance },
-  partnershipDeals: { label: 'Partnership Deals', category: 'FINANCIAL' as GapCategory, importance: 'IMPORTANT' as GapImportance },
+  fundingRaised: {
+    label: 'Funding Raised',
+    category: 'FINANCIAL' as GapCategory,
+    importance: 'IMPORTANT' as GapImportance,
+  },
+  valuation: {
+    label: 'Company Valuation',
+    category: 'FINANCIAL' as GapCategory,
+    importance: 'OPTIONAL' as GapImportance,
+  },
+  partnershipDeals: {
+    label: 'Partnership Deals',
+    category: 'FINANCIAL' as GapCategory,
+    importance: 'IMPORTANT' as GapImportance,
+  },
 };
 
 // Helper functions
@@ -132,7 +223,9 @@ export const getGapImportanceColor = (importance: GapImportance): string => {
   }
 };
 
-export const getGapImportanceBadge = (importance: GapImportance): 'error' | 'warning' | 'default' => {
+export const getGapImportanceBadge = (
+  importance: GapImportance
+): 'error' | 'warning' | 'default' => {
   switch (importance) {
     case 'CRITICAL':
       return 'error';

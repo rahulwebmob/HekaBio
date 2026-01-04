@@ -39,7 +39,9 @@ const pipelineSlice = createSlice({
       state,
       action: PayloadAction<{ opportunityId: string; updates: Partial<PipelineOpportunity> }>
     ) => {
-      const opportunity = state.opportunities.find((opp) => opp.id === action.payload.opportunityId);
+      const opportunity = state.opportunities.find(
+        (opp) => opp.id === action.payload.opportunityId
+      );
       if (opportunity) {
         Object.assign(opportunity, action.payload.updates);
         opportunity.updatedAt = new Date().toISOString();
@@ -54,9 +56,15 @@ const pipelineSlice = createSlice({
     // Move opportunity to new stage
     moveOpportunityToStage: (
       state,
-      action: PayloadAction<{ opportunityId: string; newStage: PipelineStage; probability?: OpportunityProbability }>
+      action: PayloadAction<{
+        opportunityId: string;
+        newStage: PipelineStage;
+        probability?: OpportunityProbability;
+      }>
     ) => {
-      const opportunity = state.opportunities.find((opp) => opp.id === action.payload.opportunityId);
+      const opportunity = state.opportunities.find(
+        (opp) => opp.id === action.payload.opportunityId
+      );
       if (opportunity) {
         const now = new Date().toISOString();
         const oldStage = opportunity.stage;
@@ -95,7 +103,9 @@ const pipelineSlice = createSlice({
       state,
       action: PayloadAction<{ opportunityId: string; probability: OpportunityProbability }>
     ) => {
-      const opportunity = state.opportunities.find((opp) => opp.id === action.payload.opportunityId);
+      const opportunity = state.opportunities.find(
+        (opp) => opp.id === action.payload.opportunityId
+      );
       if (opportunity) {
         opportunity.probability = action.payload.probability;
         opportunity.updatedAt = new Date().toISOString();
@@ -107,7 +117,9 @@ const pipelineSlice = createSlice({
       state,
       action: PayloadAction<{ opportunityId: string; winReason: WinReason; actualValue?: number }>
     ) => {
-      const opportunity = state.opportunities.find((opp) => opp.id === action.payload.opportunityId);
+      const opportunity = state.opportunities.find(
+        (opp) => opp.id === action.payload.opportunityId
+      );
       if (opportunity) {
         const now = new Date().toISOString();
 
@@ -146,9 +158,15 @@ const pipelineSlice = createSlice({
     // Mark as lost
     markAsLost: (
       state,
-      action: PayloadAction<{ opportunityId: string; lossReason: LossReason; competitorInfo?: string }>
+      action: PayloadAction<{
+        opportunityId: string;
+        lossReason: LossReason;
+        competitorInfo?: string;
+      }>
     ) => {
-      const opportunity = state.opportunities.find((opp) => opp.id === action.payload.opportunityId);
+      const opportunity = state.opportunities.find(
+        (opp) => opp.id === action.payload.opportunityId
+      );
       if (opportunity) {
         const now = new Date().toISOString();
 
@@ -189,7 +207,9 @@ const pipelineSlice = createSlice({
       state,
       action: PayloadAction<{ opportunityId: string; nextFollowUpDate: string }>
     ) => {
-      const opportunity = state.opportunities.find((opp) => opp.id === action.payload.opportunityId);
+      const opportunity = state.opportunities.find(
+        (opp) => opp.id === action.payload.opportunityId
+      );
       if (opportunity) {
         opportunity.nextFollowUpDate = action.payload.nextFollowUpDate;
         opportunity.updatedAt = new Date().toISOString();
@@ -212,7 +232,9 @@ const pipelineSlice = createSlice({
       state,
       action: PayloadAction<{ opportunityId: string; teamMembers: string[] }>
     ) => {
-      const opportunity = state.opportunities.find((opp) => opp.id === action.payload.opportunityId);
+      const opportunity = state.opportunities.find(
+        (opp) => opp.id === action.payload.opportunityId
+      );
       if (opportunity) {
         opportunity.teamMembers = action.payload.teamMembers;
         opportunity.updatedAt = new Date().toISOString();
@@ -221,7 +243,9 @@ const pipelineSlice = createSlice({
 
     // Add note
     addNote: (state, action: PayloadAction<{ opportunityId: string; note: string }>) => {
-      const opportunity = state.opportunities.find((opp) => opp.id === action.payload.opportunityId);
+      const opportunity = state.opportunities.find(
+        (opp) => opp.id === action.payload.opportunityId
+      );
       if (opportunity) {
         opportunity.notes = action.payload.note;
         opportunity.updatedAt = new Date().toISOString();
@@ -230,7 +254,9 @@ const pipelineSlice = createSlice({
 
     // Update tags
     updateTags: (state, action: PayloadAction<{ opportunityId: string; tags: string[] }>) => {
-      const opportunity = state.opportunities.find((opp) => opp.id === action.payload.opportunityId);
+      const opportunity = state.opportunities.find(
+        (opp) => opp.id === action.payload.opportunityId
+      );
       if (opportunity) {
         opportunity.tags = action.payload.tags;
         opportunity.updatedAt = new Date().toISOString();

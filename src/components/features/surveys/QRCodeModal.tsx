@@ -67,12 +67,7 @@ export default function QRCodeModal({ isOpen, onClose, surveyId, surveyName }: Q
   };
 
   return (
-    <Modal
-      isOpen={isOpen}
-      onClose={onClose}
-      title="Survey QR Code"
-      size="md"
-    >
+    <Modal isOpen={isOpen} onClose={onClose} title="Survey QR Code" size="md">
       <div className="space-y-6">
         {/* Survey Info */}
         <div className="bg-gray-50 rounded-lg p-4">
@@ -97,11 +92,7 @@ export default function QRCodeModal({ isOpen, onClose, surveyId, surveyName }: Q
               readOnly
               className="flex-1 px-3 py-2 border border-gray-300 rounded-lg bg-gray-50 text-sm font-mono"
             />
-            <Button
-              variant="secondary"
-              onClick={handleCopyUrl}
-              leftIcon={<IconCopy size={18} />}
-            >
+            <Button variant="secondary" onClick={handleCopyUrl} leftIcon={<IconCopy size={18} />}>
               {copied ? 'Copied!' : 'Copy'}
             </Button>
           </div>
@@ -126,11 +117,7 @@ export default function QRCodeModal({ isOpen, onClose, surveyId, surveyName }: Q
           <Button variant="ghost" onClick={onClose}>
             Close
           </Button>
-          <Button
-            variant="primary"
-            onClick={handleDownload}
-            leftIcon={<IconDownload size={18} />}
-          >
+          <Button variant="primary" onClick={handleDownload} leftIcon={<IconDownload size={18} />}>
             Download QR Code
           </Button>
         </div>

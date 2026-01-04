@@ -62,7 +62,7 @@ export default function ProjectsPage() {
   const tagStats = useMemo(() => {
     const stats: Record<string, number> = {
       'Strategic Portfolio': 0,
-      'Finders': 0,
+      Finders: 0,
       'Development Services': 0,
     };
 
@@ -103,10 +103,10 @@ export default function ProjectsPage() {
 
   // Stage options (all unique stages from projects)
   const stageOptions = useMemo(() => {
-    const uniqueStages = [...new Set(projects.map(p => p.currentStage))];
+    const uniqueStages = [...new Set(projects.map((p) => p.currentStage))];
     return [
       { value: '', label: 'All Stages' },
-      ...uniqueStages.map(stage => ({
+      ...uniqueStages.map((stage) => ({
         value: stage,
         label: StageLabels[stage],
       })),
@@ -159,8 +159,7 @@ export default function ProjectsPage() {
 
       // Japan Fit filter
       const matchesJapanFit =
-        !japanFitFilter ||
-        (project.japanMarketFit || 'NOT_ASSESSED') === japanFitFilter;
+        !japanFitFilter || (project.japanMarketFit || 'NOT_ASSESSED') === japanFitFilter;
 
       // Score filter
       let matchesScore = true;
@@ -176,7 +175,14 @@ export default function ProjectsPage() {
       if (flagFilter === 'stalled') matchesFlag = !!project.isStalled;
       if (flagFilter === 'japan') matchesFlag = !!project.japanInterest;
 
-      return matchesSearch && matchesTag && matchesStage && matchesJapanFit && matchesScore && matchesFlag;
+      return (
+        matchesSearch &&
+        matchesTag &&
+        matchesStage &&
+        matchesJapanFit &&
+        matchesScore &&
+        matchesFlag
+      );
     });
   }, [projects, searchTerm, tagFilter, stageFilter, japanFitFilter, scoreFilter, flagFilter]);
 
@@ -206,14 +212,13 @@ export default function ProjectsPage() {
     currentPage * itemsPerPage
   );
 
-  const hasFilters = searchTerm || tagFilter || stageFilter || japanFitFilter || scoreFilter || flagFilter;
+  const hasFilters =
+    searchTerm || tagFilter || stageFilter || japanFitFilter || scoreFilter || flagFilter;
 
   // Selection handlers
   const handleToggleSelection = (projectId: string) => {
     setSelectedProjectIds((prev) =>
-      prev.includes(projectId)
-        ? prev.filter((id) => id !== projectId)
-        : [...prev, projectId]
+      prev.includes(projectId) ? prev.filter((id) => id !== projectId) : [...prev, projectId]
     );
   };
 
@@ -234,16 +239,20 @@ export default function ProjectsPage() {
 
   // Determine if bulk movement is possible (all selected projects must have same tag)
   const selectedProjects = projects.filter((p) => selectedProjectIds.includes(p.id));
-  const canBulkMove = selectedProjects.length > 0 && selectedProjects.every((p) => p.tags[0] === selectedProjects[0].tags[0]);
+  const canBulkMove =
+    selectedProjects.length > 0 &&
+    selectedProjects.every((p) => p.tags[0] === selectedProjects[0].tags[0]);
   const bulkProjectTag = canBulkMove ? selectedProjects[0].tags[0] : 'Strategic Portfolio';
 
   const handleBulkMove = (newStage: Stage, reason: string, notes?: string) => {
-    dispatch(bulkMoveToStage({
-      projectIds: selectedProjectIds,
-      stage: newStage,
-      reason,
-      notes,
-    }));
+    dispatch(
+      bulkMoveToStage({
+        projectIds: selectedProjectIds,
+        stage: newStage,
+        reason,
+        notes,
+      })
+    );
     setSelectedProjectIds([]);
     setSelectionMode(false);
   };
@@ -288,7 +297,8 @@ export default function ProjectsPage() {
                   </div>
                   <div>
                     <p className="text-sm font-semibold text-gray-900">
-                      {selectedProjectIds.length} project{selectedProjectIds.length > 1 ? 's' : ''} selected
+                      {selectedProjectIds.length} project{selectedProjectIds.length > 1 ? 's' : ''}{' '}
+                      selected
                     </p>
                     <p className="text-xs text-gray-600">
                       {canBulkMove
@@ -301,11 +311,7 @@ export default function ProjectsPage() {
 
               <div className="flex items-center gap-2">
                 {paginatedProjects.length > selectedProjectIds.length && (
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={handleSelectAll}
-                  >
+                  <Button variant="ghost" size="sm" onClick={handleSelectAll}>
                     Select All ({paginatedProjects.length})
                   </Button>
                 )}
@@ -318,11 +324,7 @@ export default function ProjectsPage() {
                 >
                   Move to Stage
                 </Button>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={handleClearSelection}
-                >
+                <Button variant="ghost" size="sm" onClick={handleClearSelection}>
                   Clear
                 </Button>
               </div>
@@ -367,26 +369,23 @@ export default function ProjectsPage() {
                 className={`
                   bg-white/80 backdrop-blur-xl rounded-lg p-5 text-left transition-all duration-200
                   border cursor-pointer
-                  ${isActive
-                    ? 'border-brand-400 shadow-md bg-white/95'
-                    : 'border-white/40 hover:border-gray-300 hover:shadow-sm'
+                  ${
+                    isActive
+                      ? 'border-brand-400 shadow-md bg-white/95'
+                      : 'border-white/40 hover:border-gray-300 hover:shadow-sm'
                   }
                 `}
               >
                 <div className="flex items-start justify-between mb-3">
-                  <div className={`${colors.iconBg} w-10 h-10 rounded-lg flex items-center justify-center`}>
+                  <div
+                    className={`${colors.iconBg} w-10 h-10 rounded-lg flex items-center justify-center`}
+                  >
                     <Icon size={20} className={colors.iconText} />
                   </div>
-                  <div className={`text-2xl font-bold ${colors.countText}`}>
-                    {count}
-                  </div>
+                  <div className={`text-2xl font-bold ${colors.countText}`}>{count}</div>
                 </div>
-                <h3 className="font-semibold text-gray-900 mb-1 text-sm">
-                  {config.label}
-                </h3>
-                <p className="text-xs text-gray-600">
-                  {config.description}
-                </p>
+                <h3 className="font-semibold text-gray-900 mb-1 text-sm">{config.label}</h3>
+                <p className="text-xs text-gray-600">{config.description}</p>
               </button>
             );
           })}
@@ -562,10 +561,7 @@ export default function ProjectsPage() {
       </div>
 
       {/* Project Form Modal */}
-      <ProjectFormModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-      />
+      <ProjectFormModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
 
       {/* Bulk Stage Movement Modal */}
       <BulkStageMovementModal

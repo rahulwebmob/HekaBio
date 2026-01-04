@@ -41,8 +41,9 @@ export default function GateReviewPanel({
   // Find or create gate review
   const reviews = useAppSelector((state) => state.gate.reviews);
   const currentReview = useMemo(() => {
-    return existingReview || reviews.find(
-      (r) => r.projectId === projectId && r.gateNumber === gateNumber
+    return (
+      existingReview ||
+      reviews.find((r) => r.projectId === projectId && r.gateNumber === gateNumber)
     );
   }, [existingReview, reviews, projectId, gateNumber]);
 
@@ -183,7 +184,10 @@ export default function GateReviewPanel({
   };
 
   const getDecisionBadge = (dec: GateDecision) => {
-    const variants: Record<GateDecision, { variant: 'default' | 'info' | 'success' | 'warning' | 'error'; label: string }> = {
+    const variants: Record<
+      GateDecision,
+      { variant: 'default' | 'info' | 'success' | 'warning' | 'error'; label: string }
+    > = {
       PENDING: { variant: 'default', label: 'Pending Review' },
       APPROVED: { variant: 'success', label: 'Approved' },
       REJECTED: { variant: 'error', label: 'Rejected' },
@@ -223,9 +227,7 @@ export default function GateReviewPanel({
           <div className="flex items-center gap-3">
             {getDecisionBadge(currentReview.decision)}
             <div className="text-right text-sm">
-              <div className="font-medium">
-                {currentReview.checklistCompletionRate}% Complete
-              </div>
+              <div className="font-medium">{currentReview.checklistCompletionRate}% Complete</div>
               <div className="text-xs opacity-75">
                 {currentReview.checklist.filter((i) => i.completed).length} /{' '}
                 {currentReview.checklist.length} items
@@ -257,13 +259,13 @@ export default function GateReviewPanel({
                           className="w-5 h-5 text-brand-600 rounded focus:ring-brand-500 mt-0.5"
                         />
                         <div className="flex-1">
-                          <span className={`text-sm ${item.completed ? 'line-through text-gray-500' : 'text-gray-900'}`}>
+                          <span
+                            className={`text-sm ${item.completed ? 'line-through text-gray-500' : 'text-gray-900'}`}
+                          >
                             {item.text}
                             {item.required && <span className="text-error-600 ml-1">*</span>}
                           </span>
-                          {item.notes && (
-                            <p className="text-xs text-gray-600 mt-1">{item.notes}</p>
-                          )}
+                          {item.notes && <p className="text-xs text-gray-600 mt-1">{item.notes}</p>}
                         </div>
                       </label>
                     ))}
@@ -277,11 +279,7 @@ export default function GateReviewPanel({
           <Card padding="md">
             <div className="flex items-center justify-between mb-4">
               <h4 className="font-semibold text-gray-900">Scoring (Optional)</h4>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => setShowScoring(!showScoring)}
-              >
+              <Button variant="ghost" size="sm" onClick={() => setShowScoring(!showScoring)}>
                 {showScoring ? 'Hide' : 'Show'} Scores
               </Button>
             </div>
@@ -336,11 +334,7 @@ export default function GateReviewPanel({
           <Card padding="md">
             <div className="flex items-center justify-between mb-4">
               <h4 className="font-semibold text-gray-900">Gate Decision</h4>
-              <Button
-                variant="primary"
-                size="sm"
-                onClick={() => setShowDecision(!showDecision)}
-              >
+              <Button variant="primary" size="sm" onClick={() => setShowDecision(!showDecision)}>
                 {showDecision ? 'Hide' : 'Make'} Decision
               </Button>
             </div>
@@ -354,10 +348,30 @@ export default function GateReviewPanel({
                   </label>
                   <div className="grid grid-cols-2 gap-3">
                     {[
-                      { value: 'APPROVED' as GateDecision, label: 'Approve', icon: IconCheck, color: 'success' },
-                      { value: 'CONDITIONAL' as GateDecision, label: 'Conditional', icon: IconAlertCircle, color: 'warning' },
-                      { value: 'DEFERRED' as GateDecision, label: 'Defer', icon: IconClock, color: 'info' },
-                      { value: 'REJECTED' as GateDecision, label: 'Reject', icon: IconX, color: 'error' },
+                      {
+                        value: 'APPROVED' as GateDecision,
+                        label: 'Approve',
+                        icon: IconCheck,
+                        color: 'success',
+                      },
+                      {
+                        value: 'CONDITIONAL' as GateDecision,
+                        label: 'Conditional',
+                        icon: IconAlertCircle,
+                        color: 'warning',
+                      },
+                      {
+                        value: 'DEFERRED' as GateDecision,
+                        label: 'Defer',
+                        icon: IconClock,
+                        color: 'info',
+                      },
+                      {
+                        value: 'REJECTED' as GateDecision,
+                        label: 'Reject',
+                        icon: IconX,
+                        color: 'error',
+                      },
                     ].map((option) => (
                       <button
                         key={option.value}
@@ -368,7 +382,12 @@ export default function GateReviewPanel({
                             : 'border-gray-300 hover:border-gray-400'
                         }`}
                       >
-                        <option.icon size={20} className={decision === option.value ? `text-${option.color}-600` : 'text-gray-600'} />
+                        <option.icon
+                          size={20}
+                          className={
+                            decision === option.value ? `text-${option.color}-600` : 'text-gray-600'
+                          }
+                        />
                         <span className="font-medium">{option.label}</span>
                       </button>
                     ))}
@@ -391,12 +410,32 @@ export default function GateReviewPanel({
 
                 {/* Strengths, Concerns, Recommendations */}
                 {[
-                  { label: 'Strengths', items: strengths, setItems: setStrengths, input: strengthInput, setInput: setStrengthInput },
-                  { label: 'Concerns', items: concerns, setItems: setConcerns, input: concernInput, setInput: setConcernInput },
-                  { label: 'Recommendations', items: recommendations, setItems: setRecommendations, input: recommendationInput, setInput: setRecommendationInput },
+                  {
+                    label: 'Strengths',
+                    items: strengths,
+                    setItems: setStrengths,
+                    input: strengthInput,
+                    setInput: setStrengthInput,
+                  },
+                  {
+                    label: 'Concerns',
+                    items: concerns,
+                    setItems: setConcerns,
+                    input: concernInput,
+                    setInput: setConcernInput,
+                  },
+                  {
+                    label: 'Recommendations',
+                    items: recommendations,
+                    setItems: setRecommendations,
+                    input: recommendationInput,
+                    setInput: setRecommendationInput,
+                  },
                 ].map((section) => (
                   <div key={section.label}>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">{section.label}</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      {section.label}
+                    </label>
                     <div className="flex gap-2 mb-2">
                       <input
                         type="text"
@@ -431,7 +470,9 @@ export default function GateReviewPanel({
                         >
                           {item}
                           <button
-                            onClick={() => section.setItems(section.items.filter((_, i) => i !== index))}
+                            onClick={() =>
+                              section.setItems(section.items.filter((_, i) => i !== index))
+                            }
                             className="hover:text-gray-900 transition-colors"
                           >
                             <IconX size={14} />
@@ -476,7 +517,10 @@ export default function GateReviewPanel({
                     </div>
                     <div className="space-y-1">
                       {conditions.map((condition, index) => (
-                        <div key={index} className="flex items-center gap-2 p-2 bg-warning-50 rounded">
+                        <div
+                          key={index}
+                          className="flex items-center gap-2 p-2 bg-warning-50 rounded"
+                        >
                           <span className="text-sm flex-1">{condition}</span>
                           <button
                             onClick={() => setConditions(conditions.filter((_, i) => i !== index))}
@@ -554,7 +598,9 @@ export default function GateReviewPanel({
                             <li key={index} className="flex items-center gap-2 text-sm">
                               <span>• {task}</span>
                               <button
-                                onClick={() => setFollowUpTasks(followUpTasks.filter((_, i) => i !== index))}
+                                onClick={() =>
+                                  setFollowUpTasks(followUpTasks.filter((_, i) => i !== index))
+                                }
                                 className="text-gray-600 hover:text-gray-900 ml-auto"
                               >
                                 <IconX size={14} />
@@ -575,7 +621,9 @@ export default function GateReviewPanel({
                   <Button
                     variant="primary"
                     onClick={handleSubmitDecision}
-                    disabled={!comments.trim() || (decision === 'CONDITIONAL' && conditions.length === 0)}
+                    disabled={
+                      !comments.trim() || (decision === 'CONDITIONAL' && conditions.length === 0)
+                    }
                   >
                     Submit Decision
                   </Button>
@@ -600,7 +648,9 @@ export default function GateReviewPanel({
                   <div>
                     <span className="text-sm font-medium text-gray-700">Strengths:</span>
                     <ul className="list-disc list-inside text-sm text-gray-600 mt-1">
-                      {currentReview.strengths.map((s, i) => <li key={i}>{s}</li>)}
+                      {currentReview.strengths.map((s, i) => (
+                        <li key={i}>{s}</li>
+                      ))}
                     </ul>
                   </div>
                 )}
@@ -608,7 +658,9 @@ export default function GateReviewPanel({
                   <div>
                     <span className="text-sm font-medium text-gray-700">Concerns:</span>
                     <ul className="list-disc list-inside text-sm text-gray-600 mt-1">
-                      {currentReview.concerns.map((c, i) => <li key={i}>{c}</li>)}
+                      {currentReview.concerns.map((c, i) => (
+                        <li key={i}>{c}</li>
+                      ))}
                     </ul>
                   </div>
                 )}

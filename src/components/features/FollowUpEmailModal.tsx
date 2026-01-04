@@ -188,9 +188,7 @@ export function FollowUpEmailModal({
 
             <div>
               <div className="flex items-center justify-between mb-2">
-                <label className="block text-sm font-medium text-gray-700">
-                  Email Body
-                </label>
+                <label className="block text-sm font-medium text-gray-700">Email Body</label>
                 <button
                   onClick={() => setIsEditing(!isEditing)}
                   className="text-sm text-brand-600 hover:text-brand-700 flex items-center gap-1"
@@ -217,11 +215,10 @@ export function FollowUpEmailModal({
 
           {/* Follow-Up Form Link */}
           <div className="p-4 bg-gray-50 border border-gray-200 rounded-lg">
-            <h4 className="text-sm font-semibold text-gray-900 mb-2">
-              Follow-Up Form Link
-            </h4>
+            <h4 className="text-sm font-semibold text-gray-900 mb-2">Follow-Up Form Link</h4>
             <p className="text-xs text-gray-600 mb-3">
-              This link will direct the recipient to a focused form containing only the missing fields.
+              This link will direct the recipient to a focused form containing only the missing
+              fields.
             </p>
             <div className="flex gap-2">
               <Input
@@ -242,9 +239,7 @@ export function FollowUpEmailModal({
 
           {/* Email Tips */}
           <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-            <h4 className="text-sm font-semibold text-blue-900 mb-2">
-              Email Best Practices
-            </h4>
+            <h4 className="text-sm font-semibold text-blue-900 mb-2">Email Best Practices</h4>
             <ul className="text-xs text-blue-800 space-y-1">
               <li>• Be specific about what information is needed and why</li>
               <li>• Provide a clear deadline if time-sensitive</li>
@@ -261,11 +256,10 @@ export function FollowUpEmailModal({
             <div className="w-16 h-16 bg-success-100 rounded-full flex items-center justify-center mb-4">
               <IconCheck size={32} className="text-success-600" />
             </div>
-            <h3 className="text-xl font-semibold text-success-900 mb-2">
-              Follow-Up Email Sent!
-            </h3>
+            <h3 className="text-xl font-semibold text-success-900 mb-2">Follow-Up Email Sent!</h3>
             <p className="text-sm text-success-700 text-center max-w-md">
-              The follow-up email has been sent to <strong>{recipientEmail}</strong> with a link to complete the missing information.
+              The follow-up email has been sent to <strong>{recipientEmail}</strong> with a link to
+              complete the missing information.
             </p>
           </div>
 

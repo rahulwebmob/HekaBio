@@ -1,0 +1,33 @@
+# Dependencies
+node_modules
+
+# Build outputs
+dist
+build
+.vite
+
+# Logs
+*.log
+
+# Environment files
+.env
+.env.*
+
+# Coverage
+coverage
+
+# Lock files
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Generated files
+*.gen.ts
+*.generated.ts
+
+# Markdown files (optional - uncomment if you want to exclude)
+# *.md
+
+# JSON files that shouldn't be formatted
+tsconfig.json
+tsconfig.*.json

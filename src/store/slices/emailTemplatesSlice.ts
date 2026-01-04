@@ -154,11 +154,7 @@ const emailTemplatesSlice = createSlice({
   },
 });
 
-export const {
-  addTemplate,
-  updateTemplate,
-  deleteTemplate,
-  toggleTemplateActive,
-} = emailTemplatesSlice.actions;
+export const { addTemplate, updateTemplate, deleteTemplate, toggleTemplateActive } =
+  emailTemplatesSlice.actions;
 
 export default emailTemplatesSlice.reducer;

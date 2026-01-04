@@ -4,7 +4,12 @@
  */
 
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
-import type { SurveyTemplate, SurveyInstance, SubmissionStatus, SurveyResponse } from '../../types/survey.types';
+import type {
+  SurveyTemplate,
+  SurveyInstance,
+  SubmissionStatus,
+  SurveyResponse,
+} from '../../types/survey.types';
 import { mockSurveyTemplates, mockSurveyInstances } from '../../data/mockSurveys';
 
 interface SurveysState {
@@ -147,10 +152,7 @@ const surveysSlice = createSlice({
     },
 
     // ===== Due Date Management =====
-    updateDueDate: (
-      state,
-      action: PayloadAction<{ instanceId: string; dueDate: string }>
-    ) => {
+    updateDueDate: (state, action: PayloadAction<{ instanceId: string; dueDate: string }>) => {
       const instance = state.instances.find((i) => i.id === action.payload.instanceId);
       if (instance) {
         instance.dueDate = action.payload.dueDate;
@@ -160,10 +162,7 @@ const surveysSlice = createSlice({
     },
 
     // ===== Assignment =====
-    reassignSurvey: (
-      state,
-      action: PayloadAction<{ instanceId: string; assignedTo: string }>
-    ) => {
+    reassignSurvey: (state, action: PayloadAction<{ instanceId: string; assignedTo: string }>) => {
       const instance = state.instances.find((i) => i.id === action.payload.instanceId);
       if (instance) {
         instance.assignedTo = action.payload.assignedTo;

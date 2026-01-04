@@ -69,10 +69,13 @@ export default function EmailTemplatesManager({
     return {
       total: templates.length,
       active: templates.filter((t) => t.isActive).length,
-      byCategory: templates.reduce((acc, t) => {
-        acc[t.category] = (acc[t.category] || 0) + 1;
-        return acc;
-      }, {} as Record<EmailTemplateCategory, number>),
+      byCategory: templates.reduce(
+        (acc, t) => {
+          acc[t.category] = (acc[t.category] || 0) + 1;
+          return acc;
+        },
+        {} as Record<EmailTemplateCategory, number>
+      ),
     };
   }, [templates]);
 
@@ -218,17 +221,22 @@ export default function EmailTemplatesManager({
               </Card>
             ) : (
               filteredTemplates.map((template) => (
-                <Card key={template.id} padding="md" shadow="sm" className="hover:shadow-md transition-shadow">
+                <Card
+                  key={template.id}
+                  padding="md"
+                  shadow="sm"
+                  className="hover:shadow-md transition-shadow"
+                >
                   <div className="space-y-3">
                     {/* Header */}
                     <div className="flex items-start justify-between gap-3">
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2 mb-1">
-                          <h3 className="font-semibold text-gray-900 truncate">
-                            {template.name}
-                          </h3>
+                          <h3 className="font-semibold text-gray-900 truncate">{template.name}</h3>
                           {!template.isActive && (
-                            <Badge variant="default" size="sm">Inactive</Badge>
+                            <Badge variant="default" size="sm">
+                              Inactive
+                            </Badge>
                           )}
                         </div>
                         <div className="flex items-center gap-2 mb-2">

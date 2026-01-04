@@ -173,7 +173,10 @@ const ddSlice = createSlice({
 
           // Recalculate workspace totals
           workspace.totalItems = workspace.sections.reduce((sum, s) => sum + s.totalItems, 0);
-          workspace.completedItems = workspace.sections.reduce((sum, s) => sum + s.completedItems, 0);
+          workspace.completedItems = workspace.sections.reduce(
+            (sum, s) => sum + s.completedItems,
+            0
+          );
           workspace.overallCompletionPercentage = calculateDDCompletion(
             workspace.sections.flatMap((s) => s.items)
           );
@@ -218,7 +221,10 @@ const ddSlice = createSlice({
             section.updatedAt = now;
 
             // Recalculate workspace totals
-            workspace.completedItems = workspace.sections.reduce((sum, s) => sum + s.completedItems, 0);
+            workspace.completedItems = workspace.sections.reduce(
+              (sum, s) => sum + s.completedItems,
+              0
+            );
             workspace.blockedItems = workspace.sections.reduce((sum, s) => sum + s.blockedItems, 0);
             workspace.overallCompletionPercentage = calculateDDCompletion(
               workspace.sections.flatMap((s) => s.items)
@@ -336,7 +342,9 @@ const ddSlice = createSlice({
     // Template management
     createDDTemplate: (
       state,
-      action: PayloadAction<Omit<DDTemplate, 'id' | 'isActive' | 'usageCount' | 'createdAt' | 'createdBy'>>
+      action: PayloadAction<
+        Omit<DDTemplate, 'id' | 'isActive' | 'usageCount' | 'createdAt' | 'createdBy'>
+      >
     ) => {
       const now = new Date().toISOString();
       const newTemplate: DDTemplate = {

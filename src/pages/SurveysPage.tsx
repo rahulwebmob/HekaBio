@@ -5,12 +5,7 @@
 
 import { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import {
-  IconSearch,
-  IconFileText,
-  IconEye,
-  IconSend,
-} from '@tabler/icons-react';
+import { IconSearch, IconFileText, IconEye, IconSend } from '@tabler/icons-react';
 import { useAppSelector } from '../app/store';
 import { AppLayout } from '../components/layout';
 import { Button, Card, Input, Select, Badge } from '../components/ui';
@@ -141,9 +136,7 @@ export default function SurveysPage() {
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-3xl font-semibold text-gray-900">Surveys</h1>
-            <p className="text-gray-600 mt-1">
-              Manage survey distribution and track responses
-            </p>
+            <p className="text-gray-600 mt-1">Manage survey distribution and track responses</p>
           </div>
           <Button
             variant="primary"
@@ -251,9 +244,7 @@ export default function SurveysPage() {
                       </td>
                       <td className="px-6 py-4">
                         <div>
-                          <p className="text-sm font-medium text-gray-900">
-                            {survey.company.name}
-                          </p>
+                          <p className="text-sm font-medium text-gray-900">{survey.company.name}</p>
                           {survey.project && (
                             <p className="text-xs text-gray-600">{survey.project.name}</p>
                           )}
@@ -290,13 +281,15 @@ export default function SurveysPage() {
                                 isOverdue(survey.dueDate, survey.status)
                                   ? 'text-error-600 font-semibold'
                                   : isDueSoon(survey.dueDate)
-                                  ? 'text-warning-600 font-semibold'
-                                  : 'text-gray-600'
+                                    ? 'text-warning-600 font-semibold'
+                                    : 'text-gray-600'
                               }`}
                             >
                               Due: {new Date(survey.dueDate).toLocaleDateString()}
                               {isOverdue(survey.dueDate, survey.status) && ' (Overdue)'}
-                              {isDueSoon(survey.dueDate) && !isOverdue(survey.dueDate, survey.status) && ' (Soon)'}
+                              {isDueSoon(survey.dueDate) &&
+                                !isOverdue(survey.dueDate, survey.status) &&
+                                ' (Soon)'}
                             </p>
                           )}
                         </div>
@@ -383,10 +376,7 @@ export default function SurveysPage() {
       </div>
 
       {/* Send Survey Modal */}
-      <SendSurveyModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-      />
+      <SendSurveyModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
     </AppLayout>
   );
 }

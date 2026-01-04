@@ -42,7 +42,7 @@ export default function EventFormDrawer({ isOpen, onClose, event }: EventFormDra
         endDate: endDate.toISOString().split('T')[0],
         endTime: endDate.toTimeString().slice(0, 5),
         allDay: event.allDay,
-        locationType: event.location?.type || 'ONLINE' as LocationType,
+        locationType: event.location?.type || ('ONLINE' as LocationType),
         locationUrl: event.location?.meetingUrl || '',
         locationAddress: event.location?.address || '',
         agenda: event.agenda || '',
@@ -330,7 +330,9 @@ export default function EventFormDrawer({ isOpen, onClose, event }: EventFormDra
                 onChange={(e) => handleInputChange('startTime', e.target.value)}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500 transition-colors"
               />
-              {errors.startTime && <p className="mt-1 text-sm text-error-600">{errors.startTime}</p>}
+              {errors.startTime && (
+                <p className="mt-1 text-sm text-error-600">{errors.startTime}</p>
+              )}
             </div>
           )}
         </div>

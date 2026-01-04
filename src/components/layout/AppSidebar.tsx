@@ -115,7 +115,8 @@ const menuItems: MenuItem[] = [
 
 export default function AppSidebar() {
   const location = useLocation();
-  const { isCollapsed, isMobileOpen, isHoverExpanded, setHoverExpanded, closeMobile } = useSidebar();
+  const { isCollapsed, isMobileOpen, isHoverExpanded, setHoverExpanded, closeMobile } =
+    useSidebar();
 
   const isExpanded = !isCollapsed || isHoverExpanded;
   const sidebarWidth = isExpanded ? 'w-64' : 'w-20';
@@ -128,10 +129,7 @@ export default function AppSidebar() {
     <>
       {/* Mobile Overlay */}
       {isMobileOpen && (
-        <div
-          className="fixed inset-0 bg-black/50 z-40 lg:hidden"
-          onClick={closeMobile}
-        />
+        <div className="fixed inset-0 bg-black/50 z-40 lg:hidden" onClick={closeMobile} />
       )}
 
       {/* Sidebar */}
@@ -184,9 +182,7 @@ export default function AppSidebar() {
                   `}
                 >
                   <span className="flex-shrink-0">{item.icon}</span>
-                  {isExpanded && (
-                    <span className="text-sm font-medium">{item.label}</span>
-                  )}
+                  {isExpanded && <span className="text-sm font-medium">{item.label}</span>}
                   {item.badge && isExpanded && (
                     <span className="ml-auto text-xs bg-brand-500 text-white px-2 py-0.5 rounded-full">
                       {item.badge}

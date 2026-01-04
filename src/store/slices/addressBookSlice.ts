@@ -36,15 +36,15 @@ const addressBookSlice = createSlice({
       state.companies.push(action.payload);
     },
     updateCompany: (state, action: PayloadAction<Company>) => {
-      const index = state.companies.findIndex(c => c.id === action.payload.id);
+      const index = state.companies.findIndex((c) => c.id === action.payload.id);
       if (index !== -1) {
         state.companies[index] = action.payload;
       }
     },
     deleteCompany: (state, action: PayloadAction<string>) => {
-      state.companies = state.companies.filter(c => c.id !== action.payload);
+      state.companies = state.companies.filter((c) => c.id !== action.payload);
       // Also delete related contacts
-      state.contacts = state.contacts.filter(c => c.companyId !== action.payload);
+      state.contacts = state.contacts.filter((c) => c.companyId !== action.payload);
     },
     setSelectedCompany: (state, action: PayloadAction<string | null>) => {
       state.selectedCompanyId = action.payload;
@@ -55,13 +55,13 @@ const addressBookSlice = createSlice({
       state.contacts.push(action.payload);
     },
     updateContact: (state, action: PayloadAction<Contact>) => {
-      const index = state.contacts.findIndex(c => c.id === action.payload.id);
+      const index = state.contacts.findIndex((c) => c.id === action.payload.id);
       if (index !== -1) {
         state.contacts[index] = action.payload;
       }
     },
     deleteContact: (state, action: PayloadAction<string>) => {
-      state.contacts = state.contacts.filter(c => c.id !== action.payload);
+      state.contacts = state.contacts.filter((c) => c.id !== action.payload);
     },
     setSelectedContact: (state, action: PayloadAction<string | null>) => {
       state.selectedContactId = action.payload;

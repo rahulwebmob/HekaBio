@@ -18,10 +18,7 @@ import {
   IconAlertCircle,
 } from '@tabler/icons-react';
 import { useAppDispatch } from '../../../app/store';
-import {
-  deleteEvent,
-  updateEvent,
-} from '../../../store/slices/calendarSlice';
+import { deleteEvent, updateEvent } from '../../../store/slices/calendarSlice';
 import { Drawer, Badge, Button } from '../../ui';
 import type {
   CalendarEvent,
@@ -129,14 +126,21 @@ export default function EventDetailDrawer({
   };
 
   const getResponseStatusBadge = (status: string) => {
-    const variants: Record<string, { variant: 'default' | 'info' | 'success' | 'warning' | 'error'; label: string }> = {
+    const variants: Record<
+      string,
+      { variant: 'default' | 'info' | 'success' | 'warning' | 'error'; label: string }
+    > = {
       ACCEPTED: { variant: 'success', label: 'Accepted' },
       DECLINED: { variant: 'error', label: 'Declined' },
       TENTATIVE: { variant: 'warning', label: 'Tentative' },
       PENDING: { variant: 'default', label: 'Pending' },
     };
     const config = variants[status] || variants.PENDING;
-    return <Badge variant={config.variant} size="sm">{config.label}</Badge>;
+    return (
+      <Badge variant={config.variant} size="sm">
+        {config.label}
+      </Badge>
+    );
   };
 
   const isPastEvent = new Date(event.endTime) < new Date();
@@ -214,11 +218,15 @@ export default function EventDetailDrawer({
               <div className="space-y-1">
                 <div className="flex items-center gap-2">
                   <span className="text-sm text-gray-600">Start:</span>
-                  <span className="font-semibold text-gray-900">{formatDateTime(event.startTime)}</span>
+                  <span className="font-semibold text-gray-900">
+                    {formatDateTime(event.startTime)}
+                  </span>
                 </div>
                 <div className="flex items-center gap-2">
                   <span className="text-sm text-gray-600">End:</span>
-                  <span className="font-semibold text-gray-900">{formatDateTime(event.endTime)}</span>
+                  <span className="font-semibold text-gray-900">
+                    {formatDateTime(event.endTime)}
+                  </span>
                 </div>
               </div>
             )}
@@ -267,9 +275,7 @@ export default function EventDetailDrawer({
           <div className="bg-white/60 rounded-lg p-4">
             <div className="flex items-center gap-2 text-gray-600 mb-3">
               <IconUsers size={20} />
-              <span className="text-sm font-medium">
-                Attendees ({event.attendees.length})
-              </span>
+              <span className="text-sm font-medium">Attendees ({event.attendees.length})</span>
             </div>
             <div className="space-y-2">
               {event.attendees.map((attendee) => (
@@ -315,8 +321,8 @@ export default function EventDetailDrawer({
                     {reminder.minutesBefore < 60
                       ? `${reminder.minutesBefore} minutes before`
                       : reminder.minutesBefore < 1440
-                      ? `${Math.floor(reminder.minutesBefore / 60)} hours before`
-                      : `${Math.floor(reminder.minutesBefore / 1440)} days before`}
+                        ? `${Math.floor(reminder.minutesBefore / 60)} hours before`
+                        : `${Math.floor(reminder.minutesBefore / 1440)} days before`}
                   </span>
                   <div className="flex items-center gap-2">
                     <Badge variant="default" size="sm">

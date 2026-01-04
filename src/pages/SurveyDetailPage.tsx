@@ -34,9 +34,7 @@ export default function SurveyDetailPage() {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
-  const survey = useAppSelector((state) =>
-    state.surveys.instances.find((s) => s.id === id)
-  );
+  const survey = useAppSelector((state) => state.surveys.instances.find((s) => s.id === id));
 
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [activeTab, setActiveTab] = useState<'overview' | 'responses' | 'analytics'>('overview');
@@ -200,7 +198,9 @@ export default function SurveyDetailPage() {
     console.log('Approved extracted data:', approvedData);
     // TODO: Apply extracted data to project
     // For now, just show a success message
-    alert(`Successfully extracted ${Object.keys(approvedData).length} fields. Data can now be used to enrich the project.`);
+    alert(
+      `Successfully extracted ${Object.keys(approvedData).length} fields. Data can now be used to enrich the project.`
+    );
   };
 
   // Check if survey has uploaded files
@@ -270,7 +270,13 @@ export default function SurveyDetailPage() {
             {hasUploadedFiles && (
               <Button
                 variant="primary"
-                leftIcon={isExtracting ? <IconLoader size={18} className="animate-spin" /> : <IconSparkles size={18} />}
+                leftIcon={
+                  isExtracting ? (
+                    <IconLoader size={18} className="animate-spin" />
+                  ) : (
+                    <IconSparkles size={18} />
+                  )
+                }
                 onClick={handleExtractData}
                 disabled={isExtracting}
               >
@@ -287,11 +293,7 @@ export default function SurveyDetailPage() {
               </Button>
             )}
             {survey.status !== 'REVIEWED' && (
-              <Button
-                variant="outline"
-                leftIcon={<IconSend size={18} />}
-                onClick={handleResend}
-              >
+              <Button variant="outline" leftIcon={<IconSend size={18} />} onClick={handleResend}>
                 Resend
               </Button>
             )}
@@ -313,11 +315,13 @@ export default function SurveyDetailPage() {
               Overdue
             </Badge>
           )}
-          {survey.dueDate && isDueSoon(survey.dueDate) && !isOverdue(survey.dueDate, survey.status) && (
-            <Badge variant="warning" size="md">
-              Due Soon
-            </Badge>
-          )}
+          {survey.dueDate &&
+            isDueSoon(survey.dueDate) &&
+            !isOverdue(survey.dueDate, survey.status) && (
+              <Badge variant="warning" size="md">
+                Due Soon
+              </Badge>
+            )}
         </div>
 
         {/* Tabs */}
@@ -387,127 +391,133 @@ export default function SurveyDetailPage() {
               <>
                 {/* Survey Overview */}
                 <Card
-              padding="lg"
-              shadow="sm"
-              header={
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-brand-100 rounded-lg flex items-center justify-center">
-                    <IconFileText size={20} className="text-brand-600" />
-                  </div>
-                  <h2 className="text-xl font-semibold text-gray-900">Survey Details</h2>
-                </div>
-              }
-            >
-              <div className="space-y-4">
-                <div>
-                  <p className="text-sm text-gray-600 mb-1">Template</p>
-                  <p className="text-base font-semibold text-gray-900">{survey.template.name}</p>
-                  <p className="text-sm text-gray-600">{survey.template.type}</p>
-                </div>
-
-                {survey.template.description && (
-                  <div>
-                    <p className="text-sm text-gray-600 mb-1">Description</p>
-                    <p className="text-base text-gray-700">{survey.template.description}</p>
-                  </div>
-                )}
-
-                <div className="pt-4 border-t border-gray-200">
-                  <div className="flex items-center justify-between mb-2">
-                    <p className="text-sm text-gray-600">Completion Progress</p>
-                    <span className={`text-lg font-bold ${getCompletionColor(survey.completionPercentage)}`}>
-                      {survey.completionPercentage}%
-                    </span>
-                  </div>
-                  <div className="w-full bg-gray-200 rounded-full h-3">
-                    <div
-                      className="bg-brand-500 h-3 rounded-full transition-all"
-                      style={{ width: `${survey.completionPercentage}%` }}
-                    />
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4 border-t border-gray-200">
-                  <div>
-                    <p className="text-sm text-gray-600 mb-1">Total Sections</p>
-                    <p className="text-base font-semibold text-gray-900">
-                      {survey.template.sections.length}
-                    </p>
-                  </div>
-                  <div>
-                    <p className="text-sm text-gray-600 mb-1">Total Questions</p>
-                    <p className="text-base font-semibold text-gray-900">
-                      {survey.template.sections.reduce((sum, section) => sum + section.questions.length, 0)}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </Card>
-
-            {/* Sections Overview */}
-            <Card
-              padding="lg"
-              shadow="sm"
-              header={
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-brand-100 rounded-lg flex items-center justify-center">
-                    <IconFileText size={20} className="text-brand-600" />
-                  </div>
-                  <h2 className="text-xl font-semibold text-gray-900">
-                    Survey Sections ({survey.template.sections.length})
-                  </h2>
-                </div>
-              }
-            >
-              <div className="space-y-4">
-                {survey.template.sections.map((section, index) => (
-                  <div
-                    key={section.id}
-                    className="p-4 rounded-lg border border-gray-200/50 hover:bg-gray-50 transition-colors"
-                  >
-                    <div className="flex items-start gap-3">
-                      <div className="w-8 h-8 bg-brand-100 rounded-full flex items-center justify-center flex-shrink-0">
-                        <span className="text-sm font-semibold text-brand-600">{index + 1}</span>
+                  padding="lg"
+                  shadow="sm"
+                  header={
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 bg-brand-100 rounded-lg flex items-center justify-center">
+                        <IconFileText size={20} className="text-brand-600" />
                       </div>
-                      <div className="flex-1">
-                        <h3 className="text-base font-semibold text-gray-900 mb-1">
-                          {section.title}
-                        </h3>
-                        {section.description && (
-                          <p className="text-sm text-gray-600 mb-2">{section.description}</p>
-                        )}
-                        <p className="text-xs text-gray-500">
-                          {section.questions.length} question{section.questions.length !== 1 ? 's' : ''}
+                      <h2 className="text-xl font-semibold text-gray-900">Survey Details</h2>
+                    </div>
+                  }
+                >
+                  <div className="space-y-4">
+                    <div>
+                      <p className="text-sm text-gray-600 mb-1">Template</p>
+                      <p className="text-base font-semibold text-gray-900">
+                        {survey.template.name}
+                      </p>
+                      <p className="text-sm text-gray-600">{survey.template.type}</p>
+                    </div>
+
+                    {survey.template.description && (
+                      <div>
+                        <p className="text-sm text-gray-600 mb-1">Description</p>
+                        <p className="text-base text-gray-700">{survey.template.description}</p>
+                      </div>
+                    )}
+
+                    <div className="pt-4 border-t border-gray-200">
+                      <div className="flex items-center justify-between mb-2">
+                        <p className="text-sm text-gray-600">Completion Progress</p>
+                        <span
+                          className={`text-lg font-bold ${getCompletionColor(survey.completionPercentage)}`}
+                        >
+                          {survey.completionPercentage}%
+                        </span>
+                      </div>
+                      <div className="w-full bg-gray-200 rounded-full h-3">
+                        <div
+                          className="bg-brand-500 h-3 rounded-full transition-all"
+                          style={{ width: `${survey.completionPercentage}%` }}
+                        />
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4 border-t border-gray-200">
+                      <div>
+                        <p className="text-sm text-gray-600 mb-1">Total Sections</p>
+                        <p className="text-base font-semibold text-gray-900">
+                          {survey.template.sections.length}
+                        </p>
+                      </div>
+                      <div>
+                        <p className="text-sm text-gray-600 mb-1">Total Questions</p>
+                        <p className="text-base font-semibold text-gray-900">
+                          {survey.template.sections.reduce(
+                            (sum, section) => sum + section.questions.length,
+                            0
+                          )}
                         </p>
                       </div>
                     </div>
                   </div>
-                ))}
-              </div>
-            </Card>
+                </Card>
 
-            {/* Gap Analysis */}
-            {survey.status === 'SUBMITTED' && (
-              <GapAnalysisReport surveyInstance={survey} />
-            )}
+                {/* Sections Overview */}
+                <Card
+                  padding="lg"
+                  shadow="sm"
+                  header={
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 bg-brand-100 rounded-lg flex items-center justify-center">
+                        <IconFileText size={20} className="text-brand-600" />
+                      </div>
+                      <h2 className="text-xl font-semibold text-gray-900">
+                        Survey Sections ({survey.template.sections.length})
+                      </h2>
+                    </div>
+                  }
+                >
+                  <div className="space-y-4">
+                    {survey.template.sections.map((section, index) => (
+                      <div
+                        key={section.id}
+                        className="p-4 rounded-lg border border-gray-200/50 hover:bg-gray-50 transition-colors"
+                      >
+                        <div className="flex items-start gap-3">
+                          <div className="w-8 h-8 bg-brand-100 rounded-full flex items-center justify-center flex-shrink-0">
+                            <span className="text-sm font-semibold text-brand-600">
+                              {index + 1}
+                            </span>
+                          </div>
+                          <div className="flex-1">
+                            <h3 className="text-base font-semibold text-gray-900 mb-1">
+                              {section.title}
+                            </h3>
+                            {section.description && (
+                              <p className="text-sm text-gray-600 mb-2">{section.description}</p>
+                            )}
+                            <p className="text-xs text-gray-500">
+                              {section.questions.length} question
+                              {section.questions.length !== 1 ? 's' : ''}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </Card>
 
-            {/* Review Notes */}
-            {survey.reviewNotes && (
-              <Card
-                padding="lg"
-                shadow="sm"
-                header={
-                  <h2 className="text-xl font-semibold text-gray-900">Review Notes</h2>
-                }
-              >
-                <p className="text-gray-700 leading-relaxed">{survey.reviewNotes}</p>
-                {survey.reviewedAt && (
-                  <p className="text-xs text-gray-500 mt-4">
-                    Reviewed on {new Date(survey.reviewedAt).toLocaleDateString()}
-                  </p>
+                {/* Gap Analysis */}
+                {survey.status === 'SUBMITTED' && <GapAnalysisReport surveyInstance={survey} />}
+
+                {/* Review Notes */}
+                {survey.reviewNotes && (
+                  <Card
+                    padding="lg"
+                    shadow="sm"
+                    header={<h2 className="text-xl font-semibold text-gray-900">Review Notes</h2>}
+                  >
+                    <p className="text-gray-700 leading-relaxed">{survey.reviewNotes}</p>
+                    {survey.reviewedAt && (
+                      <p className="text-xs text-gray-500 mt-4">
+                        Reviewed on {new Date(survey.reviewedAt).toLocaleDateString()}
+                      </p>
+                    )}
+                  </Card>
                 )}
-              </Card>
-            )}
               </>
             )}
 
@@ -606,12 +616,8 @@ export default function SurveyDetailPage() {
                       <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
                         <IconMessageCircle size={32} className="text-gray-400" />
                       </div>
-                      <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                        No responses yet
-                      </h3>
-                      <p className="text-gray-600">
-                        This survey hasn't been filled out yet.
-                      </p>
+                      <h3 className="text-lg font-semibold text-gray-900 mb-2">No responses yet</h3>
+                      <p className="text-gray-600">This survey hasn't been filled out yet.</p>
                     </div>
                   </Card>
                 )}
@@ -625,7 +631,9 @@ export default function SurveyDetailPage() {
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                   <Card padding="md" shadow="sm">
                     <p className="text-sm text-gray-600 mb-1">Completion Rate</p>
-                    <p className={`text-3xl font-bold ${getCompletionColor(survey.completionPercentage)}`}>
+                    <p
+                      className={`text-3xl font-bold ${getCompletionColor(survey.completionPercentage)}`}
+                    >
                       {survey.completionPercentage}%
                     </p>
                   </Card>
@@ -655,9 +663,7 @@ export default function SurveyDetailPage() {
 
                 {/* Section-by-Section Completion */}
                 <Card padding="lg" shadow="sm">
-                  <h2 className="text-xl font-semibold text-gray-900 mb-6">
-                    Section Completion
-                  </h2>
+                  <h2 className="text-xl font-semibold text-gray-900 mb-6">Section Completion</h2>
                   <div className="space-y-4">
                     {survey.template.sections.map((section, idx) => {
                       const totalQuestions = section.questions.length;
@@ -680,7 +686,9 @@ export default function SurveyDetailPage() {
                                 {answeredQuestions} / {totalQuestions} questions answered
                               </p>
                             </div>
-                            <span className={`text-sm font-bold ${getCompletionColor(sectionPercentage)}`}>
+                            <span
+                              className={`text-sm font-bold ${getCompletionColor(sectionPercentage)}`}
+                            >
                               {sectionPercentage}%
                             </span>
                           </div>
@@ -698,9 +706,7 @@ export default function SurveyDetailPage() {
 
                 {/* Response Quality */}
                 <Card padding="lg" shadow="sm">
-                  <h2 className="text-xl font-semibold text-gray-900 mb-6">
-                    Response Quality
-                  </h2>
+                  <h2 className="text-xl font-semibold text-gray-900 mb-6">Response Quality</h2>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                     <div>
                       <p className="text-sm text-gray-600 mb-2">Required Questions</p>
@@ -711,9 +717,11 @@ export default function SurveyDetailPage() {
                               className="bg-success-500 h-2 rounded-full"
                               style={{
                                 width: `${
-                                  ((survey.responses?.filter((r) => r.question.isRequired).length || 0) /
+                                  ((survey.responses?.filter((r) => r.question.isRequired).length ||
+                                    0) /
                                     (survey.template.sections.reduce(
-                                      (sum, s) => sum + s.questions.filter((q) => q.isRequired).length,
+                                      (sum, s) =>
+                                        sum + s.questions.filter((q) => q.isRequired).length,
                                       0
                                     ) || 1)) *
                                   100
@@ -778,7 +786,9 @@ export default function SurveyDetailPage() {
 
                 <div className="pt-4 border-t border-gray-200">
                   <p className="text-sm text-gray-600 mb-1">Completion</p>
-                  <p className={`text-2xl font-bold ${getCompletionColor(survey.completionPercentage)}`}>
+                  <p
+                    className={`text-2xl font-bold ${getCompletionColor(survey.completionPercentage)}`}
+                  >
                     {survey.completionPercentage}%
                   </p>
                 </div>
@@ -819,9 +829,7 @@ export default function SurveyDetailPage() {
                     </button>
                   ) : (
                     <div>
-                      <p className="text-sm text-gray-500 mb-3">
-                        No project linked to this survey
-                      </p>
+                      <p className="text-sm text-gray-500 mb-3">No project linked to this survey</p>
                       <Button
                         variant="outline"
                         size="sm"
@@ -854,16 +862,20 @@ export default function SurveyDetailPage() {
                 {survey.dueDate && (
                   <div>
                     <p className="text-gray-600">Due Date</p>
-                    <p className={`font-medium ${
-                      isOverdue(survey.dueDate, survey.status)
-                        ? 'text-error-600'
-                        : isDueSoon(survey.dueDate)
-                        ? 'text-warning-600'
-                        : 'text-gray-900'
-                    }`}>
+                    <p
+                      className={`font-medium ${
+                        isOverdue(survey.dueDate, survey.status)
+                          ? 'text-error-600'
+                          : isDueSoon(survey.dueDate)
+                            ? 'text-warning-600'
+                            : 'text-gray-900'
+                      }`}
+                    >
                       {new Date(survey.dueDate).toLocaleDateString()}
                       {isOverdue(survey.dueDate, survey.status) && ' (Overdue)'}
-                      {isDueSoon(survey.dueDate) && !isOverdue(survey.dueDate, survey.status) && ' (Soon)'}
+                      {isDueSoon(survey.dueDate) &&
+                        !isOverdue(survey.dueDate, survey.status) &&
+                        ' (Soon)'}
                     </p>
                   </div>
                 )}
@@ -936,11 +948,13 @@ export default function SurveyDetailPage() {
       >
         <div className="space-y-4">
           <p className="text-gray-700">
-            Are you sure you want to delete this survey instance for <strong>{survey.company.name}</strong>?
+            Are you sure you want to delete this survey instance for{' '}
+            <strong>{survey.company.name}</strong>?
           </p>
           <div className="bg-error-50 border border-error-200 rounded-lg p-4">
             <p className="text-sm text-error-800">
-              <strong>Warning:</strong> This action cannot be undone. All responses and data will be permanently deleted.
+              <strong>Warning:</strong> This action cannot be undone. All responses and data will be
+              permanently deleted.
             </p>
           </div>
         </div>

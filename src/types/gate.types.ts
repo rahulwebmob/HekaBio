@@ -100,7 +100,10 @@ export interface GateReview {
  * Gate 1 Checklist (Initial Screening)
  * Basic qualification criteria
  */
-export const GATE_1_CHECKLIST: Omit<GateChecklistItem, 'id' | 'completed' | 'completedBy' | 'completedAt' | 'notes'>[] = [
+export const GATE_1_CHECKLIST: Omit<
+  GateChecklistItem,
+  'id' | 'completed' | 'completedBy' | 'completedAt' | 'notes'
+>[] = [
   {
     text: 'Company information verified (name, location, website)',
     category: 'Company Details',
@@ -152,7 +155,10 @@ export const GATE_1_CHECKLIST: Omit<GateChecklistItem, 'id' | 'completed' | 'com
  * Gate 2 Checklist (Detailed Evaluation)
  * In-depth technical and market assessment
  */
-export const GATE_2_CHECKLIST: Omit<GateChecklistItem, 'id' | 'completed' | 'completedBy' | 'completedAt' | 'notes'>[] = [
+export const GATE_2_CHECKLIST: Omit<
+  GateChecklistItem,
+  'id' | 'completed' | 'completedBy' | 'completedAt' | 'notes'
+>[] = [
   {
     text: 'Technology/science validated by experts',
     category: 'Technology',
@@ -219,7 +225,10 @@ export const GATE_2_CHECKLIST: Omit<GateChecklistItem, 'id' | 'completed' | 'com
  * Gate 3 Checklist (Final Decision)
  * Comprehensive review before partnership decision
  */
-export const GATE_3_CHECKLIST: Omit<GateChecklistItem, 'id' | 'completed' | 'completedBy' | 'completedAt' | 'notes'>[] = [
+export const GATE_3_CHECKLIST: Omit<
+  GateChecklistItem,
+  'id' | 'completed' | 'completedBy' | 'completedAt' | 'notes'
+>[] = [
   {
     text: 'Full due diligence completed',
     category: 'Due Diligence',
@@ -290,7 +299,9 @@ export const GATE_3_CHECKLIST: Omit<GateChecklistItem, 'id' | 'completed' | 'com
 /**
  * Get checklist template for a specific gate
  */
-export const getGateChecklistTemplate = (gateNumber: GateNumber): Omit<GateChecklistItem, 'id' | 'completed' | 'completedBy' | 'completedAt' | 'notes'>[] => {
+export const getGateChecklistTemplate = (
+  gateNumber: GateNumber
+): Omit<GateChecklistItem, 'id' | 'completed' | 'completedBy' | 'completedAt' | 'notes'>[] => {
   switch (gateNumber) {
     case 1:
       return GATE_1_CHECKLIST;
@@ -339,7 +350,10 @@ export const GATE_CONFIGS: Record<GateNumber, GateConfig> = {
 /**
  * Gate Progression Rules
  */
-export const canProgressToGate = (currentGate: GateNumber | null, targetGate: GateNumber): boolean => {
+export const canProgressToGate = (
+  currentGate: GateNumber | null,
+  targetGate: GateNumber
+): boolean => {
   if (currentGate === null) return targetGate === 1;
   return targetGate === currentGate + 1;
 };

@@ -115,7 +115,9 @@ const Modal = ({
           {/* Header */}
           {title && (
             <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200/30">
-              <h3 id="modal-title" className="text-lg font-semibold text-gray-900">{title}</h3>
+              <h3 id="modal-title" className="text-lg font-semibold text-gray-900">
+                {title}
+              </h3>
               <button
                 onClick={onClose}
                 className="text-gray-400 hover:text-gray-700 transition-all duration-200 p-1 rounded-lg hover:bg-white/50"

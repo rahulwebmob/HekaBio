@@ -138,16 +138,16 @@ export default function Gate1ReviewPanel({
               {dataExtractionStatus === 'VERIFIED'
                 ? 'Verified'
                 : dataExtractionStatus === 'COMPLETED'
-                ? 'Completed'
-                : 'Not Started'}
+                  ? 'Completed'
+                  : 'Not Started'}
             </div>
             <Badge
               variant={
                 dataExtractionStatus === 'VERIFIED'
                   ? 'success'
                   : dataExtractionStatus === 'COMPLETED'
-                  ? 'warning'
-                  : 'default'
+                    ? 'warning'
+                    : 'default'
               }
             >
               {dataExtractionStatus === 'VERIFIED' ? (
@@ -180,7 +180,9 @@ export default function Gate1ReviewPanel({
           </div>
           <div className="flex items-end justify-between">
             <div className="text-3xl font-bold text-gray-900">{initialScore}</div>
-            <Badge variant={initialScore >= 60 ? 'success' : initialScore >= 40 ? 'warning' : 'error'}>
+            <Badge
+              variant={initialScore >= 60 ? 'success' : initialScore >= 40 ? 'warning' : 'error'}
+            >
               {initialScore >= 60 ? 'Strong' : initialScore >= 40 ? 'Moderate' : 'Weak'}
             </Badge>
           </div>
@@ -190,8 +192,8 @@ export default function Gate1ReviewPanel({
                 initialScore >= 60
                   ? 'bg-success-500'
                   : initialScore >= 40
-                  ? 'bg-warning-500'
-                  : 'bg-error-500'
+                    ? 'bg-warning-500'
+                    : 'bg-error-500'
               }`}
               style={{ width: `${initialScore}%` }}
             />
@@ -213,13 +215,18 @@ export default function Gate1ReviewPanel({
                 decision === 'APPROVED'
                   ? 'border-success-500 bg-success-50'
                   : canApprove
-                  ? 'border-gray-200 hover:border-success-300'
-                  : 'border-gray-200 opacity-50 cursor-not-allowed'
+                    ? 'border-gray-200 hover:border-success-300'
+                    : 'border-gray-200 opacity-50 cursor-not-allowed'
               }`}
             >
               <div className="flex items-center gap-3 mb-2">
-                <IconCheck size={20} className={decision === 'APPROVED' ? 'text-success-600' : 'text-gray-400'} />
-                <span className={`font-semibold ${decision === 'APPROVED' ? 'text-success-900' : 'text-gray-700'}`}>
+                <IconCheck
+                  size={20}
+                  className={decision === 'APPROVED' ? 'text-success-600' : 'text-gray-400'}
+                />
+                <span
+                  className={`font-semibold ${decision === 'APPROVED' ? 'text-success-900' : 'text-gray-700'}`}
+                >
                   Approve to Gate 2
                 </span>
               </div>
@@ -243,8 +250,13 @@ export default function Gate1ReviewPanel({
               }`}
             >
               <div className="flex items-center gap-3 mb-2">
-                <IconAlertCircle size={20} className={decision === 'PENDING' ? 'text-warning-600' : 'text-gray-400'} />
-                <span className={`font-semibold ${decision === 'PENDING' ? 'text-warning-900' : 'text-gray-700'}`}>
+                <IconAlertCircle
+                  size={20}
+                  className={decision === 'PENDING' ? 'text-warning-600' : 'text-gray-400'}
+                />
+                <span
+                  className={`font-semibold ${decision === 'PENDING' ? 'text-warning-900' : 'text-gray-700'}`}
+                >
                   Request Information
                 </span>
               </div>
@@ -262,8 +274,13 @@ export default function Gate1ReviewPanel({
               }`}
             >
               <div className="flex items-center gap-3 mb-2">
-                <IconX size={20} className={decision === 'REJECTED' ? 'text-error-600' : 'text-gray-400'} />
-                <span className={`font-semibold ${decision === 'REJECTED' ? 'text-error-900' : 'text-gray-700'}`}>
+                <IconX
+                  size={20}
+                  className={decision === 'REJECTED' ? 'text-error-600' : 'text-gray-400'}
+                />
+                <span
+                  className={`font-semibold ${decision === 'REJECTED' ? 'text-error-900' : 'text-gray-700'}`}
+                >
                   Close Project
                 </span>
               </div>
@@ -309,9 +326,7 @@ export default function Gate1ReviewPanel({
               variant="primary"
               onClick={handleSubmit}
               disabled={
-                !decision ||
-                !reasoning.trim() ||
-                (decision === 'PENDING' && !requestedInfo.trim())
+                !decision || !reasoning.trim() || (decision === 'PENDING' && !requestedInfo.trim())
               }
             >
               Submit Gate 1 Decision
@@ -324,15 +339,13 @@ export default function Gate1ReviewPanel({
             <div className="w-16 h-16 bg-success-100 rounded-full flex items-center justify-center mx-auto mb-4">
               <IconCheck size={32} className="text-success-600" />
             </div>
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">
-              Gate 1 Decision Submitted
-            </h3>
+            <h3 className="text-lg font-semibold text-gray-900 mb-2">Gate 1 Decision Submitted</h3>
             <p className="text-gray-600">
               {decision === 'APPROVED'
                 ? 'Project approved to proceed to Gate 2 (Japan Screening)'
                 : decision === 'PENDING'
-                ? 'Follow-up request sent to product owner'
-                : 'Project closed at Gate 1'}
+                  ? 'Follow-up request sent to product owner'
+                  : 'Project closed at Gate 1'}
             </p>
           </div>
         </Card>

@@ -20,7 +20,7 @@ interface SendSurveyModalProps {
 export function SendSurveyModal({ isOpen, onClose }: SendSurveyModalProps) {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const templates = useAppSelector((state) => state.surveys.templates.filter(t => t.isActive));
+  const templates = useAppSelector((state) => state.surveys.templates.filter((t) => t.isActive));
   const companies = useAppSelector((state) => state.addressBook.companies);
   const projects = useAppSelector((state) => state.projects.projects);
 
@@ -55,9 +55,11 @@ export function SendSurveyModal({ isOpen, onClose }: SendSurveyModalProps) {
       return;
     }
 
-    const template = templates.find(t => t.id === formData.templateId);
-    const company = companies.find(c => c.id === formData.companyId);
-    const project = formData.projectId ? projects.find(p => p.id === formData.projectId) : undefined;
+    const template = templates.find((t) => t.id === formData.templateId);
+    const company = companies.find((c) => c.id === formData.companyId);
+    const project = formData.projectId
+      ? projects.find((p) => p.id === formData.projectId)
+      : undefined;
 
     if (!template || !company) {
       return;
@@ -125,7 +127,7 @@ export function SendSurveyModal({ isOpen, onClose }: SendSurveyModalProps) {
 
   const templateOptions = [
     { value: '', label: 'Select survey template' },
-    ...templates.map(t => ({
+    ...templates.map((t) => ({
       value: t.id,
       label: `${t.name} (${t.type})`,
     })),
@@ -133,7 +135,7 @@ export function SendSurveyModal({ isOpen, onClose }: SendSurveyModalProps) {
 
   const companyOptions = [
     { value: '', label: 'Select company' },
-    ...companies.map(c => ({
+    ...companies.map((c) => ({
       value: c.id,
       label: c.name,
     })),
@@ -142,8 +144,8 @@ export function SendSurveyModal({ isOpen, onClose }: SendSurveyModalProps) {
   const projectOptions = [
     { value: '', label: 'None (Optional)' },
     ...projects
-      .filter(p => p.company.id === formData.companyId)
-      .map(p => ({
+      .filter((p) => p.company.id === formData.companyId)
+      .map((p) => ({
         value: p.id,
         label: p.name,
       })),
@@ -161,11 +163,7 @@ export function SendSurveyModal({ isOpen, onClose }: SendSurveyModalProps) {
             <Button variant="outline" onClick={handleClose}>
               Cancel
             </Button>
-            <Button
-              variant="primary"
-              leftIcon={<IconSend size={18} />}
-              onClick={handleSendSurvey}
-            >
+            <Button variant="primary" leftIcon={<IconSend size={18} />} onClick={handleSendSurvey}>
               Send Survey
             </Button>
           </div>
@@ -241,7 +239,9 @@ export function SendSurveyModal({ isOpen, onClose }: SendSurveyModalProps) {
             </div>
             <div>
               <p className="font-semibold text-success-900">Survey successfully created!</p>
-              <p className="text-sm text-success-700">The survey is now accessible via the link below.</p>
+              <p className="text-sm text-success-700">
+                The survey is now accessible via the link below.
+              </p>
             </div>
           </div>
 
@@ -281,9 +281,7 @@ export function SendSurveyModal({ isOpen, onClose }: SendSurveyModalProps) {
 
           {/* QR Code Section */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              QR Code
-            </label>
+            <label className="block text-sm font-medium text-gray-700 mb-2">QR Code</label>
             <QRCodeGenerator
               url={surveyLink}
               size={256}

@@ -5,7 +5,7 @@
 
 :root {
   /* Brand Colors */
-  --color-primary: #00B8A9;
+  --color-primary: #00b8a9;
   --color-primary-dark: #008f82;
   --color-primary-light: #00e6d1;
   --color-primary-lighter: #e6fbf9;
@@ -35,12 +35,12 @@
   --stage-survey: #1890ff;
   --stage-japan: #722ed1;
   --stage-nda: #fa8c16;
-  --stage-dd: #00B8A9;
+  --stage-dd: #00b8a9;
   --stage-contract-approved: #52c41a;
   --stage-contract-declined: #f5222d;
 
   /* Project Tag Colors */
-  --tag-strategic: #00B8A9;
+  --tag-strategic: #00b8a9;
   --tag-finders: #1890ff;
   --tag-development: #722ed1;
 
@@ -60,7 +60,9 @@
 
   /* Shadows */
   --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.03), 0 1px 6px -1px rgba(0, 0, 0, 0.02);
-  --shadow-md: 0 1px 2px 0 rgba(0, 0, 0, 0.03), 0 1px 6px -1px rgba(0, 0, 0, 0.02), 0 2px 4px 0 rgba(0, 0, 0, 0.02);
+  --shadow-md:
+    0 1px 2px 0 rgba(0, 0, 0, 0.03), 0 1px 6px -1px rgba(0, 0, 0, 0.02),
+    0 2px 4px 0 rgba(0, 0, 0, 0.02);
   --shadow-lg: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
   --shadow-xl: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
 
@@ -88,7 +90,8 @@
   --content-max-width: 1400px;
 
   /* Typography */
-  --font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --font-family:
+    -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
   --font-size-xs: 12px;
   --font-size-sm: 13px;
   --font-size-base: 14px;

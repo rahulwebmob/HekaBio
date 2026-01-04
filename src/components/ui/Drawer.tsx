@@ -113,7 +113,9 @@ const Drawer = ({
           {/* Header */}
           {title && (
             <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200/30 bg-white/30 flex-shrink-0">
-              <h2 id="drawer-title" className="text-xl font-semibold text-gray-900">{title}</h2>
+              <h2 id="drawer-title" className="text-xl font-semibold text-gray-900">
+                {title}
+              </h2>
               <button
                 onClick={onClose}
                 className="text-gray-400 hover:text-gray-700 transition-all duration-200 p-1.5 rounded-lg hover:bg-white/50"

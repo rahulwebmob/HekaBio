@@ -12,23 +12,18 @@ import type { Project } from './project.types';
  * Represents different stages in the business development funnel
  */
 export type PipelineStage =
-  | 'LEAD'           // Initial contact/inquiry
-  | 'QUALIFIED'      // Lead has been qualified
-  | 'PROPOSAL'       // Proposal/quote sent
-  | 'NEGOTIATION'    // In contract negotiation
-  | 'VERBAL_COMMIT'  // Verbal commitment received
-  | 'WON'           // Deal closed successfully
-  | 'LOST';         // Deal lost
+  | 'LEAD' // Initial contact/inquiry
+  | 'QUALIFIED' // Lead has been qualified
+  | 'PROPOSAL' // Proposal/quote sent
+  | 'NEGOTIATION' // In contract negotiation
+  | 'VERBAL_COMMIT' // Verbal commitment received
+  | 'WON' // Deal closed successfully
+  | 'LOST'; // Deal lost
 
 /**
  * Win/Loss Reason
  */
-export type WinReason =
-  | 'BEST_PRICE'
-  | 'BEST_TECHNOLOGY'
-  | 'RELATIONSHIP'
-  | 'TIMELINE'
-  | 'OTHER';
+export type WinReason = 'BEST_PRICE' | 'BEST_TECHNOLOGY' | 'RELATIONSHIP' | 'TIMELINE' | 'OTHER';
 
 export type LossReason =
   | 'PRICE_TOO_HIGH'

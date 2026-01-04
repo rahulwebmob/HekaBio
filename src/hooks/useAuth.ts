@@ -21,8 +21,7 @@ export const useAuth = () => {
 
   const handleLogout = useCallback(() => {
     return dispatch(logout());
-  },  [dispatch]
-  );
+  }, [dispatch]);
 
   const switchRole = useCallback(
     (role: UserRole) => {

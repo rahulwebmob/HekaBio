@@ -17,13 +17,7 @@ const Radio = forwardRef<HTMLInputElement, RadioProps>(
       <div>
         <label className="inline-flex items-center cursor-pointer group">
           <div className="relative">
-            <input
-              ref={ref}
-              type="radio"
-              className="peer sr-only"
-              disabled={disabled}
-              {...props}
-            />
+            <input ref={ref} type="radio" className="peer sr-only" disabled={disabled} {...props} />
             <div
               className={`
                 w-5 h-5 border-2 rounded-full transition-all

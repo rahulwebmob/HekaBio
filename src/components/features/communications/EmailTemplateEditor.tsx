@@ -13,10 +13,7 @@ import type {
   EmailTemplateCategory,
   EmailVariable,
 } from '../../../types/emailTemplate.types';
-import {
-  EMAIL_VARIABLES,
-  extractTemplateVariables,
-} from '../../../types/emailTemplate.types';
+import { EMAIL_VARIABLES, extractTemplateVariables } from '../../../types/emailTemplate.types';
 
 interface EmailTemplateEditorProps {
   isOpen: boolean;
@@ -84,9 +81,7 @@ export default function EmailTemplateEditor({
         const start = input.selectionStart || 0;
         const end = input.selectionEnd || 0;
         const newValue =
-          formData.subject.substring(0, start) +
-          placeholder +
-          formData.subject.substring(end);
+          formData.subject.substring(0, start) + placeholder + formData.subject.substring(end);
         setFormData((prev) => ({ ...prev, subject: newValue }));
 
         // Set cursor position after inserted variable
@@ -101,9 +96,7 @@ export default function EmailTemplateEditor({
         const start = textarea.selectionStart || 0;
         const end = textarea.selectionEnd || 0;
         const newValue =
-          formData.body.substring(0, start) +
-          placeholder +
-          formData.body.substring(end);
+          formData.body.substring(0, start) + placeholder + formData.body.substring(end);
         setFormData((prev) => ({ ...prev, body: newValue }));
 
         // Set cursor position after inserted variable
@@ -211,9 +204,7 @@ export default function EmailTemplateEditor({
 
         {/* Category */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Category
-          </label>
+          <label className="block text-sm font-medium text-gray-700 mb-2">Category</label>
           <Select
             value={formData.category}
             onChange={(e) => handleInputChange('category', e.target.value)}
@@ -233,9 +224,7 @@ export default function EmailTemplateEditor({
 
         {/* Description */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Description
-          </label>
+          <label className="block text-sm font-medium text-gray-700 mb-2">Description</label>
           <Input
             value={formData.description}
             onChange={(e) => handleInputChange('description', e.target.value)}

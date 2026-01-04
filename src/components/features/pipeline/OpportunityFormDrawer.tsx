@@ -137,9 +137,7 @@ export default function OpportunityFormDrawer({
 
         {/* Project Selection (Optional) */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Project (Optional)
-          </label>
+          <label className="block text-sm font-medium text-gray-700 mb-2">Project (Optional)</label>
           <select
             value={projectId}
             onChange={(e) => setProjectId(e.target.value)}
@@ -174,9 +172,7 @@ export default function OpportunityFormDrawer({
 
         {/* Description */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Description
-          </label>
+          <label className="block text-sm font-medium text-gray-700 mb-2">Description</label>
           <textarea
             value={description}
             onChange={(e) => setDescription(e.target.value)}
@@ -218,9 +214,7 @@ export default function OpportunityFormDrawer({
 
         {/* Priority */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Priority
-          </label>
+          <label className="block text-sm font-medium text-gray-700 mb-2">Priority</label>
           <select
             value={priority}
             onChange={(e) => setPriority(e.target.value as 'LOW' | 'MEDIUM' | 'HIGH' | 'URGENT')}
@@ -235,9 +229,7 @@ export default function OpportunityFormDrawer({
 
         {/* Notes */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Notes
-          </label>
+          <label className="block text-sm font-medium text-gray-700 mb-2">Notes</label>
           <textarea
             value={notes}
             onChange={(e) => setNotes(e.target.value)}

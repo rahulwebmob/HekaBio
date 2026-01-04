@@ -53,43 +53,45 @@ export function CompanyFormModal({ isOpen, onClose, company, onSuccess }: Compan
   // Load existing company data if editing
   useEffect(() => {
     // Batch state updates to avoid multiple renders
-    const newFormData = company ? {
-      name: company.name,
-      nameLocal: company.nameLocal || '',
-      role: company.role as CompanyRole | '',
-      category: company.category as CompanyCategory | '',
-      website: company.website || '',
-      phone: company.phone || '',
-      email: company.email || '',
-      street: company.address.street,
-      city: company.address.city,
-      state: company.address.state || '',
-      postalCode: company.address.postalCode,
-      country: company.address.country,
-      description: company.description || '',
-      foundedYear: company.foundedYear?.toString() || '',
-      employeeCount: company.employeeCount?.toString() || '',
-      revenue: company.revenue || '',
-      tags: company.tags.join(', '),
-    } : {
-      name: '',
-      nameLocal: '',
-      role: '' as CompanyRole | '',
-      category: '' as CompanyCategory | '',
-      website: '',
-      phone: '',
-      email: '',
-      street: '',
-      city: '',
-      state: '',
-      postalCode: '',
-      country: '',
-      description: '',
-      foundedYear: '',
-      employeeCount: '',
-      revenue: '',
-      tags: '',
-    };
+    const newFormData = company
+      ? {
+          name: company.name,
+          nameLocal: company.nameLocal || '',
+          role: company.role as CompanyRole | '',
+          category: company.category as CompanyCategory | '',
+          website: company.website || '',
+          phone: company.phone || '',
+          email: company.email || '',
+          street: company.address.street,
+          city: company.address.city,
+          state: company.address.state || '',
+          postalCode: company.address.postalCode,
+          country: company.address.country,
+          description: company.description || '',
+          foundedYear: company.foundedYear?.toString() || '',
+          employeeCount: company.employeeCount?.toString() || '',
+          revenue: company.revenue || '',
+          tags: company.tags.join(', '),
+        }
+      : {
+          name: '',
+          nameLocal: '',
+          role: '' as CompanyRole | '',
+          category: '' as CompanyCategory | '',
+          website: '',
+          phone: '',
+          email: '',
+          street: '',
+          city: '',
+          state: '',
+          postalCode: '',
+          country: '',
+          description: '',
+          foundedYear: '',
+          employeeCount: '',
+          revenue: '',
+          tags: '',
+        };
 
     // Use setTimeout to defer state update and avoid direct setState in effect
     const timeoutId = setTimeout(() => {
@@ -173,7 +175,10 @@ export function CompanyFormModal({ isOpen, onClose, company, onSuccess }: Compan
     };
 
     const tags = formData.tags
-      ? formData.tags.split(',').map((tag) => tag.trim()).filter((tag) => tag.length > 0)
+      ? formData.tags
+          .split(',')
+          .map((tag) => tag.trim())
+          .filter((tag) => tag.length > 0)
       : [];
 
     const companyData: Company = {
@@ -287,9 +292,7 @@ export function CompanyFormModal({ isOpen, onClose, company, onSuccess }: Compan
             />
 
             <div className="md:col-span-2">
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Description
-              </label>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Description</label>
               <textarea
                 value={formData.description}
                 onChange={(e) => setFormData({ ...formData, description: e.target.value })}

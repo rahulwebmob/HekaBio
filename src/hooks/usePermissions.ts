@@ -5,7 +5,13 @@
 
 import { useMemo } from 'react';
 import { useAuth } from './useAuth';
-import { Permission, hasPermission, hasAnyPermission, hasAllPermissions, rolePermissions } from '../config/permissions';
+import {
+  Permission,
+  hasPermission,
+  hasAnyPermission,
+  hasAllPermissions,
+  rolePermissions,
+} from '../config/permissions';
 
 export const usePermissions = () => {
   const { user } = useAuth();

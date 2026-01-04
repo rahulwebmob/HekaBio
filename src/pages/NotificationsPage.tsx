@@ -19,7 +19,12 @@ import {
   IconSparkles,
 } from '@tabler/icons-react';
 import { useAppSelector, useAppDispatch } from '../app/store';
-import { markAsRead, markAllAsRead, archiveNotification, deleteNotification } from '../store/slices/notificationsSlice';
+import {
+  markAsRead,
+  markAllAsRead,
+  archiveNotification,
+  deleteNotification,
+} from '../store/slices/notificationsSlice';
 import { AppLayout } from '../components/layout';
 import { Card, Badge, Button } from '../components/ui';
 import type { NotificationType } from '../types/notification.types';
@@ -74,7 +79,7 @@ export default function NotificationsPage() {
     }
   };
 
-  const handleNotificationClick = (notif: typeof notifications[0]) => {
+  const handleNotificationClick = (notif: (typeof notifications)[0]) => {
     if (!notif.isRead) {
       dispatch(markAsRead(notif.id));
     }
@@ -103,9 +108,7 @@ export default function NotificationsPage() {
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-3xl font-semibold text-gray-900">Notifications</h1>
-            <p className="text-gray-600 mt-1">
-              Stay updated with your activities and alerts
-            </p>
+            <p className="text-gray-600 mt-1">Stay updated with your activities and alerts</p>
           </div>
           <div className="flex items-center gap-3">
             <Button
@@ -188,19 +191,21 @@ export default function NotificationsPage() {
               onClick={() => handleNotificationClick(notif)}
             >
               <div className="flex items-start gap-4">
-                <div className={`w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0 ${getPriorityColor(notif.priority)}`}>
+                <div
+                  className={`w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0 ${getPriorityColor(notif.priority)}`}
+                >
                   {getNotificationIcon(notif.type)}
                 </div>
 
                 <div className="flex-1 min-w-0">
                   <div className="flex items-start justify-between gap-4 mb-1">
-                    <h3 className={`font-semibold ${!notif.isRead ? 'text-gray-900' : 'text-gray-700'}`}>
+                    <h3
+                      className={`font-semibold ${!notif.isRead ? 'text-gray-900' : 'text-gray-700'}`}
+                    >
                       {notif.title}
                     </h3>
                     <div className="flex items-center gap-2">
-                      {!notif.isRead && (
-                        <div className="w-2 h-2 bg-brand-500 rounded-full"></div>
-                      )}
+                      {!notif.isRead && <div className="w-2 h-2 bg-brand-500 rounded-full"></div>}
                       <button
                         onClick={(e) => {
                           e.stopPropagation();
@@ -234,8 +239,8 @@ export default function NotificationsPage() {
                           notif.priority === 'URGENT'
                             ? 'error'
                             : notif.priority === 'HIGH'
-                            ? 'warning'
-                            : 'info'
+                              ? 'warning'
+                              : 'info'
                         }
                         size="sm"
                       >

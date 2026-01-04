@@ -20,10 +20,7 @@ interface GateHistoryTimelineProps {
   projectId: string;
 }
 
-export default function GateHistoryTimeline({
-  reviews,
-  projectId,
-}: GateHistoryTimelineProps) {
+export default function GateHistoryTimeline({ reviews, projectId }: GateHistoryTimelineProps) {
   // Filter and sort reviews for this project
   const projectReviews = useMemo(() => {
     return reviews
@@ -47,7 +44,10 @@ export default function GateHistoryTimeline({
   };
 
   const getDecisionBadge = (decision: GateDecision) => {
-    const variants: Record<GateDecision, { variant: 'default' | 'info' | 'success' | 'warning' | 'error'; label: string }> = {
+    const variants: Record<
+      GateDecision,
+      { variant: 'default' | 'info' | 'success' | 'warning' | 'error'; label: string }
+    > = {
       PENDING: { variant: 'default', label: 'Pending' },
       APPROVED: { variant: 'success', label: 'Approved' },
       REJECTED: { variant: 'error', label: 'Rejected' },
@@ -55,7 +55,11 @@ export default function GateHistoryTimeline({
       DEFERRED: { variant: 'info', label: 'Deferred' },
     };
     const config = variants[decision];
-    return <Badge variant={config.variant} size="sm">{config.label}</Badge>;
+    return (
+      <Badge variant={config.variant} size="sm">
+        {config.label}
+      </Badge>
+    );
   };
 
   const formatDate = (date: string) => {
@@ -82,7 +86,9 @@ export default function GateHistoryTimeline({
       <div className="text-center py-8 bg-gray-50 rounded-lg border-2 border-dashed border-gray-300">
         <IconClock size={48} className="mx-auto text-gray-400 mb-3" />
         <p className="text-gray-600 text-sm">No gate reviews yet</p>
-        <p className="text-gray-500 text-xs mt-1">Gate reviews will appear here as they are completed</p>
+        <p className="text-gray-500 text-xs mt-1">
+          Gate reviews will appear here as they are completed
+        </p>
       </div>
     );
   }
@@ -106,12 +112,12 @@ export default function GateHistoryTimeline({
                 review.decision === 'APPROVED'
                   ? 'bg-success-500 border-success-600'
                   : review.decision === 'REJECTED'
-                  ? 'bg-error-500 border-error-600'
-                  : review.decision === 'CONDITIONAL'
-                  ? 'bg-warning-500 border-warning-600'
-                  : review.decision === 'DEFERRED'
-                  ? 'bg-info-500 border-info-600'
-                  : 'bg-gray-300 border-gray-400'
+                    ? 'bg-error-500 border-error-600'
+                    : review.decision === 'CONDITIONAL'
+                      ? 'bg-warning-500 border-warning-600'
+                      : review.decision === 'DEFERRED'
+                        ? 'bg-info-500 border-info-600'
+                        : 'bg-gray-300 border-gray-400'
               }`}
             />
 
@@ -129,7 +135,9 @@ export default function GateHistoryTimeline({
                     <h4 className="font-semibold text-gray-900">{gateConfig.name}</h4>
                   </div>
                   {isLatest && (
-                    <Badge variant="info" size="sm">Latest</Badge>
+                    <Badge variant="info" size="sm">
+                      Latest
+                    </Badge>
                   )}
                 </div>
                 {getDecisionBadge(review.decision)}
@@ -142,9 +150,7 @@ export default function GateHistoryTimeline({
                   <span>•</span>
                   <span className="text-gray-500">{review.reviewerRole}</span>
                 </div>
-                <div className="text-xs text-gray-500">
-                  {formatDate(review.reviewDate)}
-                </div>
+                <div className="text-xs text-gray-500">{formatDate(review.reviewDate)}</div>
               </div>
 
               {/* Checklist progress */}
@@ -159,16 +165,17 @@ export default function GateHistoryTimeline({
                       review.checklistCompletionRate === 100
                         ? 'bg-success-500'
                         : review.checklistCompletionRate >= 75
-                        ? 'bg-blue-500'
-                        : review.checklistCompletionRate >= 50
-                        ? 'bg-warning-500'
-                        : 'bg-gray-400'
+                          ? 'bg-blue-500'
+                          : review.checklistCompletionRate >= 50
+                            ? 'bg-warning-500'
+                            : 'bg-gray-400'
                     }`}
                     style={{ width: `${review.checklistCompletionRate}%` }}
                   />
                 </div>
                 <div className="text-xs text-gray-500 mt-1">
-                  {review.checklist.filter((i) => i.completed).length} of {review.checklist.length} items completed
+                  {review.checklist.filter((i) => i.completed).length} of {review.checklist.length}{' '}
+                  items completed
                 </div>
               </div>
 
@@ -184,7 +191,9 @@ export default function GateHistoryTimeline({
                       { label: 'Overall', value: review.overallScore },
                     ].map((score, idx) => (
                       <div key={idx}>
-                        <div className={`text-lg font-bold ${idx === 4 ? 'text-brand-600' : 'text-gray-900'}`}>
+                        <div
+                          className={`text-lg font-bold ${idx === 4 ? 'text-brand-600' : 'text-gray-900'}`}
+                        >
                           {score.value?.toFixed(1) || 'N/A'}
                         </div>
                         <div className="text-xs text-gray-600">{score.label}</div>

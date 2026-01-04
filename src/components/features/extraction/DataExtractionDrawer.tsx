@@ -14,11 +14,20 @@ import {
   IconLoader,
 } from '@tabler/icons-react';
 import { useAppDispatch } from '../../../app/store';
-import { addExtraction, verifyField, verifyAllFields, addGapAnalysis } from '../../../store/slices/extractionSlice';
+import {
+  addExtraction,
+  verifyField,
+  verifyAllFields,
+  addGapAnalysis,
+} from '../../../store/slices/extractionSlice';
 import { Drawer, Button, Badge } from '../../ui';
 import type { ExtractionResult, ExtractedField } from '../../../types/extraction.types';
 import { extractDataFromDocument, analyzeDataGaps } from '../../../services/extractionService';
-import { getConfidenceColor, getConfidenceBadgeVariant, EXTRACTABLE_FIELDS } from '../../../types/extraction.types';
+import {
+  getConfidenceColor,
+  getConfidenceBadgeVariant,
+  EXTRACTABLE_FIELDS,
+} from '../../../types/extraction.types';
 
 interface DataExtractionDrawerProps {
   isOpen: boolean;
@@ -148,9 +157,7 @@ export default function DataExtractionDrawer({
               <div className="w-16 h-16 bg-brand-100 rounded-full flex items-center justify-center mx-auto mb-4">
                 <IconSparkles size={32} className="text-brand-600" />
               </div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                Upload Introduction Deck
-              </h3>
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">Upload Introduction Deck</h3>
               <p className="text-gray-600 mb-6">
                 Upload a PDF or PowerPoint file and our AI will extract key information
               </p>
@@ -175,9 +182,7 @@ export default function DataExtractionDrawer({
           <div className="bg-white/60 rounded-lg p-8">
             <div className="text-center">
               <IconLoader size={48} className="mx-auto text-brand-600 animate-spin mb-4" />
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                Processing Document...
-              </h3>
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">Processing Document...</h3>
               <p className="text-gray-600">
                 Our AI is analyzing your document and extracting key information
               </p>
@@ -196,7 +201,8 @@ export default function DataExtractionDrawer({
               </div>
               <p className="text-sm text-success-800">
                 Successfully extracted {extractionResult.extractedFields.length} fields from{' '}
-                {extractionResult.fileName} in {((extractionResult.processingTimeMs || 0) / 1000).toFixed(1)}s
+                {extractionResult.fileName} in{' '}
+                {((extractionResult.processingTimeMs || 0) / 1000).toFixed(1)}s
               </p>
             </div>
 
@@ -216,10 +222,7 @@ export default function DataExtractionDrawer({
                         <span className="text-sm font-medium text-gray-700">
                           {getFieldLabel(field.fieldName)}
                         </span>
-                        <Badge
-                          variant={getConfidenceBadgeVariant(field.confidence)}
-                          size="sm"
-                        >
+                        <Badge variant={getConfidenceBadgeVariant(field.confidence)} size="sm">
                           {field.confidence}% confident
                         </Badge>
                         {field.isVerified && (
@@ -263,9 +266,7 @@ export default function DataExtractionDrawer({
                     </div>
                   ) : (
                     <div className="flex items-start justify-between gap-4">
-                      <p
-                        className={`flex-1 ${getConfidenceColor(field.confidence)}`}
-                      >
+                      <p className={`flex-1 ${getConfidenceColor(field.confidence)}`}>
                         {String(field.editedValue || field.value)}
                       </p>
                       <div className="flex gap-2">
@@ -296,9 +297,7 @@ export default function DataExtractionDrawer({
 
             {/* Confidence Legend */}
             <div className="bg-gray-50 rounded-lg p-4">
-              <h4 className="text-xs font-semibold text-gray-700 mb-2">
-                Confidence Levels
-              </h4>
+              <h4 className="text-xs font-semibold text-gray-700 mb-2">Confidence Levels</h4>
               <div className="grid grid-cols-3 gap-4 text-xs">
                 <div className="flex items-center gap-2">
                   <IconCheck size={14} className="text-success-600" />

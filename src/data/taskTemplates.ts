@@ -301,14 +301,14 @@ export const TASK_TEMPLATES: TaskTemplate[] = [
  * Get template by ID
  */
 export function getTaskTemplate(id: string): TaskTemplate | undefined {
-  return TASK_TEMPLATES.find(t => t.id === id);
+  return TASK_TEMPLATES.find((t) => t.id === id);
 }
 
 /**
  * Get templates by category
  */
 export function getTaskTemplatesByCategory(category: TaskTemplate['category']): TaskTemplate[] {
-  return TASK_TEMPLATES.filter(t => t.category === category);
+  return TASK_TEMPLATES.filter((t) => t.category === category);
 }
 
 /**

@@ -21,9 +21,7 @@ export interface ExtractionResult {
 /**
  * Mock AI extraction - simulates extracting data from an uploaded file
  */
-export async function extractDataFromDeck(
-  file: File
-): Promise<ExtractionResult> {
+export async function extractDataFromDeck(file: File): Promise<ExtractionResult> {
   // In production, this would process the actual file
   console.log('Processing file:', file.name);
 

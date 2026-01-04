@@ -4,12 +4,7 @@
  */
 
 import { useState } from 'react';
-import {
-  IconBuilding,
-  IconMapPin,
-  IconWorld,
-  IconPhone,
-} from '@tabler/icons-react';
+import { IconBuilding, IconMapPin, IconWorld, IconPhone } from '@tabler/icons-react';
 import { MailIcon, PencilIcon, TrashBinIcon, UserIcon } from '../../icons';
 import { useAppSelector, useAppDispatch } from '../../app/store';
 import { deleteCompany } from '../../store/slices/addressBookSlice';
@@ -117,9 +112,7 @@ export function CompanyDetailDrawer({ isOpen, onClose, companyId }: CompanyDetai
           {/* Header */}
           <div>
             <h1 className="text-3xl font-semibold text-gray-900">{company.name}</h1>
-            {company.nameLocal && (
-              <p className="text-lg text-gray-600 mt-1">{company.nameLocal}</p>
-            )}
+            {company.nameLocal && <p className="text-lg text-gray-600 mt-1">{company.nameLocal}</p>}
 
             {/* Status Badges */}
             <div className="flex items-center gap-2 mt-4">
@@ -432,9 +425,8 @@ export function CompanyDetailDrawer({ isOpen, onClose, companyId }: CompanyDetai
           </p>
           <div className="bg-error-50 border border-error-200 rounded-lg p-4">
             <p className="text-sm text-error-800">
-              <strong>Warning:</strong> This action cannot be undone. All associated contacts ({
-                contacts.length
-              }) will also be deleted.
+              <strong>Warning:</strong> This action cannot be undone. All associated contacts (
+              {contacts.length}) will also be deleted.
             </p>
           </div>
         </div>

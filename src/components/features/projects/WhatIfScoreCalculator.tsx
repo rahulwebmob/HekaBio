@@ -4,7 +4,13 @@
  */
 
 import { useState, useEffect } from 'react';
-import { IconCalculator, IconRefresh, IconDeviceFloppy, IconTrendingUp, IconTrendingDown } from '@tabler/icons-react';
+import {
+  IconCalculator,
+  IconRefresh,
+  IconDeviceFloppy,
+  IconTrendingUp,
+  IconTrendingDown,
+} from '@tabler/icons-react';
 import { Card, Button, Badge } from '../../ui';
 import type { ScoreBreakdown } from '../../../types/project.types';
 
@@ -79,9 +85,7 @@ export default function WhatIfScoreCalculator({
     };
   });
 
-  const [originalBreakdown] = useState<ScoreBreakdown>(
-    currentBreakdown || breakdown
-  );
+  const [originalBreakdown] = useState<ScoreBreakdown>(currentBreakdown || breakdown);
 
   // Recalculate total whenever breakdown changes
   useEffect(() => {
@@ -204,11 +208,9 @@ export default function WhatIfScoreCalculator({
                   </div>
                   <div className="flex items-center gap-3">
                     {factorDelta !== 0 && (
-                      <Badge
-                        variant={factorDelta > 0 ? 'success' : 'error'}
-                        size="sm"
-                      >
-                        {factorDelta > 0 ? '+' : ''}{factorDelta}
+                      <Badge variant={factorDelta > 0 ? 'success' : 'error'} size="sm">
+                        {factorDelta > 0 ? '+' : ''}
+                        {factorDelta}
                       </Badge>
                     )}
                     <span className="text-sm font-semibold text-gray-900 min-w-[60px] text-right">

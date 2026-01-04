@@ -182,8 +182,8 @@ export default function Gate3ReviewPanel({
               japanMarketFit === 'HIGH'
                 ? 'success'
                 : japanMarketFit === 'MEDIUM'
-                ? 'warning'
-                : 'error'
+                  ? 'warning'
+                  : 'error'
             }
             size="lg"
           >
@@ -241,8 +241,8 @@ export default function Gate3ReviewPanel({
                     Below Standard Thresholds
                   </p>
                   <p className="text-xs text-warning-700">
-                    This project does not meet the standard criteria (Gate 1 & 2 approved, Score ≥ 70).
-                    Consider carefully before proceeding.
+                    This project does not meet the standard criteria (Gate 1 & 2 approved, Score ≥
+                    70). Consider carefully before proceeding.
                   </p>
                 </div>
               </div>
@@ -260,14 +260,17 @@ export default function Gate3ReviewPanel({
               }`}
             >
               <div className="flex items-center gap-3 mb-2">
-                <IconCheck size={20} className={decision === 'APPROVED' ? 'text-success-600' : 'text-gray-400'} />
-                <span className={`font-semibold ${decision === 'APPROVED' ? 'text-success-900' : 'text-gray-700'}`}>
+                <IconCheck
+                  size={20}
+                  className={decision === 'APPROVED' ? 'text-success-600' : 'text-gray-400'}
+                />
+                <span
+                  className={`font-semibold ${decision === 'APPROVED' ? 'text-success-900' : 'text-gray-700'}`}
+                >
                   Proceed to NDA/DD
                 </span>
               </div>
-              <p className="text-xs text-gray-600">
-                Approve for NDA initiation and due diligence.
-              </p>
+              <p className="text-xs text-gray-600">Approve for NDA initiation and due diligence.</p>
             </button>
 
             <button
@@ -279,14 +282,17 @@ export default function Gate3ReviewPanel({
               }`}
             >
               <div className="flex items-center gap-3 mb-2">
-                <IconAlertCircle size={20} className={decision === 'CONDITIONAL' ? 'text-warning-600' : 'text-gray-400'} />
-                <span className={`font-semibold ${decision === 'CONDITIONAL' ? 'text-warning-900' : 'text-gray-700'}`}>
+                <IconAlertCircle
+                  size={20}
+                  className={decision === 'CONDITIONAL' ? 'text-warning-600' : 'text-gray-400'}
+                />
+                <span
+                  className={`font-semibold ${decision === 'CONDITIONAL' ? 'text-warning-900' : 'text-gray-700'}`}
+                >
                   Renegotiate Terms
                 </span>
               </div>
-              <p className="text-xs text-gray-600">
-                Requires term adjustments before proceeding.
-              </p>
+              <p className="text-xs text-gray-600">Requires term adjustments before proceeding.</p>
             </button>
 
             <button
@@ -298,14 +304,17 @@ export default function Gate3ReviewPanel({
               }`}
             >
               <div className="flex items-center gap-3 mb-2">
-                <IconX size={20} className={decision === 'REJECTED' ? 'text-error-600' : 'text-gray-400'} />
-                <span className={`font-semibold ${decision === 'REJECTED' ? 'text-error-900' : 'text-gray-700'}`}>
+                <IconX
+                  size={20}
+                  className={decision === 'REJECTED' ? 'text-error-600' : 'text-gray-400'}
+                />
+                <span
+                  className={`font-semibold ${decision === 'REJECTED' ? 'text-error-900' : 'text-gray-700'}`}
+                >
                   Decline Project
                 </span>
               </div>
-              <p className="text-xs text-gray-600">
-                Does not meet strategic criteria.
-              </p>
+              <p className="text-xs text-gray-600">Does not meet strategic criteria.</p>
             </button>
           </div>
 
@@ -385,15 +394,13 @@ export default function Gate3ReviewPanel({
             <div className="w-16 h-16 bg-success-100 rounded-full flex items-center justify-center mx-auto mb-4">
               <IconCheck size={32} className="text-success-600" />
             </div>
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">
-              Gate 3 Decision Submitted
-            </h3>
+            <h3 className="text-lg font-semibold text-gray-900 mb-2">Gate 3 Decision Submitted</h3>
             <p className="text-gray-600">
               {decision === 'APPROVED'
                 ? 'Project approved for NDA initiation and due diligence process'
                 : decision === 'CONDITIONAL'
-                ? 'Project requires term renegotiation before proceeding'
-                : 'Project declined at Gate 3'}
+                  ? 'Project requires term renegotiation before proceeding'
+                  : 'Project declined at Gate 3'}
             </p>
           </div>
         </Card>

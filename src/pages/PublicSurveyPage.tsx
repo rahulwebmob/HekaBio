@@ -79,7 +79,11 @@ export default function PublicSurveyPage() {
   }
 
   // Already submitted
-  if (isSubmitted || surveyInstance.status === 'SUBMITTED' || surveyInstance.status === 'REVIEWED') {
+  if (
+    isSubmitted ||
+    surveyInstance.status === 'SUBMITTED' ||
+    surveyInstance.status === 'REVIEWED'
+  ) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-brand-50 via-white to-accent-50 flex items-center justify-center p-4">
         <Card padding="lg" shadow="lg" className="max-w-2xl w-full">
@@ -91,7 +95,8 @@ export default function PublicSurveyPage() {
               Thank You for Your Submission!
             </h1>
             <p className="text-lg text-gray-700 mb-6">
-              Your survey has been successfully submitted to <strong>{surveyInstance.company.name}</strong>.
+              Your survey has been successfully submitted to{' '}
+              <strong>{surveyInstance.company.name}</strong>.
             </p>
             <div className="bg-brand-50 border border-brand-200 rounded-lg p-6 mb-8">
               <h3 className="font-semibold text-brand-900 mb-3">What happens next?</h3>
@@ -146,16 +151,20 @@ export default function PublicSurveyPage() {
         const valueStr = String(value || '');
 
         if (validation.minLength && valueStr.length < validation.minLength) {
-          newErrors[question.id] = validation.errorMessage || `Minimum ${validation.minLength} characters required`;
+          newErrors[question.id] =
+            validation.errorMessage || `Minimum ${validation.minLength} characters required`;
         }
         if (validation.maxLength && valueStr.length > validation.maxLength) {
-          newErrors[question.id] = validation.errorMessage || `Maximum ${validation.maxLength} characters allowed`;
+          newErrors[question.id] =
+            validation.errorMessage || `Maximum ${validation.maxLength} characters allowed`;
         }
         if (validation.minValue && Number(value) < validation.minValue) {
-          newErrors[question.id] = validation.errorMessage || `Minimum value is ${validation.minValue}`;
+          newErrors[question.id] =
+            validation.errorMessage || `Minimum value is ${validation.minValue}`;
         }
         if (validation.maxValue && Number(value) > validation.maxValue) {
-          newErrors[question.id] = validation.errorMessage || `Maximum value is ${validation.maxValue}`;
+          newErrors[question.id] =
+            validation.errorMessage || `Maximum value is ${validation.maxValue}`;
         }
         if (validation.pattern && !new RegExp(validation.pattern).test(valueStr)) {
           newErrors[question.id] = validation.errorMessage || 'Invalid format';
@@ -205,9 +214,7 @@ export default function PublicSurveyPage() {
         updateSurveyResponse({
           surveyId: surveyInstance.id,
           responses: Object.entries(responses).map(([questionId, answer]) => {
-            const question = sections
-              .flatMap((s) => s.questions)
-              .find((q) => q.id === questionId);
+            const question = sections.flatMap((s) => s.questions).find((q) => q.id === questionId);
 
             const response: SurveyResponse = {
               id: `response-${questionId}-${Date.now()}`,
@@ -317,7 +324,10 @@ export default function PublicSurveyPage() {
         return (
           <div className="space-y-2">
             {question.options?.map((option) => (
-              <label key={option.id} className="flex items-center gap-3 p-3 rounded-lg border border-gray-200 hover:bg-gray-50 cursor-pointer transition-colors">
+              <label
+                key={option.id}
+                className="flex items-center gap-3 p-3 rounded-lg border border-gray-200 hover:bg-gray-50 cursor-pointer transition-colors"
+              >
                 <input
                   type="checkbox"
                   checked={Array.isArray(value) && value.includes(option.value)}
@@ -494,9 +504,7 @@ export default function PublicSurveyPage() {
                 Section {currentSectionIndex + 1} of {sections.length}
               </Badge>
             </div>
-            <h2 className="text-2xl font-semibold text-gray-900 mb-2">
-              {currentSection.title}
-            </h2>
+            <h2 className="text-2xl font-semibold text-gray-900 mb-2">{currentSection.title}</h2>
             {currentSection.description && (
               <p className="text-gray-600">{currentSection.description}</p>
             )}
@@ -510,16 +518,12 @@ export default function PublicSurveyPage() {
                 <div key={question.id} className="pb-6 border-b border-gray-100 last:border-0">
                   <label className="block mb-3">
                     <div className="flex items-start gap-2 mb-2">
-                      <span className="text-sm font-medium text-gray-500">
-                        Q{index + 1}
-                      </span>
+                      <span className="text-sm font-medium text-gray-500">Q{index + 1}</span>
                       <div className="flex-1">
                         <span className="text-base font-medium text-gray-900">
                           {question.questionText}
                         </span>
-                        {question.isRequired && (
-                          <span className="text-error-500 ml-1">*</span>
-                        )}
+                        {question.isRequired && <span className="text-error-500 ml-1">*</span>}
                         {question.helpText && (
                           <p className="text-sm text-gray-500 mt-1">{question.helpText}</p>
                         )}

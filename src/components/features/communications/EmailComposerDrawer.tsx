@@ -56,9 +56,7 @@ export default function EmailComposerDrawer({
         to: replyTo.from,
         cc: '',
         bcc: '',
-        subject: replyTo.subject.startsWith('Re:')
-          ? replyTo.subject
-          : `Re: ${replyTo.subject}`,
+        subject: replyTo.subject.startsWith('Re:') ? replyTo.subject : `Re: ${replyTo.subject}`,
         body: `\n\n--- Original Message ---\n${replyTo.body}`,
         priority: replyTo.priority,
         companyId: replyTo.companyId,
@@ -236,13 +234,7 @@ export default function EmailComposerDrawer({
     <Drawer
       isOpen={isOpen}
       onClose={onClose}
-      title={
-        isEdit
-          ? 'Edit Draft'
-          : isReply
-          ? 'Reply to Email'
-          : 'New Email'
-      }
+      title={isEdit ? 'Edit Draft' : isReply ? 'Reply to Email' : 'New Email'}
       size="xl"
       footer={
         <div className="flex justify-between items-center">
@@ -381,9 +373,7 @@ export default function EmailComposerDrawer({
 
           {formData.needsFollowUp && (
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Follow-up Date
-              </label>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Follow-up Date</label>
               <input
                 type="date"
                 value={formData.followUpDate}
@@ -434,14 +424,10 @@ export default function EmailComposerDrawer({
 
         {/* Attachments placeholder */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Attachments
-          </label>
+          <label className="block text-sm font-medium text-gray-700 mb-2">Attachments</label>
           <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
             <IconPaperclip size={24} className="mx-auto text-gray-400 mb-2" />
-            <p className="text-sm text-gray-600">
-              Drag and drop files or click to browse
-            </p>
+            <p className="text-sm text-gray-600">Drag and drop files or click to browse</p>
             <p className="text-xs text-gray-500 mt-1">(Feature coming soon)</p>
           </div>
         </div>

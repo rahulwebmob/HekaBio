@@ -4,13 +4,7 @@
  */
 
 import { useState } from 'react';
-import {
-  IconCheck,
-  IconX,
-  IconEdit,
-  IconSparkles,
-  IconAlertCircle,
-} from '@tabler/icons-react';
+import { IconCheck, IconX, IconEdit, IconSparkles, IconAlertCircle } from '@tabler/icons-react';
 import { Button, Input, Modal, Badge } from '../ui';
 import type { ExtractedField } from '../../services/aiExtraction.service';
 
@@ -30,21 +24,36 @@ export function ExtractionResultsModal({
   onApprove,
 }: ExtractionResultsModalProps) {
   const [editedFields, setEditedFields] = useState<Record<string, string>>(
-    extractedFields.reduce((acc, field) => {
-      acc[field.field] = field.value;
-      return acc;
-    }, {} as Record<string, string>)
+    extractedFields.reduce(
+      (acc, field) => {
+        acc[field.field] = field.value;
+        return acc;
+      },
+      {} as Record<string, string>
+    )
   );
 
   const [editingField, setEditingField] = useState<string | null>(null);
 
   const getConfidenceBadge = (confidence: number) => {
     if (confidence >= 90) {
-      return <Badge variant="success" size="sm">High ({confidence.toFixed(0)}%)</Badge>;
+      return (
+        <Badge variant="success" size="sm">
+          High ({confidence.toFixed(0)}%)
+        </Badge>
+      );
     } else if (confidence >= 75) {
-      return <Badge variant="warning" size="sm">Medium ({confidence.toFixed(0)}%)</Badge>;
+      return (
+        <Badge variant="warning" size="sm">
+          Medium ({confidence.toFixed(0)}%)
+        </Badge>
+      );
     } else {
-      return <Badge variant="error" size="sm">Low ({confidence.toFixed(0)}%)</Badge>;
+      return (
+        <Badge variant="error" size="sm">
+          Low ({confidence.toFixed(0)}%)
+        </Badge>
+      );
     }
   };
 
@@ -69,19 +78,13 @@ export function ExtractionResultsModal({
       footer={
         <div className="flex items-center justify-between w-full">
           <div className="text-sm text-gray-600">
-            {processingTime && (
-              <span>Processed in {processingTime}s</span>
-            )}
+            {processingTime && <span>Processed in {processingTime}s</span>}
           </div>
           <div className="flex items-center gap-3">
             <Button variant="outline" onClick={onClose}>
               Cancel
             </Button>
-            <Button
-              variant="primary"
-              leftIcon={<IconCheck size={18} />}
-              onClick={handleApprove}
-            >
+            <Button variant="primary" leftIcon={<IconCheck size={18} />} onClick={handleApprove}>
               Approve & Apply
             </Button>
           </div>
@@ -129,19 +132,13 @@ export function ExtractionResultsModal({
               <div className="flex items-start justify-between mb-2">
                 <div className="flex-1">
                   <div className="flex items-center gap-2 mb-1">
-                    <label className="text-sm font-semibold text-gray-900">
-                      {field.label}
-                    </label>
+                    <label className="text-sm font-semibold text-gray-900">{field.label}</label>
                     {getConfidenceBadge(field.confidence)}
                   </div>
                   <p className="text-xs text-gray-500">Source: {field.source}</p>
                 </div>
                 <button
-                  onClick={() =>
-                    setEditingField(
-                      editingField === field.field ? null : field.field
-                    )
-                  }
+                  onClick={() => setEditingField(editingField === field.field ? null : field.field)}
                   className="p-1.5 hover:bg-gray-100 rounded transition-colors"
                   title="Edit field"
                 >
@@ -171,9 +168,7 @@ export function ExtractionResultsModal({
 
         {/* Info */}
         <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
-          <h4 className="text-sm font-semibold text-gray-900 mb-2">
-            How AI Extraction Works
-          </h4>
+          <h4 className="text-sm font-semibold text-gray-900 mb-2">How AI Extraction Works</h4>
           <ul className="text-xs text-gray-700 space-y-1">
             <li>• AI analyzes the uploaded introduction deck (PDF/PPT)</li>
             <li>• Extracts key fields with confidence scores based on text analysis</li>

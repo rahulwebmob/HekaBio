@@ -41,16 +41,16 @@ const projectsSlice = createSlice({
       state.projects.push(action.payload);
     },
     updateProject: (state, action: PayloadAction<Project>) => {
-      const index = state.projects.findIndex(p => p.id === action.payload.id);
+      const index = state.projects.findIndex((p) => p.id === action.payload.id);
       if (index !== -1) {
         state.projects[index] = action.payload;
       }
     },
     deleteProject: (state, action: PayloadAction<string>) => {
-      state.projects = state.projects.filter(p => p.id !== action.payload);
+      state.projects = state.projects.filter((p) => p.id !== action.payload);
     },
     duplicateProject: (state, action: PayloadAction<string>) => {
-      const originalProject = state.projects.find(p => p.id === action.payload);
+      const originalProject = state.projects.find((p) => p.id === action.payload);
       if (originalProject) {
         const now = new Date().toISOString();
         const duplicatedProject: Project = {
@@ -64,16 +64,18 @@ const projectsSlice = createSlice({
           isHot: false,
           ddProgress: 0,
           ddCompletedAt: undefined,
-          stageHistory: [{
-            id: `stage-${Date.now()}`,
-            projectId: `project-${Date.now()}`,
-            fromStage: null,
-            toStage: 'LOBBY',
-            changedBy: 'user-001',
-            changedByName: 'Current User',
-            changedAt: now,
-            reason: 'Project duplicated',
-          }],
+          stageHistory: [
+            {
+              id: `stage-${Date.now()}`,
+              projectId: `project-${Date.now()}`,
+              fromStage: null,
+              toStage: 'LOBBY',
+              changedBy: 'user-001',
+              changedByName: 'Current User',
+              changedAt: now,
+              reason: 'Project duplicated',
+            },
+          ],
           createdAt: now,
           updatedAt: now,
           createdBy: 'user-001',
@@ -86,8 +88,11 @@ const projectsSlice = createSlice({
     },
 
     // Stage Management
-    moveToStage: (state, action: PayloadAction<{ projectId: string; stage: Stage; reason?: string; notes?: string }>) => {
-      const project = state.projects.find(p => p.id === action.payload.projectId);
+    moveToStage: (
+      state,
+      action: PayloadAction<{ projectId: string; stage: Stage; reason?: string; notes?: string }>
+    ) => {
+      const project = state.projects.find((p) => p.id === action.payload.projectId);
       if (project) {
         const now = new Date().toISOString();
         project.stageHistory.push({
@@ -105,10 +110,13 @@ const projectsSlice = createSlice({
         project.updatedAt = now;
       }
     },
-    bulkMoveToStage: (state, action: PayloadAction<{ projectIds: string[]; stage: Stage; reason: string; notes?: string }>) => {
+    bulkMoveToStage: (
+      state,
+      action: PayloadAction<{ projectIds: string[]; stage: Stage; reason: string; notes?: string }>
+    ) => {
       const now = new Date().toISOString();
       action.payload.projectIds.forEach((projectId) => {
-        const project = state.projects.find(p => p.id === projectId);
+        const project = state.projects.find((p) => p.id === projectId);
         if (project) {
           project.stageHistory.push({
             id: `stage-${Date.now()}-${projectId}`,
@@ -128,8 +136,11 @@ const projectsSlice = createSlice({
     },
 
     // Score Management
-    updateScore: (state, action: PayloadAction<{ projectId: string; score: number; breakdown?: ScoreBreakdown }>) => {
-      const project = state.projects.find(p => p.id === action.payload.projectId);
+    updateScore: (
+      state,
+      action: PayloadAction<{ projectId: string; score: number; breakdown?: ScoreBreakdown }>
+    ) => {
+      const project = state.projects.find((p) => p.id === action.payload.projectId);
       if (project) {
         project.score = action.payload.score;
         project.scoreBreakdown = action.payload.breakdown;
@@ -141,12 +152,15 @@ const projectsSlice = createSlice({
     },
 
     // Japan Assessment
-    updateJapanAssessment: (state, action: PayloadAction<{
-      projectId: string;
-      japanMarketFit: JapanMarketFit;
-      japanSummary?: string;
-    }>) => {
-      const project = state.projects.find(p => p.id === action.payload.projectId);
+    updateJapanAssessment: (
+      state,
+      action: PayloadAction<{
+        projectId: string;
+        japanMarketFit: JapanMarketFit;
+        japanSummary?: string;
+      }>
+    ) => {
+      const project = state.projects.find((p) => p.id === action.payload.projectId);
       if (project) {
         project.japanMarketFit = action.payload.japanMarketFit;
         project.japanSummary = action.payload.japanSummary;
@@ -156,12 +170,15 @@ const projectsSlice = createSlice({
     },
 
     // NDA Management
-    updateNDAStatus: (state, action: PayloadAction<{
-      projectId: string;
-      status: NDAStatus;
-      completedAt?: string;
-    }>) => {
-      const project = state.projects.find(p => p.id === action.payload.projectId);
+    updateNDAStatus: (
+      state,
+      action: PayloadAction<{
+        projectId: string;
+        status: NDAStatus;
+        completedAt?: string;
+      }>
+    ) => {
+      const project = state.projects.find((p) => p.id === action.payload.projectId);
       if (project) {
         project.ndaStatus = action.payload.status;
         if (action.payload.status === 'REQUESTED' && !project.ndaRequestedAt) {
@@ -176,7 +193,7 @@ const projectsSlice = createSlice({
 
     // Due Diligence
     updateDDProgress: (state, action: PayloadAction<{ projectId: string; progress: number }>) => {
-      const project = state.projects.find(p => p.id === action.payload.projectId);
+      const project = state.projects.find((p) => p.id === action.payload.projectId);
       if (project) {
         project.ddProgress = action.payload.progress;
         if (!project.ddStartedAt && action.payload.progress > 0) {
@@ -190,8 +207,11 @@ const projectsSlice = createSlice({
     },
 
     // Contract Decision
-    updateContractStatus: (state, action: PayloadAction<{ projectId: string; status: ContractStatus }>) => {
-      const project = state.projects.find(p => p.id === action.payload.projectId);
+    updateContractStatus: (
+      state,
+      action: PayloadAction<{ projectId: string; status: ContractStatus }>
+    ) => {
+      const project = state.projects.find((p) => p.id === action.payload.projectId);
       if (project) {
         project.contractStatus = action.payload.status;
         project.contractDecisionAt = new Date().toISOString();

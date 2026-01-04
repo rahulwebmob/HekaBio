@@ -153,8 +153,8 @@ export default function Gate2ReviewPanel({
               japanMarketFit === 'HIGH'
                 ? 'success'
                 : japanMarketFit === 'MEDIUM'
-                ? 'warning'
-                : 'error'
+                  ? 'warning'
+                  : 'error'
             }
             size="md"
           >
@@ -174,7 +174,10 @@ export default function Gate2ReviewPanel({
             </div>
           </div>
           <div className="text-2xl font-bold text-gray-900">{leadScore}/100</div>
-          <Badge variant={leadScore >= 70 ? 'success' : leadScore >= 50 ? 'warning' : 'error'} size="sm">
+          <Badge
+            variant={leadScore >= 70 ? 'success' : leadScore >= 50 ? 'warning' : 'error'}
+            size="sm"
+          >
             {leadScore >= 70 ? 'Strong' : leadScore >= 50 ? 'Moderate' : 'Weak'}
           </Badge>
         </Card>
@@ -195,10 +198,10 @@ export default function Gate2ReviewPanel({
               partnerFit === 'EXCELLENT'
                 ? 'success'
                 : partnerFit === 'GOOD'
-                ? 'info'
-                : partnerFit === 'FAIR'
-                ? 'warning'
-                : 'default'
+                  ? 'info'
+                  : partnerFit === 'FAIR'
+                    ? 'warning'
+                    : 'default'
             }
             size="md"
           >
@@ -227,19 +230,22 @@ export default function Gate2ReviewPanel({
                 decision === 'APPROVED'
                   ? 'border-success-500 bg-success-50'
                   : canApprove
-                  ? 'border-gray-200 hover:border-success-300'
-                  : 'border-gray-200 opacity-50 cursor-not-allowed'
+                    ? 'border-gray-200 hover:border-success-300'
+                    : 'border-gray-200 opacity-50 cursor-not-allowed'
               }`}
             >
               <div className="flex items-center gap-3 mb-2">
-                <IconCheck size={20} className={decision === 'APPROVED' ? 'text-success-600' : 'text-gray-400'} />
-                <span className={`font-semibold ${decision === 'APPROVED' ? 'text-success-900' : 'text-gray-700'}`}>
+                <IconCheck
+                  size={20}
+                  className={decision === 'APPROVED' ? 'text-success-600' : 'text-gray-400'}
+                />
+                <span
+                  className={`font-semibold ${decision === 'APPROVED' ? 'text-success-900' : 'text-gray-700'}`}
+                >
                   Approve to Gate 3
                 </span>
               </div>
-              <p className="text-xs text-gray-600">
-                Strong potential. Ready for senior decision.
-              </p>
+              <p className="text-xs text-gray-600">Strong potential. Ready for senior decision.</p>
               {!canApprove && (
                 <p className="text-xs text-warning-600 mt-2">
                   Requires completed meeting, score ≥50, and Japan fit
@@ -256,14 +262,17 @@ export default function Gate2ReviewPanel({
               }`}
             >
               <div className="flex items-center gap-3 mb-2">
-                <IconAlertCircle size={20} className={decision === 'PENDING' ? 'text-warning-600' : 'text-gray-400'} />
-                <span className={`font-semibold ${decision === 'PENDING' ? 'text-warning-900' : 'text-gray-700'}`}>
+                <IconAlertCircle
+                  size={20}
+                  className={decision === 'PENDING' ? 'text-warning-600' : 'text-gray-400'}
+                />
+                <span
+                  className={`font-semibold ${decision === 'PENDING' ? 'text-warning-900' : 'text-gray-700'}`}
+                >
                   Hold for Review
                 </span>
               </div>
-              <p className="text-xs text-gray-600">
-                Needs additional assessment or conditions.
-              </p>
+              <p className="text-xs text-gray-600">Needs additional assessment or conditions.</p>
             </button>
 
             <button
@@ -275,14 +284,17 @@ export default function Gate2ReviewPanel({
               }`}
             >
               <div className="flex items-center gap-3 mb-2">
-                <IconX size={20} className={decision === 'REJECTED' ? 'text-error-600' : 'text-gray-400'} />
-                <span className={`font-semibold ${decision === 'REJECTED' ? 'text-error-900' : 'text-gray-700'}`}>
+                <IconX
+                  size={20}
+                  className={decision === 'REJECTED' ? 'text-error-600' : 'text-gray-400'}
+                />
+                <span
+                  className={`font-semibold ${decision === 'REJECTED' ? 'text-error-900' : 'text-gray-700'}`}
+                >
                   Close Project
                 </span>
               </div>
-              <p className="text-xs text-gray-600">
-                Does not meet Gate 2 criteria. Close project.
-              </p>
+              <p className="text-xs text-gray-600">Does not meet Gate 2 criteria. Close project.</p>
             </button>
           </div>
 
@@ -357,15 +369,13 @@ export default function Gate2ReviewPanel({
             <div className="w-16 h-16 bg-success-100 rounded-full flex items-center justify-center mx-auto mb-4">
               <IconCheck size={32} className="text-success-600" />
             </div>
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">
-              Gate 2 Decision Submitted
-            </h3>
+            <h3 className="text-lg font-semibold text-gray-900 mb-2">Gate 2 Decision Submitted</h3>
             <p className="text-gray-600">
               {decision === 'APPROVED'
                 ? 'Project approved to proceed to Gate 3 (Senior Decision)'
                 : decision === 'PENDING'
-                ? 'Project on hold pending additional review'
-                : 'Project closed at Gate 2'}
+                  ? 'Project on hold pending additional review'
+                  : 'Project closed at Gate 2'}
             </p>
           </div>
         </Card>

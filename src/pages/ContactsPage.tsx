@@ -4,22 +4,13 @@
  */
 
 import { useState, useMemo } from 'react';
-import {
-  IconSearch,
-  IconUser,
-  IconMail,
-  IconPhone,
-  IconBuilding,
-} from '@tabler/icons-react';
+import { IconSearch, IconUser, IconMail, IconPhone, IconBuilding } from '@tabler/icons-react';
 import { PlusIcon, EyeIcon } from '../icons';
 import { useAppSelector } from '../app/store';
 import { AppLayout } from '../components/layout';
 import { Button, Card, Input, Select } from '../components/ui';
 import { ContactFormModal, ContactDetailDrawer } from '../components/features';
-import {
-  ContactRole,
-  ContactRoleLabels,
-} from '../types/addressBook.types';
+import { ContactRole, ContactRoleLabels } from '../types/addressBook.types';
 
 export default function ContactsPage() {
   const contacts = useAppSelector((state) => state.addressBook.contacts);
@@ -112,9 +103,7 @@ export default function ContactsPage() {
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-3xl font-semibold text-gray-900">Contacts</h1>
-            <p className="text-gray-600 mt-1">
-              Manage your contact directory and relationships
-            </p>
+            <p className="text-gray-600 mt-1">Manage your contact directory and relationships</p>
           </div>
           <Button
             variant="primary"

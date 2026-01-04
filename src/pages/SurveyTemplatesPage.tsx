@@ -146,9 +146,7 @@ export default function SurveyTemplatesPage() {
                     >
                       <td className="px-6 py-4">
                         <div>
-                          <p className="text-sm font-semibold text-gray-900">
-                            {template.name}
-                          </p>
+                          <p className="text-sm font-semibold text-gray-900">{template.name}</p>
                           {template.description && (
                             <p className="text-xs text-gray-600 line-clamp-1">
                               {template.description}
@@ -164,7 +162,9 @@ export default function SurveyTemplatesPage() {
                       <td className="px-6 py-4">
                         <div className="text-sm text-gray-900">
                           <p className="font-semibold">{template.sections.length} sections</p>
-                          <p className="text-xs text-gray-600">{getTotalQuestions(template)} questions</p>
+                          <p className="text-xs text-gray-600">
+                            {getTotalQuestions(template)} questions
+                          </p>
                         </div>
                       </td>
                       <td className="px-6 py-4">
@@ -177,10 +177,7 @@ export default function SurveyTemplatesPage() {
                       </td>
                       <td className="px-6 py-4">
                         <div className="flex items-center justify-center">
-                          <Badge
-                            variant={template.isActive ? 'success' : 'default'}
-                            size="sm"
-                          >
+                          <Badge variant={template.isActive ? 'success' : 'default'} size="sm">
                             {template.isActive ? 'Active' : 'Inactive'}
                           </Badge>
                         </div>
@@ -251,9 +248,7 @@ export default function SurveyTemplatesPage() {
               <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
                 <IconFileText size={32} className="text-gray-400" />
               </div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                No survey templates yet
-              </h3>
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">No survey templates yet</h3>
               <p className="text-gray-600 mb-6">
                 Create your first survey template to start collecting data
               </p>

@@ -53,16 +53,14 @@ export default function TaskFormDrawer({ isOpen, onClose, task }: TaskFormDrawer
         status: task.status,
         priority: task.priority,
         assignedTo: task.assignedTo,
-        dueDate: task.dueDate
-          ? new Date(task.dueDate).toISOString().split('T')[0]
-          : '',
+        dueDate: task.dueDate ? new Date(task.dueDate).toISOString().split('T')[0] : '',
         estimatedHours: task.estimatedHours?.toString() || '',
         progress: task.progress,
         tags: task.tags,
         notes: task.notes || '',
       });
     } else if (!isOpen) {
-  // Reset form when drawer closes
+      // Reset form when drawer closes
       setFormData({
         title: '',
         description: '',
@@ -373,9 +371,7 @@ export default function TaskFormDrawer({ isOpen, onClose, task }: TaskFormDrawer
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Estimated Hours
-            </label>
+            <label className="block text-sm font-medium text-gray-700 mb-2">Estimated Hours</label>
             <Input
               type="number"
               value={formData.estimatedHours}

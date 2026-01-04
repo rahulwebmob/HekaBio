@@ -172,7 +172,9 @@ export default function TaskKanbanBoard({ tasks, onTaskClick }: TaskKanbanBoardP
           return (
             <div key={column.id} className="flex-shrink-0 w-80">
               {/* Column Header */}
-              <div className={`rounded-t-lg ${column.bgColor} px-4 py-3 border-b-2 border-${column.color.replace('text-', '')}`}>
+              <div
+                className={`rounded-t-lg ${column.bgColor} px-4 py-3 border-b-2 border-${column.color.replace('text-', '')}`}
+              >
                 <div className="flex items-center justify-between">
                   <h3 className={`font-semibold ${column.color}`}>{column.title}</h3>
                   <Badge variant="default" size="sm">
@@ -217,7 +219,9 @@ export default function TaskKanbanBoard({ tasks, onTaskClick }: TaskKanbanBoardP
                         {/* Priority */}
                         <div className="flex items-center gap-2">
                           <IconFlag size={14} className={getPriorityColor(task.priority)} />
-                          <span className={`text-xs font-medium ${getPriorityColor(task.priority)}`}>
+                          <span
+                            className={`text-xs font-medium ${getPriorityColor(task.priority)}`}
+                          >
                             {task.priority}
                           </span>
                         </div>
@@ -225,10 +229,17 @@ export default function TaskKanbanBoard({ tasks, onTaskClick }: TaskKanbanBoardP
                         {/* Due Date */}
                         {task.dueDate && (
                           <div className="flex items-center gap-2">
-                            <IconClock size={14} className={isOverdue(task.dueDate) ? 'text-error-600' : 'text-gray-600'} />
+                            <IconClock
+                              size={14}
+                              className={
+                                isOverdue(task.dueDate) ? 'text-error-600' : 'text-gray-600'
+                              }
+                            />
                             <span
                               className={`text-xs ${
-                                isOverdue(task.dueDate) ? 'text-error-600 font-medium' : 'text-gray-600'
+                                isOverdue(task.dueDate)
+                                  ? 'text-error-600 font-medium'
+                                  : 'text-gray-600'
                               }`}
                             >
                               {formatDate(task.dueDate)}
@@ -283,9 +294,7 @@ export default function TaskKanbanBoard({ tasks, onTaskClick }: TaskKanbanBoardP
                   ))}
 
                   {columnTasks.length === 0 && (
-                    <div className="text-center py-8 text-gray-400 text-sm">
-                      No tasks
-                    </div>
+                    <div className="text-center py-8 text-gray-400 text-sm">No tasks</div>
                   )}
                 </div>
               </SortableContext>

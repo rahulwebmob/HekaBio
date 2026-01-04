@@ -194,13 +194,7 @@ export interface Notification {
 }
 
 // ===== Permission =====
-export type Permission =
-  | 'view'
-  | 'create'
-  | 'edit'
-  | 'delete'
-  | 'approve'
-  | 'admin';
+export type Permission = 'view' | 'create' | 'edit' | 'delete' | 'approve' | 'admin';
 
 export interface PermissionConfig {
   resource: string;

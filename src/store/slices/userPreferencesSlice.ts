@@ -92,10 +92,7 @@ const userPreferencesSlice = createSlice({
     },
 
     // Update display preferences
-    updateDisplayPreferences: (
-      state,
-      action: PayloadAction<Partial<DisplayPreferences>>
-    ) => {
+    updateDisplayPreferences: (state, action: PayloadAction<Partial<DisplayPreferences>>) => {
       if (state.preferences) {
         state.preferences.display = {
           ...state.preferences.display,

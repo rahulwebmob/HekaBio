@@ -31,10 +31,7 @@ interface GapAnalysisReportProps {
   compact?: boolean;
 }
 
-export function GapAnalysisReport({
-  surveyInstance,
-  compact = false,
-}: GapAnalysisReportProps) {
+export function GapAnalysisReport({ surveyInstance, compact = false }: GapAnalysisReportProps) {
   const [isExpanded, setIsExpanded] = useState(!compact);
   const [showFollowUpModal, setShowFollowUpModal] = useState(false);
 
@@ -44,9 +41,7 @@ export function GapAnalysisReport({
 
   template.sections.forEach((section) => {
     section.questions.forEach((question) => {
-      const response = surveyInstance.responses?.find(
-        (r) => r.questionId === question.id
-      );
+      const response = surveyInstance.responses?.find((r) => r.questionId === question.id);
 
       // Check if question is missing or incomplete
       const isMissing = !response || response.skipped;
@@ -89,9 +84,7 @@ export function GapAnalysisReport({
     0
   );
   const answeredQuestions = totalQuestions - gaps.length;
-  const completionPercentage = Math.round(
-    (answeredQuestions / totalQuestions) * 100
-  );
+  const completionPercentage = Math.round((answeredQuestions / totalQuestions) * 100);
 
   const criticalGaps = gaps.filter((g) => g.priority === 'critical');
   const importantGaps = gaps.filter((g) => g.priority === 'important');
@@ -119,9 +112,7 @@ export function GapAnalysisReport({
             <IconCheck size={24} className="text-success-600" />
           </div>
           <div>
-            <h3 className="text-lg font-semibold text-success-900">
-              No Data Gaps Found
-            </h3>
+            <h3 className="text-lg font-semibold text-success-900">No Data Gaps Found</h3>
             <p className="text-sm text-success-700">
               All required and optional fields have been completed.
             </p>
@@ -143,9 +134,7 @@ export function GapAnalysisReport({
                 <IconCircleDashed size={20} className="text-warning-600" />
               </div>
               <div>
-                <h2 className="text-xl font-semibold text-gray-900">
-                  Gap Analysis Report
-                </h2>
+                <h2 className="text-xl font-semibold text-gray-900">Gap Analysis Report</h2>
                 <p className="text-sm text-gray-600">
                   {gaps.length} field{gaps.length !== 1 ? 's' : ''} missing
                 </p>
@@ -176,194 +165,165 @@ export function GapAnalysisReport({
           </div>
         }
       >
-      <div className="space-y-6">
-        {/* Completion Overview */}
-        <div className="space-y-3">
-          <div className="flex items-center justify-between">
-            <span className="text-sm font-medium text-gray-700">
-              Overall Completion
-            </span>
-            <span
-              className={`text-2xl font-bold ${getCompletenessColor(
-                completionPercentage
-              )}`}
-            >
-              {completionPercentage}%
-            </span>
+        <div className="space-y-6">
+          {/* Completion Overview */}
+          <div className="space-y-3">
+            <div className="flex items-center justify-between">
+              <span className="text-sm font-medium text-gray-700">Overall Completion</span>
+              <span className={`text-2xl font-bold ${getCompletenessColor(completionPercentage)}`}>
+                {completionPercentage}%
+              </span>
+            </div>
+            <div className="w-full bg-gray-200 rounded-full h-4">
+              <div
+                className={`h-4 rounded-full transition-all ${
+                  completionPercentage === 100
+                    ? 'bg-success-500'
+                    : completionPercentage >= 80
+                      ? 'bg-brand-500'
+                      : completionPercentage >= 60
+                        ? 'bg-warning-500'
+                        : 'bg-error-500'
+                }`}
+                style={{ width: `${completionPercentage}%` }}
+              />
+            </div>
+            <div className="flex items-center justify-between text-sm">
+              <span className="text-gray-600">
+                {answeredQuestions} of {totalQuestions} questions answered
+              </span>
+              <Badge
+                variant={
+                  completionPercentage === 100
+                    ? 'success'
+                    : completionPercentage >= 80
+                      ? 'info'
+                      : completionPercentage >= 60
+                        ? 'warning'
+                        : 'error'
+                }
+                size="sm"
+              >
+                {getCompletenessLabel(completionPercentage)}
+              </Badge>
+            </div>
           </div>
-          <div className="w-full bg-gray-200 rounded-full h-4">
-            <div
-              className={`h-4 rounded-full transition-all ${
-                completionPercentage === 100
-                  ? 'bg-success-500'
-                  : completionPercentage >= 80
-                  ? 'bg-brand-500'
-                  : completionPercentage >= 60
-                  ? 'bg-warning-500'
-                  : 'bg-error-500'
-              }`}
-              style={{ width: `${completionPercentage}%` }}
-            />
-          </div>
-          <div className="flex items-center justify-between text-sm">
-            <span className="text-gray-600">
-              {answeredQuestions} of {totalQuestions} questions answered
-            </span>
-            <Badge
-              variant={
-                completionPercentage === 100
-                  ? 'success'
-                  : completionPercentage >= 80
-                  ? 'info'
-                  : completionPercentage >= 60
-                  ? 'warning'
-                  : 'error'
-              }
-              size="sm"
-            >
-              {getCompletenessLabel(completionPercentage)}
-            </Badge>
-          </div>
+
+          {isExpanded && (
+            <>
+              {/* Gap Summary */}
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                {criticalGaps.length > 0 && (
+                  <div className="p-4 bg-error-50 border border-error-200 rounded-lg">
+                    <div className="flex items-center gap-2 mb-1">
+                      <IconExclamationCircle size={18} className="text-error-600" />
+                      <span className="text-sm font-semibold text-error-900">Critical</span>
+                    </div>
+                    <p className="text-2xl font-bold text-error-600">{criticalGaps.length}</p>
+                    <p className="text-xs text-error-700">Required fields missing</p>
+                  </div>
+                )}
+
+                {importantGaps.length > 0 && (
+                  <div className="p-4 bg-warning-50 border border-warning-200 rounded-lg">
+                    <div className="flex items-center gap-2 mb-1">
+                      <IconAlertTriangle size={18} className="text-warning-600" />
+                      <span className="text-sm font-semibold text-warning-900">Important</span>
+                    </div>
+                    <p className="text-2xl font-bold text-warning-600">{importantGaps.length}</p>
+                    <p className="text-xs text-warning-700">Recommended fields missing</p>
+                  </div>
+                )}
+
+                {optionalGaps.length > 0 && (
+                  <div className="p-4 bg-gray-50 border border-gray-200 rounded-lg">
+                    <div className="flex items-center gap-2 mb-1">
+                      <IconCircleDashed size={18} className="text-gray-600" />
+                      <span className="text-sm font-semibold text-gray-900">Optional</span>
+                    </div>
+                    <p className="text-2xl font-bold text-gray-600">{optionalGaps.length}</p>
+                    <p className="text-xs text-gray-700">Optional fields missing</p>
+                  </div>
+                )}
+              </div>
+
+              {/* Gap Details */}
+              <div className="space-y-4">
+                {criticalGaps.length > 0 && (
+                  <div>
+                    <h3 className="text-sm font-semibold text-error-900 mb-3 flex items-center gap-2">
+                      <IconExclamationCircle size={16} />
+                      Critical Gaps ({criticalGaps.length})
+                    </h3>
+                    <div className="space-y-2">
+                      {criticalGaps.map((gap) => (
+                        <div
+                          key={gap.questionId}
+                          className="p-3 bg-error-50 border border-error-200 rounded-lg"
+                        >
+                          <p className="text-sm font-medium text-error-900">{gap.questionText}</p>
+                          <p className="text-xs text-error-700 mt-1">
+                            Section: {gap.section} • {gap.reason}
+                          </p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {importantGaps.length > 0 && (
+                  <div>
+                    <h3 className="text-sm font-semibold text-warning-900 mb-3 flex items-center gap-2">
+                      <IconAlertTriangle size={16} />
+                      Important Gaps ({importantGaps.length})
+                    </h3>
+                    <div className="space-y-2">
+                      {importantGaps.map((gap) => (
+                        <div
+                          key={gap.questionId}
+                          className="p-3 bg-warning-50 border border-warning-200 rounded-lg"
+                        >
+                          <p className="text-sm font-medium text-warning-900">{gap.questionText}</p>
+                          <p className="text-xs text-warning-700 mt-1">
+                            Section: {gap.section} • {gap.reason}
+                          </p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {optionalGaps.length > 0 && (
+                  <div>
+                    <h3 className="text-sm font-semibold text-gray-900 mb-3 flex items-center gap-2">
+                      <IconCircleDashed size={16} />
+                      Optional Gaps ({optionalGaps.length})
+                    </h3>
+                    <div className="space-y-2">
+                      {optionalGaps.slice(0, 5).map((gap) => (
+                        <div
+                          key={gap.questionId}
+                          className="p-3 bg-gray-50 border border-gray-200 rounded-lg"
+                        >
+                          <p className="text-sm font-medium text-gray-900">{gap.questionText}</p>
+                          <p className="text-xs text-gray-700 mt-1">
+                            Section: {gap.section} • {gap.reason}
+                          </p>
+                        </div>
+                      ))}
+                      {optionalGaps.length > 5 && (
+                        <p className="text-xs text-gray-600 text-center py-2">
+                          + {optionalGaps.length - 5} more optional fields
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                )}
+              </div>
+            </>
+          )}
         </div>
-
-        {isExpanded && (
-          <>
-            {/* Gap Summary */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-              {criticalGaps.length > 0 && (
-                <div className="p-4 bg-error-50 border border-error-200 rounded-lg">
-                  <div className="flex items-center gap-2 mb-1">
-                    <IconExclamationCircle
-                      size={18}
-                      className="text-error-600"
-                    />
-                    <span className="text-sm font-semibold text-error-900">
-                      Critical
-                    </span>
-                  </div>
-                  <p className="text-2xl font-bold text-error-600">
-                    {criticalGaps.length}
-                  </p>
-                  <p className="text-xs text-error-700">Required fields missing</p>
-                </div>
-              )}
-
-              {importantGaps.length > 0 && (
-                <div className="p-4 bg-warning-50 border border-warning-200 rounded-lg">
-                  <div className="flex items-center gap-2 mb-1">
-                    <IconAlertTriangle size={18} className="text-warning-600" />
-                    <span className="text-sm font-semibold text-warning-900">
-                      Important
-                    </span>
-                  </div>
-                  <p className="text-2xl font-bold text-warning-600">
-                    {importantGaps.length}
-                  </p>
-                  <p className="text-xs text-warning-700">
-                    Recommended fields missing
-                  </p>
-                </div>
-              )}
-
-              {optionalGaps.length > 0 && (
-                <div className="p-4 bg-gray-50 border border-gray-200 rounded-lg">
-                  <div className="flex items-center gap-2 mb-1">
-                    <IconCircleDashed size={18} className="text-gray-600" />
-                    <span className="text-sm font-semibold text-gray-900">
-                      Optional
-                    </span>
-                  </div>
-                  <p className="text-2xl font-bold text-gray-600">
-                    {optionalGaps.length}
-                  </p>
-                  <p className="text-xs text-gray-700">Optional fields missing</p>
-                </div>
-              )}
-            </div>
-
-            {/* Gap Details */}
-            <div className="space-y-4">
-              {criticalGaps.length > 0 && (
-                <div>
-                  <h3 className="text-sm font-semibold text-error-900 mb-3 flex items-center gap-2">
-                    <IconExclamationCircle size={16} />
-                    Critical Gaps ({criticalGaps.length})
-                  </h3>
-                  <div className="space-y-2">
-                    {criticalGaps.map((gap) => (
-                      <div
-                        key={gap.questionId}
-                        className="p-3 bg-error-50 border border-error-200 rounded-lg"
-                      >
-                        <p className="text-sm font-medium text-error-900">
-                          {gap.questionText}
-                        </p>
-                        <p className="text-xs text-error-700 mt-1">
-                          Section: {gap.section} • {gap.reason}
-                        </p>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {importantGaps.length > 0 && (
-                <div>
-                  <h3 className="text-sm font-semibold text-warning-900 mb-3 flex items-center gap-2">
-                    <IconAlertTriangle size={16} />
-                    Important Gaps ({importantGaps.length})
-                  </h3>
-                  <div className="space-y-2">
-                    {importantGaps.map((gap) => (
-                      <div
-                        key={gap.questionId}
-                        className="p-3 bg-warning-50 border border-warning-200 rounded-lg"
-                      >
-                        <p className="text-sm font-medium text-warning-900">
-                          {gap.questionText}
-                        </p>
-                        <p className="text-xs text-warning-700 mt-1">
-                          Section: {gap.section} • {gap.reason}
-                        </p>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {optionalGaps.length > 0 && (
-                <div>
-                  <h3 className="text-sm font-semibold text-gray-900 mb-3 flex items-center gap-2">
-                    <IconCircleDashed size={16} />
-                    Optional Gaps ({optionalGaps.length})
-                  </h3>
-                  <div className="space-y-2">
-                    {optionalGaps.slice(0, 5).map((gap) => (
-                      <div
-                        key={gap.questionId}
-                        className="p-3 bg-gray-50 border border-gray-200 rounded-lg"
-                      >
-                        <p className="text-sm font-medium text-gray-900">
-                          {gap.questionText}
-                        </p>
-                        <p className="text-xs text-gray-700 mt-1">
-                          Section: {gap.section} • {gap.reason}
-                        </p>
-                      </div>
-                    ))}
-                    {optionalGaps.length > 5 && (
-                      <p className="text-xs text-gray-600 text-center py-2">
-                        + {optionalGaps.length - 5} more optional fields
-                      </p>
-                    )}
-                  </div>
-                </div>
-              )}
-            </div>
-          </>
-        )}
-      </div>
-    </Card>
+      </Card>
 
       <FollowUpEmailModal
         isOpen={showFollowUpModal}

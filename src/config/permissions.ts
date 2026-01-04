@@ -189,12 +189,12 @@ export const hasPermission = (role: UserRole, permission: Permission): boolean =
  * Check if a role has ANY of the specified permissions
  */
 export const hasAnyPermission = (role: UserRole, permissions: Permission[]): boolean => {
-  return permissions.some(permission => hasPermission(role, permission));
+  return permissions.some((permission) => hasPermission(role, permission));
 };
 
 /**
  * Check if a role has ALL of the specified permissions
  */
 export const hasAllPermissions = (role: UserRole, permissions: Permission[]): boolean => {
-  return permissions.every(permission => hasPermission(role, permission));
+  return permissions.every((permission) => hasPermission(role, permission));
 };

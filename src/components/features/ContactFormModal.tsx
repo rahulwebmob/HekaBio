@@ -8,10 +8,7 @@ import { IconUser } from '@tabler/icons-react';
 import { useAppDispatch, useAppSelector } from '../../app/store';
 import { addContact, updateContact } from '../../store/slices/addressBookSlice';
 import { Button, Input, Select, Modal } from '../ui';
-import {
-  ContactRole,
-  ContactRoleLabels,
-} from '../../types/addressBook.types';
+import { ContactRole, ContactRoleLabels } from '../../types/addressBook.types';
 import type { Contact } from '../../types/addressBook.types';
 
 interface ContactFormModalProps {
@@ -54,33 +51,35 @@ export function ContactFormModal({
   // Load existing contact data if editing
   useEffect(() => {
     // Batch state updates to avoid multiple renders
-    const newFormData = contact ? {
-      firstName: contact.firstName,
-      lastName: contact.lastName,
-      role: contact.role as ContactRole | '',
-      title: contact.title || '',
-      companyId: contact.companyId,
-      email: contact.email,
-      phone: contact.phone || '',
-      mobilePhone: contact.mobilePhone || '',
-      linkedIn: contact.linkedIn || '',
-      department: contact.department || '',
-      notes: contact.notes || '',
-      isPrimaryContact: contact.isPrimaryContact,
-    } : {
-      firstName: '',
-      lastName: '',
-      role: '' as ContactRole | '',
-      title: '',
-      companyId: preSelectedCompanyId || '',
-      email: '',
-      phone: '',
-      mobilePhone: '',
-      linkedIn: '',
-      department: '',
-      notes: '',
-      isPrimaryContact: false,
-    };
+    const newFormData = contact
+      ? {
+          firstName: contact.firstName,
+          lastName: contact.lastName,
+          role: contact.role as ContactRole | '',
+          title: contact.title || '',
+          companyId: contact.companyId,
+          email: contact.email,
+          phone: contact.phone || '',
+          mobilePhone: contact.mobilePhone || '',
+          linkedIn: contact.linkedIn || '',
+          department: contact.department || '',
+          notes: contact.notes || '',
+          isPrimaryContact: contact.isPrimaryContact,
+        }
+      : {
+          firstName: '',
+          lastName: '',
+          role: '' as ContactRole | '',
+          title: '',
+          companyId: preSelectedCompanyId || '',
+          email: '',
+          phone: '',
+          mobilePhone: '',
+          linkedIn: '',
+          department: '',
+          notes: '',
+          isPrimaryContact: false,
+        };
 
     // Use setTimeout to defer state update and avoid direct setState in effect
     const timeoutId = setTimeout(() => {
@@ -261,9 +260,7 @@ export function ContactFormModal({
                 type="checkbox"
                 id="isPrimaryContact"
                 checked={formData.isPrimaryContact}
-                onChange={(e) =>
-                  setFormData({ ...formData, isPrimaryContact: e.target.checked })
-                }
+                onChange={(e) => setFormData({ ...formData, isPrimaryContact: e.target.checked })}
                 className="w-4 h-4 text-brand-600 border-gray-300 rounded focus:ring-brand-500"
               />
               <label htmlFor="isPrimaryContact" className="text-sm font-medium text-gray-700">

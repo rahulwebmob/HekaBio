@@ -85,8 +85,8 @@ export function QRCodeGenerator({ url, size = 256, title }: QRCodeGeneratorProps
           </div>
           <div className="bg-brand-50 border border-brand-200 rounded-lg p-3">
             <p className="text-xs text-brand-800">
-              <strong>Tip:</strong> Print this QR code on event materials, presentations, or
-              email signatures for easy survey access
+              <strong>Tip:</strong> Print this QR code on event materials, presentations, or email
+              signatures for easy survey access
             </p>
           </div>
         </div>

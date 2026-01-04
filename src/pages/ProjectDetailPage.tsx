@@ -32,9 +32,7 @@ export default function ProjectDetailPage() {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
-  const project = useAppSelector((state) =>
-    state.projects.projects.find((p) => p.id === id)
-  );
+  const project = useAppSelector((state) => state.projects.projects.find((p) => p.id === id));
 
   const gateReviews = useAppSelector((state) => state.gate.reviews);
 
@@ -111,7 +109,7 @@ export default function ProjectDetailPage() {
                 leftIcon={<IconWorld size={18} />}
                 onClick={() => navigate(`/projects/${project.id}/japan-screening`)}
               >
-                 Japan Screening
+                Japan Screening
               </Button>
             )}
             <Button
@@ -152,8 +150,8 @@ export default function ProjectDetailPage() {
                 project.japanMarketFit === 'HIGH'
                   ? 'success'
                   : project.japanMarketFit === 'MEDIUM'
-                  ? 'warning'
-                  : 'default'
+                    ? 'warning'
+                    : 'default'
               }
               size="md"
             >
@@ -187,10 +185,7 @@ export default function ProjectDetailPage() {
               Track progress through the {project.tags[0]} pipeline
             </p>
           </div>
-          <StageTimeline
-            currentStage={project.currentStage}
-            projectTag={project.tags[0]}
-          />
+          <StageTimeline currentStage={project.currentStage} projectTag={project.tags[0]} />
         </Card>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -381,9 +376,7 @@ export default function ProjectDetailPage() {
                     <div className="w-10 h-10 bg-brand-100 rounded-lg flex items-center justify-center">
                       <span className="text-lg">🇯🇵</span>
                     </div>
-                    <h2 className="text-xl font-semibold text-gray-900">
-                      Japan Market Assessment
-                    </h2>
+                    <h2 className="text-xl font-semibold text-gray-900">Japan Market Assessment</h2>
                   </div>
                 }
               >
@@ -395,8 +388,8 @@ export default function ProjectDetailPage() {
                         project.japanMarketFit === 'HIGH'
                           ? 'success'
                           : project.japanMarketFit === 'MEDIUM'
-                          ? 'warning'
-                          : 'default'
+                            ? 'warning'
+                            : 'default'
                       }
                       size="md"
                     >
@@ -486,9 +479,7 @@ export default function ProjectDetailPage() {
                 {/* Gate History Timeline */}
                 {gateReviews.filter((r) => r.projectId === project.id).length > 0 && (
                   <div className="pt-6 border-t border-gray-200">
-                    <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                      Review History
-                    </h3>
+                    <h3 className="text-lg font-semibold text-gray-900 mb-4">Review History</h3>
                     <GateHistoryTimeline reviews={gateReviews} projectId={project.id} />
                   </div>
                 )}
@@ -549,7 +540,10 @@ export default function ProjectDetailPage() {
                 )}
 
                 {/* Gate Status */}
-                {(project.currentGate || project.gate1Status || project.gate2Status || project.gate3Status) && (
+                {(project.currentGate ||
+                  project.gate1Status ||
+                  project.gate2Status ||
+                  project.gate3Status) && (
                   <div className="pt-4 border-t border-gray-200">
                     <p className="text-sm text-gray-600 mb-3">Gate Progress</p>
                     <div className="space-y-2">
@@ -561,10 +555,10 @@ export default function ProjectDetailPage() {
                               project.gate1Status === 'APPROVED'
                                 ? 'success'
                                 : project.gate1Status === 'REJECTED'
-                                ? 'error'
-                                : project.gate1Status === 'CONDITIONAL'
-                                ? 'warning'
-                                : 'default'
+                                  ? 'error'
+                                  : project.gate1Status === 'CONDITIONAL'
+                                    ? 'warning'
+                                    : 'default'
                             }
                             size="sm"
                           >
@@ -580,10 +574,10 @@ export default function ProjectDetailPage() {
                               project.gate2Status === 'APPROVED'
                                 ? 'success'
                                 : project.gate2Status === 'REJECTED'
-                                ? 'error'
-                                : project.gate2Status === 'CONDITIONAL'
-                                ? 'warning'
-                                : 'default'
+                                  ? 'error'
+                                  : project.gate2Status === 'CONDITIONAL'
+                                    ? 'warning'
+                                    : 'default'
                             }
                             size="sm"
                           >
@@ -599,10 +593,10 @@ export default function ProjectDetailPage() {
                               project.gate3Status === 'APPROVED'
                                 ? 'success'
                                 : project.gate3Status === 'REJECTED'
-                                ? 'error'
-                                : project.gate3Status === 'CONDITIONAL'
-                                ? 'warning'
-                                : 'default'
+                                  ? 'error'
+                                  : project.gate3Status === 'CONDITIONAL'
+                                    ? 'warning'
+                                    : 'default'
                             }
                             size="sm"
                           >
@@ -613,7 +607,8 @@ export default function ProjectDetailPage() {
                       {project.currentGate && (
                         <div className="mt-2 pt-2 border-t border-gray-100">
                           <span className="text-xs text-gray-600">
-                            Current: <span className="font-semibold">Gate {project.currentGate}</span>
+                            Current:{' '}
+                            <span className="font-semibold">Gate {project.currentGate}</span>
                           </span>
                         </div>
                       )}
@@ -706,8 +701,8 @@ export default function ProjectDetailPage() {
           </p>
           <div className="bg-error-50 border border-error-200 rounded-lg p-4">
             <p className="text-sm text-error-800">
-              <strong>Warning:</strong> This action cannot be undone. All project history and
-              data will be permanently deleted.
+              <strong>Warning:</strong> This action cannot be undone. All project history and data
+              will be permanently deleted.
             </p>
           </div>
         </div>

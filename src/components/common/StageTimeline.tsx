@@ -93,7 +93,9 @@ export function StageTimeline({
                 `}
                 title={StageLabels[stage]}
               >
-                <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${getStageStyles(status)}`}>
+                <div
+                  className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${getStageStyles(status)}`}
+                >
                   {status === 'completed' && <IconCheck size={12} className="text-white" />}
                 </div>
                 <span className="whitespace-nowrap">{StageLabels[stage]}</span>
@@ -144,12 +146,8 @@ export function StageTimeline({
 
                 {/* Stage Label */}
                 <div className="mt-3 text-center max-w-[120px]">
-                  <p className={`text-sm ${getTextStyles(status)}`}>
-                    {StageLabels[stage]}
-                  </p>
-                  {status === 'current' && (
-                    <p className="text-xs text-brand-600 mt-1">Current</p>
-                  )}
+                  <p className={`text-sm ${getTextStyles(status)}`}>{StageLabels[stage]}</p>
+                  {status === 'current' && <p className="text-xs text-brand-600 mt-1">Current</p>}
                 </div>
               </div>
             );
@@ -190,9 +188,7 @@ export function StageTimeline({
 
               {/* Stage Content */}
               <div className="flex-1 pb-6">
-                <p className={`text-base ${getTextStyles(status)}`}>
-                  {StageLabels[stage]}
-                </p>
+                <p className={`text-base ${getTextStyles(status)}`}>{StageLabels[stage]}</p>
                 {status === 'current' && (
                   <p className="text-sm text-brand-600 mt-1">Current Stage</p>
                 )}

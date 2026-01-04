@@ -3,12 +3,7 @@
  * Shows missing fields and data completeness
  */
 
-import {
-  IconAlertCircle,
-  IconCheck,
-  IconX,
-  IconMail,
-} from '@tabler/icons-react';
+import { IconAlertCircle, IconCheck, IconX, IconMail } from '@tabler/icons-react';
 import { Badge, Button, Card } from '../../ui';
 import type { GapAnalysisResult, GapCategory } from '../../../types/extraction.types';
 import { getGapImportanceColor, getGapImportanceBadge } from '../../../types/extraction.types';
@@ -82,8 +77,8 @@ export default function GapAnalysisPanel({
                   gapAnalysis.completionPercentage >= 80
                     ? 'bg-success-500'
                     : gapAnalysis.completionPercentage >= 60
-                    ? 'bg-warning-500'
-                    : 'bg-error-500'
+                      ? 'bg-warning-500'
+                      : 'bg-error-500'
                 }`}
                 style={{ width: `${gapAnalysis.completionPercentage}%` }}
               />
@@ -98,9 +93,7 @@ export default function GapAnalysisPanel({
               <span className="text-sm text-error-700 font-medium">Critical</span>
               <IconX size={16} className="text-error-600" />
             </div>
-            <div className="text-2xl font-bold text-error-900">
-              {gapAnalysis.criticalGaps}
-            </div>
+            <div className="text-2xl font-bold text-error-900">{gapAnalysis.criticalGaps}</div>
             <div className="text-xs text-error-600">Missing fields</div>
           </div>
 
@@ -109,9 +102,7 @@ export default function GapAnalysisPanel({
               <span className="text-sm text-warning-700 font-medium">Important</span>
               <IconAlertCircle size={16} className="text-warning-600" />
             </div>
-            <div className="text-2xl font-bold text-warning-900">
-              {gapAnalysis.importantGaps}
-            </div>
+            <div className="text-2xl font-bold text-warning-900">{gapAnalysis.importantGaps}</div>
             <div className="text-xs text-warning-600">Missing fields</div>
           </div>
 
@@ -120,9 +111,7 @@ export default function GapAnalysisPanel({
               <span className="text-sm text-gray-700 font-medium">Optional</span>
               <IconAlertCircle size={16} className="text-gray-400" />
             </div>
-            <div className="text-2xl font-bold text-gray-900">
-              {gapAnalysis.optionalGaps}
-            </div>
+            <div className="text-2xl font-bold text-gray-900">{gapAnalysis.optionalGaps}</div>
             <div className="text-xs text-gray-600">Missing fields</div>
           </div>
         </div>
@@ -168,9 +157,7 @@ export default function GapAnalysisPanel({
                     >
                       <div className="flex-1">
                         <div className="flex items-center gap-2 mb-1">
-                          <span className="text-sm font-medium text-gray-900">
-                            {gap.label}
-                          </span>
+                          <span className="text-sm font-medium text-gray-900">{gap.label}</span>
                           <Badge variant={getGapImportanceBadge(gap.importance)} size="sm">
                             {gap.importance}
                           </Badge>

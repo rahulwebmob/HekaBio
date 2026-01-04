@@ -42,7 +42,8 @@ const Select = forwardRef<HTMLSelectElement, SelectProps>(
     const errorId = `${selectId}-error`;
     const helperId = `${selectId}-helper`;
 
-    const baseStyles = 'px-4 py-2.5 border rounded-lg text-sm text-gray-900 focus:outline-none focus:ring-4 transition-all duration-200 ease-out disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-gray-50/30 bg-white/80 cursor-pointer hover:bg-white hover:border-gray-400 hover:shadow-sm';
+    const baseStyles =
+      'px-4 py-2.5 border rounded-lg text-sm text-gray-900 focus:outline-none focus:ring-4 transition-all duration-200 ease-out disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-gray-50/30 bg-white/80 cursor-pointer hover:bg-white hover:border-gray-400 hover:shadow-sm';
 
     const errorStyles = error
       ? 'border-error-500 focus:border-error-500 focus:ring-error-500/10'
@@ -96,7 +97,10 @@ const Select = forwardRef<HTMLSelectElement, SelectProps>(
               </option>
             ))}
           </select>
-          <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none" aria-hidden="true">
+          <div
+            className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none"
+            aria-hidden="true"
+          >
             <svg
               className="w-5 h-5 text-gray-400 group-hover:text-gray-600 transition-colors duration-300"
               xmlns="http://www.w3.org/2000/svg"

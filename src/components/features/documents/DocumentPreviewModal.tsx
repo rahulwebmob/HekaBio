@@ -146,8 +146,7 @@ export default function DocumentPreviewModal({
           </div>
           <h3 className="text-xl font-semibold text-gray-900 mb-2">Preview Not Available</h3>
           <p className="text-gray-600 mb-6">
-            This file type cannot be previewed in the browser. Please download the file to view
-            it.
+            This file type cannot be previewed in the browser. Please download the file to view it.
           </p>
           <Button variant="primary" onClick={handleDownload} leftIcon={<IconDownload size={18} />}>
             Download File

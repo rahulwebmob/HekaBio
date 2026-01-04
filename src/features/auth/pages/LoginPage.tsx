@@ -71,7 +71,10 @@ export default function LoginPage() {
     { value: UserRole.GATE_1_ANALYST, label: RoleLabels[UserRole.GATE_1_ANALYST] },
     { value: UserRole.GATE_2_ANALYST, label: RoleLabels[UserRole.GATE_2_ANALYST] },
     { value: UserRole.GATE_3_DECISION_MAKER, label: RoleLabels[UserRole.GATE_3_DECISION_MAKER] },
-    { value: UserRole.DD_SPECIALIST_SCIENTIFIC, label: RoleLabels[UserRole.DD_SPECIALIST_SCIENTIFIC] },
+    {
+      value: UserRole.DD_SPECIALIST_SCIENTIFIC,
+      label: RoleLabels[UserRole.DD_SPECIALIST_SCIENTIFIC],
+    },
     { value: UserRole.PRODUCT_OWNER, label: RoleLabels[UserRole.PRODUCT_OWNER] },
     { value: UserRole.HOSPITAL_STAFF, label: RoleLabels[UserRole.HOSPITAL_STAFF] },
     { value: UserRole.DISTRIBUTOR_STAFF, label: RoleLabels[UserRole.DISTRIBUTOR_STAFF] },
@@ -93,17 +96,9 @@ export default function LoginPage() {
         <div className="bg-white/80 backdrop-blur-xl rounded-xl shadow-theme-xl border border-gray-200/50 p-8">
           {/* Logo & Header */}
           <div className="text-center mb-8">
-            <img
-              src="/logo.png"
-              alt="HekaBio Logo"
-              className="h-[60px] mx-auto mb-4"
-            />
-            <h3 className="text-2xl font-semibold text-brand-500 mb-2">
-              Welcome to HekaBio
-            </h3>
-            <p className="text-sm text-gray-600">
-              Healthcare Innovation Management Platform
-            </p>
+            <img src="/logo.png" alt="HekaBio Logo" className="h-[60px] mx-auto mb-4" />
+            <h3 className="text-2xl font-semibold text-brand-500 mb-2">Welcome to HekaBio</h3>
+            <p className="text-sm text-gray-600">Healthcare Innovation Management Platform</p>
           </div>
 
           {/* Login Form */}
@@ -148,13 +143,7 @@ export default function LoginPage() {
             />
 
             {/* Submit Button */}
-            <Button
-              type="submit"
-              variant="primary"
-              size="md"
-              fullWidth
-              loading={isLoading}
-            >
+            <Button type="submit" variant="primary" size="md" fullWidth loading={isLoading}>
               Login
             </Button>
           </form>

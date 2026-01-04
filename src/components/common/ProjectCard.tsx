@@ -21,7 +21,7 @@ export function ProjectCard({
   onClick,
   selectable = false,
   selected = false,
-  onSelect
+  onSelect,
 }: ProjectCardProps) {
   const getStageColor = (stage: string) => {
     if (stage.includes('LOBBY')) return 'default';
@@ -85,10 +85,7 @@ export function ProjectCard({
     >
       {/* Selection Checkbox */}
       {selectable && (
-        <div
-          className="absolute top-4 left-4 z-10"
-          onClick={handleCheckboxClick}
-        >
+        <div className="absolute top-4 left-4 z-10" onClick={handleCheckboxClick}>
           <input
             type="checkbox"
             checked={selected}
@@ -101,9 +98,7 @@ export function ProjectCard({
       {/* Header */}
       <div className={`flex items-start justify-between mb-4 ${selectable ? 'ml-7' : ''}`}>
         <div className="flex-1 min-w-0">
-          <h3 className="text-lg font-semibold text-gray-900 mb-1 truncate">
-            {project.name}
-          </h3>
+          <h3 className="text-lg font-semibold text-gray-900 mb-1 truncate">{project.name}</h3>
           <div className="flex items-center gap-2 text-sm text-gray-600">
             <IconBuilding size={16} className="flex-shrink-0" />
             <span className="truncate">{project.company.name}</span>
@@ -154,9 +149,7 @@ export function ProjectCard({
 
       {/* Description */}
       {project.description && (
-        <p className="text-sm text-gray-600 mb-4 line-clamp-2">
-          {project.description}
-        </p>
+        <p className="text-sm text-gray-600 mb-4 line-clamp-2">{project.description}</p>
       )}
 
       {/* Footer Stats */}
@@ -166,7 +159,11 @@ export function ProjectCard({
           {project.ndaStatus !== 'NOT_REQUIRED' && (
             <div className="flex items-center gap-1">
               <span className="font-medium">NDA:</span>
-              <span className={project.ndaStatus === 'COMPLETED' ? 'text-success-600' : 'text-warning-600'}>
+              <span
+                className={
+                  project.ndaStatus === 'COMPLETED' ? 'text-success-600' : 'text-warning-600'
+                }
+              >
                 {project.ndaStatus}
               </span>
             </div>
@@ -190,9 +187,7 @@ export function ProjectCard({
         </div>
 
         {/* Updated Date */}
-        <span>
-          {new Date(project.updatedAt || project.createdAt).toLocaleDateString()}
-        </span>
+        <span>{new Date(project.updatedAt || project.createdAt).toLocaleDateString()}</span>
       </div>
     </div>
   );

@@ -4,12 +4,7 @@
  */
 
 import { useState } from 'react';
-import {
-  IconUser,
-  IconPhone,
-  IconBuilding,
-  IconWorld,
-} from '@tabler/icons-react';
+import { IconUser, IconPhone, IconBuilding, IconWorld } from '@tabler/icons-react';
 import { MailIcon, PencilIcon, TrashBinIcon } from '../../icons';
 import { useAppSelector, useAppDispatch } from '../../app/store';
 import { deleteContact } from '../../store/slices/addressBookSlice';

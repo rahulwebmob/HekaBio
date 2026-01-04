@@ -62,12 +62,13 @@ export default function DDWorkspacePage() {
       total: workspaces.length,
       inProgress: workspaces.filter((w) => w.status === 'IN_PROGRESS').length,
       completed: workspaces.filter((w) => w.status === 'COMPLETED').length,
-      avgCompletion: workspaces.length > 0
-        ? Math.round(
-            workspaces.reduce((sum, w) => sum + w.overallCompletionPercentage, 0) /
-              workspaces.length
-          )
-        : 0,
+      avgCompletion:
+        workspaces.length > 0
+          ? Math.round(
+              workspaces.reduce((sum, w) => sum + w.overallCompletionPercentage, 0) /
+                workspaces.length
+            )
+          : 0,
     };
   }, [workspaces]);
 
@@ -109,7 +110,11 @@ export default function DDWorkspacePage() {
               Manage due diligence processes and assessments
             </p>
           </div>
-          <Button variant="primary" leftIcon={<IconPlus size={18} />} onClick={() => setShowDDForm(true)}>
+          <Button
+            variant="primary"
+            leftIcon={<IconPlus size={18} />}
+            onClick={() => setShowDDForm(true)}
+          >
             New DD Workspace
           </Button>
         </div>
@@ -196,9 +201,7 @@ export default function DDWorkspacePage() {
             {showFilters && (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4 border-t border-gray-200">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Status
-                  </label>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Status</label>
                   <select
                     value={statusFilter}
                     onChange={(e) =>
@@ -237,7 +240,11 @@ export default function DDWorkspacePage() {
                   : 'Create your first DD workspace to get started'}
               </p>
               {!searchQuery && statusFilter === 'ALL' && (
-                <Button variant="primary" leftIcon={<IconPlus size={18} />} onClick={() => setShowDDForm(true)}>
+                <Button
+                  variant="primary"
+                  leftIcon={<IconPlus size={18} />}
+                  onClick={() => setShowDDForm(true)}
+                >
                   New DD Workspace
                 </Button>
               )}
@@ -268,7 +275,10 @@ export default function DDWorkspacePage() {
                         </Badge>
                       )}
                       {workspace.overallRiskLevel && (
-                        <Badge variant={getDDRiskLevelVariant(workspace.overallRiskLevel)} size="md">
+                        <Badge
+                          variant={getDDRiskLevelVariant(workspace.overallRiskLevel)}
+                          size="md"
+                        >
                           {workspace.overallRiskLevel} Risk
                         </Badge>
                       )}
@@ -302,10 +312,10 @@ export default function DDWorkspacePage() {
                             workspace.overallCompletionPercentage === 100
                               ? 'bg-success-500'
                               : workspace.overallCompletionPercentage >= 75
-                              ? 'bg-blue-500'
-                              : workspace.overallCompletionPercentage >= 50
-                              ? 'bg-warning-500'
-                              : 'bg-gray-400'
+                                ? 'bg-blue-500'
+                                : workspace.overallCompletionPercentage >= 50
+                                  ? 'bg-warning-500'
+                                  : 'bg-gray-400'
                           }`}
                           style={{ width: `${workspace.overallCompletionPercentage}%` }}
                         />
@@ -365,10 +375,7 @@ export default function DDWorkspacePage() {
         )}
 
         {/* DD Form Drawer */}
-        <DDFormDrawer
-          isOpen={showDDForm}
-          onClose={() => setShowDDForm(false)}
-        />
+        <DDFormDrawer isOpen={showDDForm} onClose={() => setShowDDForm(false)} />
       </div>
     </AppLayout>
   );

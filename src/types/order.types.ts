@@ -232,7 +232,14 @@ export interface InventoryItem {
   quantity: number;
   activity?: number;
   location: string;
-  status: 'AVAILABLE' | 'RESERVED' | 'IN_PRODUCTION' | 'SHIPPED' | 'USED' | 'COLLECTED' | 'DISPOSED';
+  status:
+    | 'AVAILABLE'
+    | 'RESERVED'
+    | 'IN_PRODUCTION'
+    | 'SHIPPED'
+    | 'USED'
+    | 'COLLECTED'
+    | 'DISPOSED';
   expiryDate?: Timestamp;
   createdAt: Timestamp;
   updatedAt?: Timestamp;

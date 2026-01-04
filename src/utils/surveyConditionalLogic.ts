@@ -3,11 +3,7 @@
  * Helper functions for evaluating conditional display rules
  */
 
-import type {
-  SurveyQuestion,
-  SurveyResponse,
-  ConditionalLogic,
-} from '../types/survey.types';
+import type { SurveyQuestion, SurveyResponse, ConditionalLogic } from '../types/survey.types';
 
 /**
  * Evaluate if a question should be shown based on conditional logic
@@ -46,9 +42,7 @@ export const shouldShowQuestion = (
 /**
  * Extract the answer value from a response
  */
-const getResponseValue = (
-  response: SurveyResponse
-): string | number | string[] | null => {
+const getResponseValue = (response: SurveyResponse): string | number | string[] | null => {
   if (response.textAnswer !== undefined && response.textAnswer !== null) {
     return response.textAnswer;
   }
@@ -217,9 +211,7 @@ export const validateConditionalLogic = (
 
     // Check if dependent question exists
     if (!dependentQuestion) {
-      errors.push(
-        `Question "${question.questionText}" depends on a non-existent question`
-      );
+      errors.push(`Question "${question.questionText}" depends on a non-existent question`);
       return;
     }
 

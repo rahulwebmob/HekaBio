@@ -26,9 +26,7 @@ export default function ConditionalLogicBuilder({
   const [operator, setOperator] = useState<ConditionalLogic['showWhen']['operator']>(
     question.conditionalLogic?.showWhen.operator || 'EQUALS'
   );
-  const [value, setValue] = useState(
-    question.conditionalLogic?.showWhen.value?.toString() || ''
-  );
+  const [value, setValue] = useState(question.conditionalLogic?.showWhen.value?.toString() || '');
 
   // Get available previous questions (questions that appear before current question)
   const availableQuestions = allQuestions.filter(
@@ -189,8 +187,8 @@ export default function ConditionalLogicBuilder({
             <div>
               <h5 className="font-semibold text-blue-900 mb-1">About Conditional Logic</h5>
               <p className="text-sm text-blue-700">
-                Show or hide this question based on how respondents answer a previous question.
-                This helps create dynamic surveys that adapt to each respondent.
+                Show or hide this question based on how respondents answer a previous question. This
+                helps create dynamic surveys that adapt to each respondent.
               </p>
             </div>
           </div>
@@ -244,9 +242,7 @@ export default function ConditionalLogicBuilder({
               {/* Operator Selection */}
               {dependsOnQuestionId && (
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Condition
-                  </label>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Condition</label>
                   <Select
                     value={operator}
                     onChange={(e) =>

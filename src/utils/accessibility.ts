@@ -13,7 +13,10 @@ export const generateAriaId = (prefix: string): string => {
 /**
  * Announce message to screen readers
  */
-export const announceToScreenReader = (message: string, priority: 'polite' | 'assertive' = 'polite') => {
+export const announceToScreenReader = (
+  message: string,
+  priority: 'polite' | 'assertive' = 'polite'
+) => {
   const announcement = document.createElement('div');
   announcement.setAttribute('role', 'status');
   announcement.setAttribute('aria-live', priority);
@@ -144,7 +147,8 @@ export const getTabAriaLabel = (tabName: string, index: number, total: number): 
 /**
  * Visually hidden but screen reader accessible class
  */
-export const srOnlyClass = 'absolute w-px h-px p-0 -m-px overflow-hidden whitespace-nowrap border-0';
+export const srOnlyClass =
+  'absolute w-px h-px p-0 -m-px overflow-hidden whitespace-nowrap border-0';
 
 /**
  * Check if element is focusable

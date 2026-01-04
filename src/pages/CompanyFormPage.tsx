@@ -154,7 +154,10 @@ export default function CompanyFormPage() {
     };
 
     const tags = formData.tags
-      ? formData.tags.split(',').map((tag) => tag.trim()).filter((tag) => tag.length > 0)
+      ? formData.tags
+          .split(',')
+          .map((tag) => tag.trim())
+          .filter((tag) => tag.length > 0)
       : [];
 
     const companyData: Company = {
@@ -276,9 +279,7 @@ export default function CompanyFormPage() {
               />
 
               <div className="md:col-span-2">
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Description
-                </label>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Description</label>
                 <textarea
                   value={formData.description}
                   onChange={(e) => setFormData({ ...formData, description: e.target.value })}
@@ -291,7 +292,11 @@ export default function CompanyFormPage() {
           </Card>
 
           {/* Contact Information */}
-          <Card padding="lg" shadow="sm" header={<h2 className="text-xl font-semibold text-gray-900">Contact Information</h2>}>
+          <Card
+            padding="lg"
+            shadow="sm"
+            header={<h2 className="text-xl font-semibold text-gray-900">Contact Information</h2>}
+          >
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <Input
                 label="Email"
@@ -327,7 +332,11 @@ export default function CompanyFormPage() {
           </Card>
 
           {/* Address */}
-          <Card padding="lg" shadow="sm" header={<h2 className="text-xl font-semibold text-gray-900">Address</h2>}>
+          <Card
+            padding="lg"
+            shadow="sm"
+            header={<h2 className="text-xl font-semibold text-gray-900">Address</h2>}
+          >
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="md:col-span-2">
                 <Input
@@ -378,7 +387,11 @@ export default function CompanyFormPage() {
           </Card>
 
           {/* Additional Details */}
-          <Card padding="lg" shadow="sm" header={<h2 className="text-xl font-semibold text-gray-900">Additional Details</h2>}>
+          <Card
+            padding="lg"
+            shadow="sm"
+            header={<h2 className="text-xl font-semibold text-gray-900">Additional Details</h2>}
+          >
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <Input
                 label="Founded Year"

@@ -96,7 +96,11 @@ export default function NDAPage() {
               Manage non-disclosure agreements and signature workflows
             </p>
           </div>
-          <Button variant="primary" leftIcon={<IconPlus size={18} />} onClick={() => setShowNDAForm(true)}>
+          <Button
+            variant="primary"
+            leftIcon={<IconPlus size={18} />}
+            onClick={() => setShowNDAForm(true)}
+          >
             New NDA
           </Button>
         </div>
@@ -183,9 +187,7 @@ export default function NDAPage() {
             {showFilters && (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4 border-t border-gray-200">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Status
-                  </label>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Status</label>
                   <select
                     value={statusFilter}
                     onChange={(e) => setStatusFilter(e.target.value as NDAStatus | 'ALL')}
@@ -316,8 +318,8 @@ export default function NDAPage() {
                                 progress.percentage === 100
                                   ? 'bg-success-500'
                                   : progress.percentage > 0
-                                  ? 'bg-blue-500'
-                                  : 'bg-gray-400'
+                                    ? 'bg-blue-500'
+                                    : 'bg-gray-400'
                               }`}
                               style={{ width: `${progress.percentage}%` }}
                             />
@@ -365,10 +367,7 @@ export default function NDAPage() {
         )}
 
         {/* NDA Form Drawer */}
-        <NDAFormDrawer
-          isOpen={showNDAForm}
-          onClose={() => setShowNDAForm(false)}
-        />
+        <NDAFormDrawer isOpen={showNDAForm} onClose={() => setShowNDAForm(false)} />
       </div>
     </AppLayout>
   );

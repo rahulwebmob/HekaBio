@@ -141,9 +141,7 @@ export function autoAssignTask(context: AssignmentContext): UserAssignment {
   const eligibleRoles = TASK_TYPE_TO_ROLE_MAP[taskType] || ['crm_user'];
 
   // Sort roles by priority
-  const sortedRoles = eligibleRoles.sort(
-    (a, b) => ROLE_PRIORITY[b] - ROLE_PRIORITY[a]
-  );
+  const sortedRoles = eligibleRoles.sort((a, b) => ROLE_PRIORITY[b] - ROLE_PRIORITY[a]);
 
   // Try to find available user from highest priority role
   for (const role of sortedRoles) {
@@ -157,9 +155,7 @@ export function autoAssignTask(context: AssignmentContext): UserAssignment {
   }
 
   // Fallback: assign to first CRM user not in exclude list
-  const fallbackUser = MOCK_USERS.filter(
-    (user) => !excludeUsers.includes(user.userId)
-  )[0];
+  const fallbackUser = MOCK_USERS.filter((user) => !excludeUsers.includes(user.userId))[0];
 
   return fallbackUser || MOCK_USERS[0];
 }
@@ -178,9 +174,7 @@ export function getRecommendedAssignees(context: AssignmentContext): UserAssignm
   } else {
     // Get users from eligible roles
     const eligibleRoles = TASK_TYPE_TO_ROLE_MAP[taskType] || ['crm_user'];
-    const sortedRoles = eligibleRoles.sort(
-      (a, b) => ROLE_PRIORITY[b] - ROLE_PRIORITY[a]
-    );
+    const sortedRoles = eligibleRoles.sort((a, b) => ROLE_PRIORITY[b] - ROLE_PRIORITY[a]);
 
     // Collect users from all eligible roles
     sortedRoles.forEach((role) => {
@@ -190,9 +184,7 @@ export function getRecommendedAssignees(context: AssignmentContext): UserAssignm
   }
 
   // Filter out excluded users
-  recommendedUsers = recommendedUsers.filter(
-    (user) => !excludeUsers.includes(user.userId)
-  );
+  recommendedUsers = recommendedUsers.filter((user) => !excludeUsers.includes(user.userId));
 
   // Remove duplicates
   const uniqueUsers = Array.from(
@@ -200,9 +192,7 @@ export function getRecommendedAssignees(context: AssignmentContext): UserAssignm
   );
 
   // Sort by role priority
-  uniqueUsers.sort(
-    (a, b) => ROLE_PRIORITY[b.userRole] - ROLE_PRIORITY[a.userRole]
-  );
+  uniqueUsers.sort((a, b) => ROLE_PRIORITY[b.userRole] - ROLE_PRIORITY[a.userRole]);
 
   return uniqueUsers;
 }
@@ -235,7 +225,9 @@ export function assignGateReviewer(gateNumber: number): UserAssignment {
 /**
  * Assign task to DD specialist based on section type
  */
-export function assignDDSpecialist(sectionType?: 'scientific' | 'regulatory' | 'commercial' | 'financial'): UserAssignment {
+export function assignDDSpecialist(
+  sectionType?: 'scientific' | 'regulatory' | 'commercial' | 'financial'
+): UserAssignment {
   // Assign based on section type
   let role: UserRole;
 
@@ -297,9 +289,7 @@ export function getUserWorkload(userId: string): number {
 /**
  * Auto-assign with load balancing
  */
-export function autoAssignWithLoadBalancing(
-  context: AssignmentContext
-): UserAssignment {
+export function autoAssignWithLoadBalancing(context: AssignmentContext): UserAssignment {
   const recommendedUsers = getRecommendedAssignees(context);
 
   if (recommendedUsers.length === 0) {

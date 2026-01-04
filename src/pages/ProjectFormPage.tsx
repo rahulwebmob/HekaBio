@@ -10,10 +10,7 @@ import { useAppSelector, useAppDispatch } from '../app/store';
 import { addProject, updateProject } from '../store/slices/projectsSlice';
 import { AppLayout } from '../components/layout';
 import { Button, Card, Input, Select } from '../components/ui';
-import {
-  StageLabels,
-  StageWorkflows,
-} from '../types/project.types';
+import { StageLabels, StageWorkflows } from '../types/project.types';
 import type { Project, ProjectTag, Stage, JapanMarketFit, NDAStatus } from '../types/project.types';
 
 export default function ProjectFormPage() {
@@ -91,7 +88,7 @@ export default function ProjectFormPage() {
 
         // If current stage is not in the workflow, reset it
         if (formData.currentStage && !stages.includes(formData.currentStage)) {
-          setFormData(prev => ({ ...prev, currentStage: '' }));
+          setFormData((prev) => ({ ...prev, currentStage: '' }));
         }
       }, 0);
 
@@ -99,7 +96,7 @@ export default function ProjectFormPage() {
     } else {
       const timeoutId = setTimeout(() => {
         setAvailableStages([]);
-        setFormData(prev => ({ ...prev, currentStage: '' }));
+        setFormData((prev) => ({ ...prev, currentStage: '' }));
       }, 0);
 
       return () => clearTimeout(timeoutId);
@@ -154,7 +151,10 @@ export default function ProjectFormPage() {
     }
 
     const partnerTags = formData.partnerTags
-      ? formData.partnerTags.split(',').map((tag) => tag.trim()).filter((tag) => tag.length > 0)
+      ? formData.partnerTags
+          .split(',')
+          .map((tag) => tag.trim())
+          .filter((tag) => tag.length > 0)
       : [];
 
     const projectData: Project = {
@@ -171,9 +171,10 @@ export default function ProjectFormPage() {
       japanInterest: formData.japanInterest,
       japanMarketFit: formData.japanMarketFit || undefined,
       japanSummary: formData.japanSummary.trim() || undefined,
-      japanScreeningCompletedAt: formData.japanMarketFit && formData.japanMarketFit !== 'NOT_ASSESSED'
-        ? new Date().toISOString()
-        : undefined,
+      japanScreeningCompletedAt:
+        formData.japanMarketFit && formData.japanMarketFit !== 'NOT_ASSESSED'
+          ? new Date().toISOString()
+          : undefined,
       partnerTags,
       ndaStatus: formData.ndaStatus,
       ndaRequestedAt: isEdit ? existingProject.ndaRequestedAt : undefined,
@@ -312,7 +313,9 @@ export default function ProjectFormPage() {
                 placeholder="Select stage"
                 options={stageOptions}
                 value={formData.currentStage}
-                onChange={(e) => setFormData({ ...formData, currentStage: e.target.value as Stage })}
+                onChange={(e) =>
+                  setFormData({ ...formData, currentStage: e.target.value as Stage })
+                }
                 error={errors.currentStage}
                 fullWidth
                 disabled={!formData.tag}
@@ -329,9 +332,7 @@ export default function ProjectFormPage() {
               />
 
               <div className="md:col-span-2">
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Description
-                </label>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Description</label>
                 <textarea
                   value={formData.description}
                   onChange={(e) => setFormData({ ...formData, description: e.target.value })}
@@ -365,9 +366,7 @@ export default function ProjectFormPage() {
                     onChange={(e) => setFormData({ ...formData, japanInterest: e.target.checked })}
                     className="w-4 h-4 text-brand-600 border-gray-300 rounded focus:ring-brand-500"
                   />
-                  <span className="text-sm font-medium text-gray-700">
-                    Japan Market Interest
-                  </span>
+                  <span className="text-sm font-medium text-gray-700">Japan Market Interest</span>
                 </label>
               </div>
 
@@ -376,7 +375,9 @@ export default function ProjectFormPage() {
                 placeholder="Select fit"
                 options={japanFitOptions}
                 value={formData.japanMarketFit}
-                onChange={(e) => setFormData({ ...formData, japanMarketFit: e.target.value as JapanMarketFit })}
+                onChange={(e) =>
+                  setFormData({ ...formData, japanMarketFit: e.target.value as JapanMarketFit })
+                }
                 fullWidth
                 disabled={!formData.japanInterest}
               />
@@ -409,7 +410,9 @@ export default function ProjectFormPage() {
                 placeholder="Select status"
                 options={ndaStatusOptions}
                 value={formData.ndaStatus}
-                onChange={(e) => setFormData({ ...formData, ndaStatus: e.target.value as NDAStatus })}
+                onChange={(e) =>
+                  setFormData({ ...formData, ndaStatus: e.target.value as NDAStatus })
+                }
                 fullWidth
               />
 

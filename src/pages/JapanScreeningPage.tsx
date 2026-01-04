@@ -63,10 +63,7 @@ export default function JapanScreeningPage() {
   };
 
   const handleSaveDraft = () => {
-    localStorage.setItem(
-      `japan-screening-${projectId}`,
-      JSON.stringify(sectionContent)
-    );
+    localStorage.setItem(`japan-screening-${projectId}`, JSON.stringify(sectionContent));
     alert('Draft saved successfully');
   };
 
@@ -151,12 +148,8 @@ export default function JapanScreeningPage() {
         {/* Progress */}
         <Card padding="md" shadow="sm">
           <div className="flex items-center justify-between mb-2">
-            <span className="text-sm font-medium text-gray-700">
-              Screening Progress
-            </span>
-            <span className="text-lg font-bold text-brand-600">
-              {completionPercentage}%
-            </span>
+            <span className="text-sm font-medium text-gray-700">Screening Progress</span>
+            <span className="text-lg font-bold text-brand-600">{completionPercentage}%</span>
           </div>
           <div className="w-full bg-gray-200 rounded-full h-3">
             <div
@@ -173,9 +166,7 @@ export default function JapanScreeningPage() {
           {/* Section Navigator */}
           <div className="lg:col-span-1">
             <Card padding="md" shadow="sm">
-              <h3 className="text-sm font-semibold text-gray-900 mb-3">
-                Assessment Sections
-              </h3>
+              <h3 className="text-sm font-semibold text-gray-900 mb-3">Assessment Sections</h3>
               <nav className="space-y-1">
                 {JAPAN_SCREENING_SECTIONS.map((section, index) => {
                   const isCompleted = sectionContent[section.id]?.trim().length > 0;
@@ -279,9 +270,7 @@ export default function JapanScreeningPage() {
                   <div className="flex items-center justify-between pt-4 border-t border-gray-200">
                     <Button
                       variant="outline"
-                      onClick={() =>
-                        setActiveSectionIndex(Math.max(0, activeSectionIndex - 1))
-                      }
+                      onClick={() => setActiveSectionIndex(Math.max(0, activeSectionIndex - 1))}
                       disabled={activeSectionIndex === 0}
                     >
                       Previous Section
@@ -292,10 +281,7 @@ export default function JapanScreeningPage() {
                         variant="primary"
                         onClick={() =>
                           setActiveSectionIndex(
-                            Math.min(
-                              JAPAN_SCREENING_SECTIONS.length - 1,
-                              activeSectionIndex + 1
-                            )
+                            Math.min(JAPAN_SCREENING_SECTIONS.length - 1, activeSectionIndex + 1)
                           )
                         }
                       >
@@ -323,10 +309,7 @@ export default function JapanScreeningPage() {
                       <IconSparkles size={28} className="text-brand-600" />
                       AI Market Analysis Results
                     </h2>
-                    <Button
-                      variant="outline"
-                      onClick={() => setShowAnalysis(false)}
-                    >
+                    <Button variant="outline" onClick={() => setShowAnalysis(false)}>
                       Back to Editing
                     </Button>
                   </div>
@@ -335,27 +318,43 @@ export default function JapanScreeningPage() {
                     <>
                       {/* Overall Scores */}
                       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-                        <div className={`p-4 border rounded-lg ${getFitScoreBg(analysis.aiInsights.marketAttractiveness)}`}>
+                        <div
+                          className={`p-4 border rounded-lg ${getFitScoreBg(analysis.aiInsights.marketAttractiveness)}`}
+                        >
                           <p className="text-xs text-gray-600 mb-1">Market Attractiveness</p>
-                          <p className={`text-2xl font-bold ${getFitScoreColor(analysis.aiInsights.marketAttractiveness)}`}>
+                          <p
+                            className={`text-2xl font-bold ${getFitScoreColor(analysis.aiInsights.marketAttractiveness)}`}
+                          >
                             {analysis.aiInsights.marketAttractiveness.toFixed(0)}
                           </p>
                         </div>
-                        <div className={`p-4 border rounded-lg ${getFitScoreBg(analysis.aiInsights.competitivePosition)}`}>
+                        <div
+                          className={`p-4 border rounded-lg ${getFitScoreBg(analysis.aiInsights.competitivePosition)}`}
+                        >
                           <p className="text-xs text-gray-600 mb-1">Competitive Position</p>
-                          <p className={`text-2xl font-bold ${getFitScoreColor(analysis.aiInsights.competitivePosition)}`}>
+                          <p
+                            className={`text-2xl font-bold ${getFitScoreColor(analysis.aiInsights.competitivePosition)}`}
+                          >
                             {analysis.aiInsights.competitivePosition.toFixed(0)}
                           </p>
                         </div>
-                        <div className={`p-4 border rounded-lg ${getFitScoreBg(100 - analysis.aiInsights.regulatoryComplexity)}`}>
+                        <div
+                          className={`p-4 border rounded-lg ${getFitScoreBg(100 - analysis.aiInsights.regulatoryComplexity)}`}
+                        >
                           <p className="text-xs text-gray-600 mb-1">Regulatory Clarity</p>
-                          <p className={`text-2xl font-bold ${getFitScoreColor(100 - analysis.aiInsights.regulatoryComplexity)}`}>
+                          <p
+                            className={`text-2xl font-bold ${getFitScoreColor(100 - analysis.aiInsights.regulatoryComplexity)}`}
+                          >
                             {(100 - analysis.aiInsights.regulatoryComplexity).toFixed(0)}
                           </p>
                         </div>
-                        <div className={`p-4 border rounded-lg ${getFitScoreBg(analysis.aiInsights.strategicFit)}`}>
+                        <div
+                          className={`p-4 border rounded-lg ${getFitScoreBg(analysis.aiInsights.strategicFit)}`}
+                        >
                           <p className="text-xs text-gray-600 mb-1">Strategic Fit</p>
-                          <p className={`text-2xl font-bold ${getFitScoreColor(analysis.aiInsights.strategicFit)}`}>
+                          <p
+                            className={`text-2xl font-bold ${getFitScoreColor(analysis.aiInsights.strategicFit)}`}
+                          >
                             {analysis.aiInsights.strategicFit.toFixed(0)}
                           </p>
                         </div>
@@ -380,9 +379,7 @@ export default function JapanScreeningPage() {
                       {/* Market Details */}
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
-                          <h4 className="text-sm font-semibold text-gray-900 mb-3">
-                            Market Size
-                          </h4>
+                          <h4 className="text-sm font-semibold text-gray-900 mb-3">Market Size</h4>
                           <div className="space-y-2 text-sm">
                             <div>
                               <span className="text-gray-600">Prevalence:</span>
@@ -394,27 +391,33 @@ export default function JapanScreeningPage() {
                             </div>
                             <div>
                               <span className="text-gray-600">Market Size:</span>
-                              <p className="font-medium text-gray-900">{analysis.marketSizeEstimate}</p>
+                              <p className="font-medium text-gray-900">
+                                {analysis.marketSizeEstimate}
+                              </p>
                             </div>
                           </div>
                         </div>
 
                         <div>
-                          <h4 className="text-sm font-semibold text-gray-900 mb-3">
-                            Regulatory
-                          </h4>
+                          <h4 className="text-sm font-semibold text-gray-900 mb-3">Regulatory</h4>
                           <div className="space-y-2 text-sm">
                             <div>
                               <span className="text-gray-600">Pathway:</span>
-                              <p className="font-medium text-gray-900">{analysis.regulatoryPathway}</p>
+                              <p className="font-medium text-gray-900">
+                                {analysis.regulatoryPathway}
+                              </p>
                             </div>
                             <div>
                               <span className="text-gray-600">Timeline:</span>
-                              <p className="font-medium text-gray-900">{analysis.approvalTimeline}</p>
+                              <p className="font-medium text-gray-900">
+                                {analysis.approvalTimeline}
+                              </p>
                             </div>
                             <div>
                               <span className="text-gray-600">Pricing:</span>
-                              <p className="font-medium text-gray-900">{analysis.pricingReimbursement}</p>
+                              <p className="font-medium text-gray-900">
+                                {analysis.pricingReimbursement}
+                              </p>
                             </div>
                           </div>
                         </div>
@@ -434,9 +437,7 @@ export default function JapanScreeningPage() {
                         </div>
 
                         <div className="bg-error-50 border border-error-200 rounded-lg p-4">
-                          <h4 className="text-sm font-semibold text-error-900 mb-3">
-                            Key Risks
-                          </h4>
+                          <h4 className="text-sm font-semibold text-error-900 mb-3">Key Risks</h4>
                           <ul className="text-sm text-error-800 space-y-1">
                             {analysis.keyRisks.map((risk, idx) => (
                               <li key={idx}>• {risk}</li>

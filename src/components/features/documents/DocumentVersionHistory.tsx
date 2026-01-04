@@ -107,8 +107,7 @@ export default function DocumentVersionHistory({
             <h3 className="font-semibold text-brand-900">Current Version</h3>
           </div>
           <p className="text-sm text-brand-700">
-            Version {document.currentVersion} - Last updated{' '}
-            {formatDate(document.updatedAt)}
+            Version {document.currentVersion} - Last updated {formatDate(document.updatedAt)}
           </p>
         </div>
 
@@ -126,9 +125,7 @@ export default function DocumentVersionHistory({
               {sortedVersions.map((version, index) => (
                 <div
                   key={version.id}
-                  className={`border rounded-lg p-4 transition-all ${getVersionColor(
-                    version
-                  )}`}
+                  className={`border rounded-lg p-4 transition-all ${getVersionColor(version)}`}
                 >
                   {/* Version Header */}
                   <div className="flex items-start justify-between mb-3">
@@ -176,10 +173,7 @@ export default function DocumentVersionHistory({
                           title="Restore This Version"
                         >
                           {restoringVersion === version.id ? (
-                            <IconRefresh
-                              size={16}
-                              className="text-brand-600 animate-spin"
-                            />
+                            <IconRefresh size={16} className="text-brand-600 animate-spin" />
                           ) : (
                             <IconRefresh size={16} className="text-brand-600" />
                           )}
@@ -194,9 +188,7 @@ export default function DocumentVersionHistory({
                       <p className="text-xs text-gray-500 mb-1">Uploaded By</p>
                       <div className="flex items-center gap-2">
                         <IconUser size={14} className="text-gray-400" />
-                        <span className="text-sm text-gray-900">
-                          {version.uploadedByName}
-                        </span>
+                        <span className="text-sm text-gray-900">{version.uploadedByName}</span>
                       </div>
                     </div>
                     <div>

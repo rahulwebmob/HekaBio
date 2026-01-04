@@ -13,7 +13,8 @@ export const mockProjects: Project[] = [
     name: 'AI-Powered Prostate Cancer Diagnostics',
     company: mockCompanies[2], // BrachyTech Solutions
     tags: ['Strategic Portfolio'],
-    description: 'Next-generation AI diagnostic platform for early-stage prostate cancer detection with 95% accuracy',
+    description:
+      'Next-generation AI diagnostic platform for early-stage prostate cancer detection with 95% accuracy',
     currentStage: 'DUE_DILIGENCE',
     stageHistory: [],
     score: 88,
@@ -29,7 +30,8 @@ export const mockProjects: Project[] = [
     lastScoredAt: '2024-12-15T10:00:00Z',
     japanInterest: true,
     japanMarketFit: 'HIGH',
-    japanSummary: 'Strong unmet need in Japan with aging population. Aligns with PMDA digital health initiative.',
+    japanSummary:
+      'Strong unmet need in Japan with aging population. Aligns with PMDA digital health initiative.',
     japanScreeningCompletedAt: '2024-11-20T14:30:00Z',
     partnerTags: ['Hospital Network A', 'Distributor B'],
     ndaStatus: 'COMPLETED',
@@ -49,7 +51,8 @@ export const mockProjects: Project[] = [
     name: 'Minimally Invasive Brachytherapy Device',
     company: mockCompanies[4], // RadPharm Medical
     tags: ['Strategic Portfolio'],
-    description: 'Revolutionary minimally invasive brachytherapy delivery system reducing procedure time by 50%',
+    description:
+      'Revolutionary minimally invasive brachytherapy delivery system reducing procedure time by 50%',
     currentStage: 'JAPAN_EARLY_ASSESSMENT',
     stageHistory: [],
     score: 82,
@@ -355,7 +358,8 @@ export const mockProjects: Project[] = [
     },
     japanInterest: true,
     japanMarketFit: 'HIGH',
-    japanSummary: 'Excellent strategic fit. Strong clinical evidence aligns with Japan\'s focus on early detection.',
+    japanSummary:
+      "Excellent strategic fit. Strong clinical evidence aligns with Japan's focus on early detection.",
     partnerTags: ['Lab Partner A', 'Hospital D'],
     ndaStatus: 'COMPLETED',
     ndaCompletedAt: '2024-11-15T12:00:00Z',

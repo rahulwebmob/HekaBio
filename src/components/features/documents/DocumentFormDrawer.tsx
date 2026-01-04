@@ -21,11 +21,7 @@ interface DocumentFormDrawerProps {
   document?: Document | null;
 }
 
-export default function DocumentFormDrawer({
-  isOpen,
-  onClose,
-  document,
-}: DocumentFormDrawerProps) {
+export default function DocumentFormDrawer({ isOpen, onClose, document }: DocumentFormDrawerProps) {
   const dispatch = useAppDispatch();
   const isEdit = !!document;
 
@@ -62,7 +58,7 @@ export default function DocumentFormDrawer({
         companyId: document.companyId || '',
       });
     } else if (!isOpen) {
-  // Reset form when drawer closes
+      // Reset form when drawer closes
       setFormData({
         name: '',
         description: '',

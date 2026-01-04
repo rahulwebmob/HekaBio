@@ -67,15 +67,17 @@ export function Table<T extends { id: string }>({
                 onClick={() => column.sortable && handleSort(column)}
                 style={column.width ? { width: column.width } : undefined}
               >
-                <div className={`flex items-center gap-2 ${column.align === 'center' ? 'justify-center' : column.align === 'right' ? 'justify-end' : ''}`}>
+                <div
+                  className={`flex items-center gap-2 ${column.align === 'center' ? 'justify-center' : column.align === 'right' ? 'justify-end' : ''}`}
+                >
                   <span>{column.header}</span>
-                  {column.sortable && sortField === column.key && (
-                    sortOrder === 'asc' ? (
+                  {column.sortable &&
+                    sortField === column.key &&
+                    (sortOrder === 'asc' ? (
                       <IconSortAscending size={14} />
                     ) : (
                       <IconSortDescending size={14} />
-                    )
-                  )}
+                    ))}
                 </div>
               </th>
             ))}
@@ -91,14 +93,11 @@ export function Table<T extends { id: string }>({
               onClick={() => onRowClick?.(row)}
             >
               {columns.map((column) => (
-                <td
-                  key={column.key}
-                  className={`px-6 py-4 ${getAlignClass(column.align)}`}
-                >
+                <td key={column.key} className={`px-6 py-4 ${getAlignClass(column.align)}`}>
                   {column.render
                     ? column.render(row)
-                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                    : (row as any)[column.key]}
+                    : // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                      (row as any)[column.key]}
                 </td>
               ))}
             </tr>

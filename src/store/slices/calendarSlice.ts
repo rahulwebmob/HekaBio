@@ -50,10 +50,7 @@ const calendarSlice = createSlice({
     },
 
     // Update event status
-    updateEventStatus: (
-      state,
-      action: PayloadAction<{ eventId: string; status: EventStatus }>
-    ) => {
+    updateEventStatus: (state, action: PayloadAction<{ eventId: string; status: EventStatus }>) => {
       const event = state.events.find((e) => e.id === action.payload.eventId);
       if (event) {
         event.status = action.payload.status;
@@ -145,10 +142,7 @@ const calendarSlice = createSlice({
     },
 
     // Remove attendee
-    removeAttendee: (
-      state,
-      action: PayloadAction<{ eventId: string; attendeeId: string }>
-    ) => {
+    removeAttendee: (state, action: PayloadAction<{ eventId: string; attendeeId: string }>) => {
       const event = state.events.find((e) => e.id === action.payload.eventId);
       if (event) {
         event.attendees = event.attendees.filter((a) => a.id !== action.payload.attendeeId);
@@ -224,10 +218,7 @@ const calendarSlice = createSlice({
     },
 
     // Mark reminder as sent
-    markReminderSent: (
-      state,
-      action: PayloadAction<{ eventId: string; reminderId: string }>
-    ) => {
+    markReminderSent: (state, action: PayloadAction<{ eventId: string; reminderId: string }>) => {
       const event = state.events.find((e) => e.id === action.payload.eventId);
       if (event) {
         const reminder = event.reminders.find((r) => r.id === action.payload.reminderId);

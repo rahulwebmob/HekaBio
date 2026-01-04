@@ -333,7 +333,8 @@ export const mockCalendarEvents: CalendarEvent[] = [
     ],
     organizerId: 'user-001',
     organizerName: 'Sarah Johnson',
-    agenda: '1. Protocol Overview\n2. Patient Enrollment Strategy\n3. Safety Monitoring\n4. Timeline and Budget',
+    agenda:
+      '1. Protocol Overview\n2. Patient Enrollment Strategy\n3. Safety Monitoring\n4. Timeline and Budget',
     reminders: [
       {
         id: 'reminder-007',

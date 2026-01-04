@@ -4,7 +4,12 @@
  */
 
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
-import type { Document, DocumentStatus, DocumentCategory, DocumentComment } from '../../types/document.types';
+import type {
+  Document,
+  DocumentStatus,
+  DocumentCategory,
+  DocumentComment,
+} from '../../types/document.types';
 import { mockDocuments } from '../../data/mockDocuments';
 
 interface DocumentsState {
@@ -171,15 +176,10 @@ const documentsSlice = createSlice({
     },
 
     // Delete comment
-    deleteComment: (
-      state,
-      action: PayloadAction<{ documentId: string; commentId: string }>
-    ) => {
+    deleteComment: (state, action: PayloadAction<{ documentId: string; commentId: string }>) => {
       const document = state.documents.find((doc) => doc.id === action.payload.documentId);
       if (document) {
-        document.comments = document.comments.filter(
-          (c) => c.id !== action.payload.commentId
-        );
+        document.comments = document.comments.filter((c) => c.id !== action.payload.commentId);
       }
     },
 
@@ -235,10 +235,7 @@ const documentsSlice = createSlice({
     },
 
     // Remove permission
-    removePermission: (
-      state,
-      action: PayloadAction<{ documentId: string; userId: string }>
-    ) => {
+    removePermission: (state, action: PayloadAction<{ documentId: string; userId: string }>) => {
       const document = state.documents.find((doc) => doc.id === action.payload.documentId);
       if (document) {
         document.permissions = document.permissions.filter(

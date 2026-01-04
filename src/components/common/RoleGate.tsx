@@ -32,8 +32,8 @@ export const RoleGate = ({
   const hasAccess = requireAll
     ? canAll(permissionArray)
     : Array.isArray(permissions)
-    ? canAny(permissionArray)
-    : can(permissions);
+      ? canAny(permissionArray)
+      : can(permissions);
 
   return hasAccess ? <>{children}</> : <>{fallback}</>;
 };

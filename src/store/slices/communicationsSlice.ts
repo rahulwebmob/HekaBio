@@ -4,7 +4,11 @@
  */
 
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
-import type { Communication, EmailTemplate, CommunicationStatus } from '../../types/communication.types';
+import type {
+  Communication,
+  EmailTemplate,
+  CommunicationStatus,
+} from '../../types/communication.types';
 import { mockCommunications, mockEmailTemplates } from '../../data/mockCommunications';
 
 interface CommunicationsState {
@@ -40,7 +44,9 @@ const communicationsSlice = createSlice({
       state,
       action: PayloadAction<{ communicationId: string; status: CommunicationStatus }>
     ) => {
-      const communication = state.communications.find((c) => c.id === action.payload.communicationId);
+      const communication = state.communications.find(
+        (c) => c.id === action.payload.communicationId
+      );
       if (communication) {
         communication.status = action.payload.status;
         communication.updatedAt = new Date().toISOString();
@@ -61,7 +67,9 @@ const communicationsSlice = createSlice({
       state,
       action: PayloadAction<{ communicationId: string; followUpDate?: string }>
     ) => {
-      const communication = state.communications.find((c) => c.id === action.payload.communicationId);
+      const communication = state.communications.find(
+        (c) => c.id === action.payload.communicationId
+      );
       if (communication) {
         communication.needsFollowUp = !communication.needsFollowUp;
         communication.followUpDate = action.payload.followUpDate;

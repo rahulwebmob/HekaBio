@@ -19,15 +19,9 @@ import {
   IconNote,
 } from '@tabler/icons-react';
 import { useAppDispatch } from '../../../app/store';
-import {
-  deleteOpportunity,
-  moveOpportunityToStage,
-} from '../../../store/slices/pipelineSlice';
+import { deleteOpportunity, moveOpportunityToStage } from '../../../store/slices/pipelineSlice';
 import { Drawer, Badge, Button } from '../../ui';
-import type {
-  PipelineOpportunity,
-  PipelineStage,
-} from '../../../types/pipeline.types';
+import type { PipelineOpportunity, PipelineStage } from '../../../types/pipeline.types';
 import { PIPELINE_STAGE_CONFIG } from '../../../types/pipeline.types';
 
 interface OpportunityDetailDrawerProps {
@@ -80,7 +74,10 @@ export default function OpportunityDetailDrawer({
   };
 
   const getPriorityBadge = (priority: string) => {
-    const variants: Record<string, { variant: 'default' | 'info' | 'success' | 'warning' | 'error'; label: string }> = {
+    const variants: Record<
+      string,
+      { variant: 'default' | 'info' | 'success' | 'warning' | 'error'; label: string }
+    > = {
       LOW: { variant: 'default', label: 'Low' },
       MEDIUM: { variant: 'info', label: 'Medium' },
       HIGH: { variant: 'warning', label: 'High' },
@@ -101,11 +98,7 @@ export default function OpportunityDetailDrawer({
       green: 'success',
       red: 'error',
     };
-    return (
-      <Badge variant={variantMap[config.color] || 'default'}>
-        {config.label}
-      </Badge>
-    );
+    return <Badge variant={variantMap[config.color] || 'default'}>{config.label}</Badge>;
   };
 
   const formatCurrency = (value: number) => {
@@ -162,11 +155,7 @@ export default function OpportunityDetailDrawer({
                 >
                   Mark as Won
                 </Button>
-                <Button
-                  variant="ghost"
-                  leftIcon={<IconX size={18} />}
-                  onClick={handleMarkAsLost}
-                >
+                <Button variant="ghost" leftIcon={<IconX size={18} />} onClick={handleMarkAsLost}>
                   Mark as Lost
                 </Button>
               </>
@@ -184,9 +173,7 @@ export default function OpportunityDetailDrawer({
         {/* Header Section */}
         <div className="bg-white/60 rounded-lg p-6 space-y-4">
           <div>
-            <h3 className="text-2xl font-semibold text-gray-900 mb-2">
-              {opportunity.title}
-            </h3>
+            <h3 className="text-2xl font-semibold text-gray-900 mb-2">{opportunity.title}</h3>
             <div className="flex items-center gap-2">
               {getStageBadge(opportunity.stage)}
               {getPriorityBadge(opportunity.priority)}
@@ -239,7 +226,8 @@ export default function OpportunityDetailDrawer({
             </div>
             <p className="text-2xl font-bold text-gray-900">{opportunity.probability}%</p>
             <p className="text-xs text-gray-600 mt-1">
-              Weighted: {formatCurrency(opportunity.estimatedValue * (opportunity.probability / 100))}
+              Weighted:{' '}
+              {formatCurrency(opportunity.estimatedValue * (opportunity.probability / 100))}
             </p>
           </div>
         </div>
@@ -355,9 +343,7 @@ export default function OpportunityDetailDrawer({
                       <div className="text-xs text-gray-600">
                         Entered: {formatDateTime(history.enteredAt)}
                         {history.exitedAt && (
-                          <span className="ml-2">
-                            • Exited: {formatDateTime(history.exitedAt)}
-                          </span>
+                          <span className="ml-2">• Exited: {formatDateTime(history.exitedAt)}</span>
                         )}
                       </div>
                     </div>
@@ -369,14 +355,18 @@ export default function OpportunityDetailDrawer({
 
         {/* Win/Loss Information */}
         {opportunity.outcome && (
-          <div className={`rounded-lg p-4 ${
-            opportunity.outcome === 'WON'
-              ? 'bg-success-50 border border-success-200'
-              : 'bg-error-50 border border-error-200'
-          }`}>
-            <h4 className={`text-sm font-semibold mb-2 ${
-              opportunity.outcome === 'WON' ? 'text-success-900' : 'text-error-900'
-            }`}>
+          <div
+            className={`rounded-lg p-4 ${
+              opportunity.outcome === 'WON'
+                ? 'bg-success-50 border border-success-200'
+                : 'bg-error-50 border border-error-200'
+            }`}
+          >
+            <h4
+              className={`text-sm font-semibold mb-2 ${
+                opportunity.outcome === 'WON' ? 'text-success-900' : 'text-error-900'
+              }`}
+            >
               {opportunity.outcome === 'WON' ? 'Deal Won' : 'Deal Lost'}
             </h4>
             <div className="space-y-1 text-sm">
