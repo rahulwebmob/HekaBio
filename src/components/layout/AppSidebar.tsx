@@ -32,47 +32,9 @@ const menuItems: MenuItem[] = [
     path: '/dashboard',
   },
   {
-    label: 'Innovations',
-    icon: <IconFlask size={20} stroke={1.5} />,
-    submenu: [
-      { label: 'All Innovations', path: '/innovations' },
-      { label: 'Submit New', path: '/innovations/submit' },
-      { label: 'My Submissions', path: '/innovations/my-submissions' },
-    ],
-  },
-  {
-    label: 'Evaluations',
-    icon: <IconClipboardCheck size={20} stroke={1.5} />,
-    submenu: [
-      { label: 'Pending Reviews', path: '/evaluations/pending' },
-      { label: 'Gate 1', path: '/evaluations/gate-1' },
-      { label: 'Gate 2', path: '/evaluations/gate-2' },
-      { label: 'Gate 3', path: '/evaluations/gate-3' },
-      { label: 'Due Diligence', path: '/evaluations/due-diligence' },
-    ],
-  },
-  {
     label: 'Users',
     icon: <IconUsers size={20} stroke={1.5} />,
     path: '/users',
-  },
-  {
-    label: 'Address Book',
-    icon: <IconBuildingHospital size={20} stroke={1.5} />,
-    submenu: [
-      { label: 'Companies', path: '/companies' },
-      { label: 'Contacts', path: '/contacts' },
-    ],
-  },
-  {
-    label: 'Reports',
-    icon: <IconChartBar size={20} stroke={1.5} />,
-    path: '/reports',
-  },
-  {
-    label: 'Documents',
-    icon: <IconFileText size={20} stroke={1.5} />,
-    path: '/documents',
   },
   {
     label: 'Settings',
