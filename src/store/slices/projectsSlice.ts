@@ -15,23 +15,24 @@ import type {
   NDAStatus,
   ContractStatus,
 } from '../../types/project.types';
-import { mockProjects } from '../../data/mockProjects';
+import { projectService } from '../../services/project.service';
+import { savedFilterService } from '../../services/savedFilter.service';
 
 interface ProjectsState {
   projects: Project[];
   selectedProjectId: string | null;
   filters: ProjectFilters;
   savedFilters: SavedFilter[];
-  currentSavedFilterId: string | null; // Track which saved filter is active
+  currentSavedFilterId: string | null;
   isLoading: boolean;
   error: string | null;
 }
 
 const initialState: ProjectsState = {
-  projects: mockProjects,
+  projects: projectService.getAll(),
   selectedProjectId: null,
   filters: {},
-  savedFilters: [], // Will be populated from localStorage or backend
+  savedFilters: savedFilterService.getAll(),
   currentSavedFilterId: null,
   isLoading: false,
   error: null,
@@ -42,28 +43,37 @@ const projectsSlice = createSlice({
   initialState,
   reducers: {
     // Project CRUD
-    addProject: (state, action: PayloadAction<Project>) => {
-      state.projects.push(action.payload);
+    addProject: (state, action: PayloadAction<Omit<Project, 'id' | 'createdAt' | 'updatedAt'>>) => {
+      const newProject = projectService.create(action.payload);
+      state.projects.push(newProject);
     },
-    updateProject: (state, action: PayloadAction<Project>) => {
-      const index = state.projects.findIndex((p) => p.id === action.payload.id);
-      if (index !== -1) {
-        state.projects[index] = action.payload;
+
+    updateProject: (state, action: PayloadAction<{ id: string; updates: Partial<Project> }>) => {
+      const updated = projectService.update(action.payload.id, action.payload.updates);
+      if (updated) {
+        const index = state.projects.findIndex((p) => p.id === action.payload.id);
+        if (index !== -1) {
+          state.projects[index] = updated;
+        }
       }
     },
+
     deleteProject: (state, action: PayloadAction<string>) => {
-      state.projects = state.projects.filter((p) => p.id !== action.payload);
+      const success = projectService.delete(action.payload);
+      if (success) {
+        state.projects = state.projects.filter((p) => p.id !== action.payload);
+      }
     },
+
     duplicateProject: (state, action: PayloadAction<string>) => {
-      const originalProject = state.projects.find((p) => p.id === action.payload);
+      const originalProject = projectService.getById(action.payload);
       if (originalProject) {
         const now = new Date().toISOString();
-        const duplicatedProject: Project = {
+        const duplicatedProjectData = {
           ...originalProject,
-          id: `project-${Date.now()}`,
           name: `${originalProject.name} (Copy)`,
-          currentStage: 'LOBBY', // Reset to initial stage
-          score: 0, // Reset score
+          currentStage: 'LOBBY' as Stage,
+          score: 0,
           scoreBreakdown: undefined,
           lastScoredAt: undefined,
           isHot: false,
@@ -72,22 +82,25 @@ const projectsSlice = createSlice({
           stageHistory: [
             {
               id: `stage-${Date.now()}`,
-              projectId: `project-${Date.now()}`,
+              projectId: `project-${Date.now()}`, // Will be replaced by service
               fromStage: null,
-              toStage: 'LOBBY',
+              toStage: 'LOBBY' as Stage,
               changedBy: 'user-001',
               changedByName: 'Current User',
               changedAt: now,
               reason: 'Project duplicated',
             },
           ],
-          createdAt: now,
-          updatedAt: now,
           createdBy: 'user-001',
         };
-        state.projects.unshift(duplicatedProject); // Add to beginning of list
+
+        // Remove fields that will be auto-generated
+        const { id, createdAt, updatedAt, ...dataToCreate } = duplicatedProjectData;
+        const duplicatedProject = projectService.create(dataToCreate);
+        state.projects.unshift(duplicatedProject);
       }
     },
+
     setSelectedProject: (state, action: PayloadAction<string | null>) => {
       state.selectedProjectId = action.payload;
     },
@@ -97,45 +110,40 @@ const projectsSlice = createSlice({
       state,
       action: PayloadAction<{ projectId: string; stage: Stage; reason?: string; notes?: string }>
     ) => {
-      const project = state.projects.find((p) => p.id === action.payload.projectId);
-      if (project) {
-        const now = new Date().toISOString();
-        project.stageHistory.push({
-          id: `stage-${Date.now()}`,
-          projectId: action.payload.projectId,
-          fromStage: project.currentStage,
-          toStage: action.payload.stage,
-          changedBy: 'user-001',
-          changedByName: 'Current User',
-          changedAt: now,
-          reason: action.payload.reason,
-          notes: action.payload.notes,
-        });
-        project.currentStage = action.payload.stage;
-        project.updatedAt = now;
+      const updated = projectService.moveToStage(
+        action.payload.projectId,
+        action.payload.stage,
+        'user-001',
+        'Current User',
+        action.payload.reason,
+        action.payload.notes
+      );
+      if (updated) {
+        const index = state.projects.findIndex((p) => p.id === action.payload.projectId);
+        if (index !== -1) {
+          state.projects[index] = updated;
+        }
       }
     },
+
     bulkMoveToStage: (
       state,
       action: PayloadAction<{ projectIds: string[]; stage: Stage; reason: string; notes?: string }>
     ) => {
-      const now = new Date().toISOString();
       action.payload.projectIds.forEach((projectId) => {
-        const project = state.projects.find((p) => p.id === projectId);
-        if (project) {
-          project.stageHistory.push({
-            id: `stage-${Date.now()}-${projectId}`,
-            projectId,
-            fromStage: project.currentStage,
-            toStage: action.payload.stage,
-            changedBy: 'user-001',
-            changedByName: 'Current User',
-            changedAt: now,
-            reason: action.payload.reason,
-            notes: action.payload.notes,
-          });
-          project.currentStage = action.payload.stage;
-          project.updatedAt = now;
+        const updated = projectService.moveToStage(
+          projectId,
+          action.payload.stage,
+          'user-001',
+          'Current User',
+          action.payload.reason,
+          action.payload.notes
+        );
+        if (updated) {
+          const index = state.projects.findIndex((p) => p.id === projectId);
+          if (index !== -1) {
+            state.projects[index] = updated;
+          }
         }
       });
     },
@@ -145,14 +153,16 @@ const projectsSlice = createSlice({
       state,
       action: PayloadAction<{ projectId: string; score: number; breakdown?: ScoreBreakdown }>
     ) => {
-      const project = state.projects.find((p) => p.id === action.payload.projectId);
-      if (project) {
-        project.score = action.payload.score;
-        project.scoreBreakdown = action.payload.breakdown;
-        project.lastScoredAt = new Date().toISOString();
-        project.updatedAt = new Date().toISOString();
-        // Update hot flag
-        project.isHot = project.score > 80 && project.japanInterest;
+      const updated = projectService.updateScore(
+        action.payload.projectId,
+        action.payload.score,
+        action.payload.breakdown
+      );
+      if (updated) {
+        const index = state.projects.findIndex((p) => p.id === action.payload.projectId);
+        if (index !== -1) {
+          state.projects[index] = updated;
+        }
       }
     },
 
@@ -165,12 +175,16 @@ const projectsSlice = createSlice({
         japanSummary?: string;
       }>
     ) => {
-      const project = state.projects.find((p) => p.id === action.payload.projectId);
-      if (project) {
-        project.japanMarketFit = action.payload.japanMarketFit;
-        project.japanSummary = action.payload.japanSummary;
-        project.japanScreeningCompletedAt = new Date().toISOString();
-        project.updatedAt = new Date().toISOString();
+      const updated = projectService.updateJapanAssessment(
+        action.payload.projectId,
+        action.payload.japanMarketFit,
+        action.payload.japanSummary
+      );
+      if (updated) {
+        const index = state.projects.findIndex((p) => p.id === action.payload.projectId);
+        if (index !== -1) {
+          state.projects[index] = updated;
+        }
       }
     },
 
@@ -183,31 +197,27 @@ const projectsSlice = createSlice({
         completedAt?: string;
       }>
     ) => {
-      const project = state.projects.find((p) => p.id === action.payload.projectId);
-      if (project) {
-        project.ndaStatus = action.payload.status;
-        if (action.payload.status === 'REQUESTED' && !project.ndaRequestedAt) {
-          project.ndaRequestedAt = new Date().toISOString();
+      const updated = projectService.updateNDAStatus(
+        action.payload.projectId,
+        action.payload.status,
+        action.payload.completedAt
+      );
+      if (updated) {
+        const index = state.projects.findIndex((p) => p.id === action.payload.projectId);
+        if (index !== -1) {
+          state.projects[index] = updated;
         }
-        if (action.payload.status === 'COMPLETED') {
-          project.ndaCompletedAt = action.payload.completedAt || new Date().toISOString();
-        }
-        project.updatedAt = new Date().toISOString();
       }
     },
 
     // Due Diligence
     updateDDProgress: (state, action: PayloadAction<{ projectId: string; progress: number }>) => {
-      const project = state.projects.find((p) => p.id === action.payload.projectId);
-      if (project) {
-        project.ddProgress = action.payload.progress;
-        if (!project.ddStartedAt && action.payload.progress > 0) {
-          project.ddStartedAt = new Date().toISOString();
+      const updated = projectService.updateDDProgress(action.payload.projectId, action.payload.progress);
+      if (updated) {
+        const index = state.projects.findIndex((p) => p.id === action.payload.projectId);
+        if (index !== -1) {
+          state.projects[index] = updated;
         }
-        if (action.payload.progress === 100 && !project.ddCompletedAt) {
-          project.ddCompletedAt = new Date().toISOString();
-        }
-        project.updatedAt = new Date().toISOString();
       }
     },
 
@@ -216,101 +226,110 @@ const projectsSlice = createSlice({
       state,
       action: PayloadAction<{ projectId: string; status: ContractStatus }>
     ) => {
-      const project = state.projects.find((p) => p.id === action.payload.projectId);
-      if (project) {
-        project.contractStatus = action.payload.status;
-        project.contractDecisionAt = new Date().toISOString();
-        project.updatedAt = new Date().toISOString();
+      const updated = projectService.updateContractStatus(action.payload.projectId, action.payload.status);
+      if (updated) {
+        const index = state.projects.findIndex((p) => p.id === action.payload.projectId);
+        if (index !== -1) {
+          state.projects[index] = updated;
+        }
       }
     },
 
     // Filters
     setFilters: (state, action: PayloadAction<ProjectFilters>) => {
       state.filters = action.payload;
-      state.currentSavedFilterId = null; // Clear active saved filter when manually changing filters
+      state.currentSavedFilterId = null;
     },
+
     clearFilters: (state) => {
       state.filters = {};
       state.currentSavedFilterId = null;
     },
 
     // Saved Filters
-    saveSavedFilter: (state, action: PayloadAction<SavedFilter>) => {
-      // Check if filter with same ID exists (update) or add new
-      const existingIndex = state.savedFilters.findIndex((f) => f.id === action.payload.id);
-      if (existingIndex !== -1) {
-        state.savedFilters[existingIndex] = action.payload;
-      } else {
-        state.savedFilters.push(action.payload);
-      }
-      // Persist to localStorage
-      if (typeof window !== 'undefined') {
-        localStorage.setItem('hekabio_saved_filters', JSON.stringify(state.savedFilters));
+    saveSavedFilter: (
+      state,
+      action: PayloadAction<Omit<SavedFilter, 'id' | 'createdAt' | 'updatedAt'>>
+    ) => {
+      const newFilter = savedFilterService.create(action.payload);
+      state.savedFilters.push(newFilter);
+    },
+
+    updateSavedFilter: (state, action: PayloadAction<{ id: string; updates: Partial<SavedFilter> }>) => {
+      const updated = savedFilterService.update(action.payload.id, action.payload.updates);
+      if (updated) {
+        const index = state.savedFilters.findIndex((f) => f.id === action.payload.id);
+        if (index !== -1) {
+          state.savedFilters[index] = updated;
+        }
       }
     },
+
     loadSavedFilter: (state, action: PayloadAction<string>) => {
-      const savedFilter = state.savedFilters.find((f) => f.id === action.payload);
+      const savedFilter = savedFilterService.getById(action.payload);
       if (savedFilter) {
         state.filters = savedFilter.filters;
         state.currentSavedFilterId = savedFilter.id;
         // Increment usage count
-        savedFilter.usageCount = (savedFilter.usageCount || 0) + 1;
-        if (typeof window !== 'undefined') {
-          localStorage.setItem('hekabio_saved_filters', JSON.stringify(state.savedFilters));
-        }
+        savedFilterService.incrementUsage(savedFilter.id);
+        state.savedFilters = savedFilterService.getAll();
       }
     },
+
     deleteSavedFilter: (state, action: PayloadAction<string>) => {
-      state.savedFilters = state.savedFilters.filter((f) => f.id !== action.payload);
-      if (state.currentSavedFilterId === action.payload) {
-        state.currentSavedFilterId = null;
-      }
-      // Persist to localStorage
-      if (typeof window !== 'undefined') {
-        localStorage.setItem('hekabio_saved_filters', JSON.stringify(state.savedFilters));
-      }
-    },
-    setDefaultSavedFilter: (state, action: PayloadAction<string>) => {
-      // Clear all defaults first
-      state.savedFilters.forEach((f) => {
-        f.isDefault = false;
-      });
-      // Set the specified filter as default
-      const filter = state.savedFilters.find((f) => f.id === action.payload);
-      if (filter) {
-        filter.isDefault = true;
-      }
-      // Persist to localStorage
-      if (typeof window !== 'undefined') {
-        localStorage.setItem('hekabio_saved_filters', JSON.stringify(state.savedFilters));
-      }
-    },
-    loadSavedFiltersFromStorage: (state) => {
-      // Load saved filters from localStorage
-      if (typeof window !== 'undefined') {
-        const stored = localStorage.getItem('hekabio_saved_filters');
-        if (stored) {
-          try {
-            state.savedFilters = JSON.parse(stored);
-            // Auto-load default filter if exists
-            const defaultFilter = state.savedFilters.find((f) => f.isDefault);
-            if (defaultFilter) {
-              state.filters = defaultFilter.filters;
-              state.currentSavedFilterId = defaultFilter.id;
-            }
-          } catch (error) {
-            console.error('Failed to parse saved filters from localStorage:', error);
-          }
+      const success = savedFilterService.delete(action.payload);
+      if (success) {
+        state.savedFilters = state.savedFilters.filter((f) => f.id !== action.payload);
+        if (state.currentSavedFilterId === action.payload) {
+          state.currentSavedFilterId = null;
         }
       }
+    },
+
+    setDefaultSavedFilter: (state, action: PayloadAction<string>) => {
+      savedFilterService.setAsDefault(action.payload);
+      state.savedFilters = savedFilterService.getAll();
+    },
+
+    loadSavedFiltersFromStorage: (state) => {
+      state.savedFilters = savedFilterService.getAll();
+      // Auto-load default filter if exists
+      const defaultFilter = savedFilterService.getDefaultFilter();
+      if (defaultFilter) {
+        state.filters = defaultFilter.filters;
+        state.currentSavedFilterId = defaultFilter.id;
+      }
+    },
+
+    // Load projects from storage
+    loadProjects: (state) => {
+      state.projects = projectService.getAll();
+    },
+
+    // Update stalled status for all projects
+    updateStalledStatus: (state) => {
+      projectService.updateStalledStatus();
+      state.projects = projectService.getAll();
     },
 
     // Utility
     setLoading: (state, action: PayloadAction<boolean>) => {
       state.isLoading = action.payload;
     },
+
     setError: (state, action: PayloadAction<string | null>) => {
       state.error = action.payload;
+    },
+
+    // Clear all data (for testing/reset)
+    clearAll: (state) => {
+      projectService.clear();
+      savedFilterService.clear();
+      state.projects = [];
+      state.savedFilters = [];
+      state.selectedProjectId = null;
+      state.filters = {};
+      state.currentSavedFilterId = null;
     },
   },
 });
@@ -331,12 +350,16 @@ export const {
   setFilters,
   clearFilters,
   saveSavedFilter,
+  updateSavedFilter,
   loadSavedFilter,
   deleteSavedFilter,
   setDefaultSavedFilter,
   loadSavedFiltersFromStorage,
+  loadProjects,
+  updateStalledStatus,
   setLoading,
   setError,
+  clearAll,
 } = projectsSlice.actions;
 
 export default projectsSlice.reducer;

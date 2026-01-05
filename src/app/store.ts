@@ -28,42 +28,47 @@ import emailTemplatesReducer from '../store/slices/emailTemplatesSlice';
 import screeningsReducer from '../store/slices/screeningsSlice';
 import automationReducer from '../store/slices/automationSlice';
 
+// Import middleware
+import { localStorageMiddleware } from '../store/middleware/localStorage.middleware';
+
+const rootReducer = {
+  auth: authReducer,
+  addressBook: addressBookReducer,
+  projects: projectsReducer,
+  opportunities: opportunitiesReducer,
+  surveys: surveysReducer,
+  communications: communicationsReducer,
+  tasks: tasksReducer,
+  notifications: notificationsReducer,
+  pipeline: pipelineReducer,
+  calendar: calendarReducer,
+  documents: documentsReducer,
+  gate: gateReducer,
+  nda: ndaReducer,
+  dd: ddReducer,
+  contract: contractReducer,
+  extraction: extractionReducer,
+  userPreferences: userPreferencesReducer,
+  emailTemplates: emailTemplatesReducer,
+  screenings: screeningsReducer,
+  automation: automationReducer,
+};
+
 export const store = configureStore({
-  reducer: {
-    auth: authReducer,
-    addressBook: addressBookReducer,
-    projects: projectsReducer,
-    opportunities: opportunitiesReducer,
-    surveys: surveysReducer,
-    communications: communicationsReducer,
-    tasks: tasksReducer,
-    notifications: notificationsReducer,
-    pipeline: pipelineReducer,
-    calendar: calendarReducer,
-    documents: documentsReducer,
-    gate: gateReducer,
-    nda: ndaReducer,
-    dd: ddReducer,
-    contract: contractReducer,
-    extraction: extractionReducer,
-    userPreferences: userPreferencesReducer,
-    emailTemplates: emailTemplatesReducer,
-    screenings: screeningsReducer,
-    automation: automationReducer,
-  },
+  reducer: rootReducer,
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: {
         // Ignore these action types
         ignoredActions: ['persist/PERSIST', 'persist/REHYDRATE'],
       },
-    }),
+    }).concat(localStorageMiddleware),
   devTools: process.env.NODE_ENV !== 'production',
 });
 
 // Infer the `RootState` and `AppDispatch` types from the store itself
-export type RootState = ReturnType<typeof store.getState>;
-export type AppDispatch = typeof store.dispatch;
+export type RootState = ReturnType<(typeof store)['getState']>;
+export type AppDispatch = (typeof store)['dispatch'];
 
 // Export pre-typed hooks for use throughout the app
 export const useAppDispatch: () => AppDispatch = useDispatch;

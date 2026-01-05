@@ -130,8 +130,7 @@ export function ContactFormModal({
 
     const fullName = `${formData.firstName.trim()} ${formData.lastName.trim()}`;
 
-    const contactData: Contact = {
-      id: isEdit ? contact.id : `cont-${Date.now()}`,
+    const contactData = {
       companyId: formData.companyId,
       firstName: formData.firstName.trim(),
       lastName: formData.lastName.trim(),
@@ -146,18 +145,16 @@ export function ContactFormModal({
       notes: formData.notes.trim() || undefined,
       isPrimaryContact: formData.isPrimaryContact,
       isActive: isEdit ? contact.isActive : true,
-      createdAt: isEdit ? contact.createdAt : new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
       createdBy: isEdit ? contact.createdBy : 'user-001',
     };
 
     if (isEdit) {
-      dispatch(updateContact(contactData));
+      dispatch(updateContact({ id: contact.id, updates: contactData }));
     } else {
       dispatch(addContact(contactData));
     }
 
-    onSuccess?.(contactData);
+    onSuccess?.(contactData as Contact);
     onClose();
   };
 

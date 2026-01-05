@@ -181,8 +181,7 @@ export function CompanyFormModal({ isOpen, onClose, company, onSuccess }: Compan
           .filter((tag) => tag.length > 0)
       : [];
 
-    const companyData: Company = {
-      id: isEdit ? company.id : `comp-${Date.now()}`,
+    const companyData = {
       name: formData.name.trim(),
       nameLocal: formData.nameLocal.trim() || undefined,
       role: formData.role as CompanyRole,
@@ -197,18 +196,16 @@ export function CompanyFormModal({ isOpen, onClose, company, onSuccess }: Compan
       revenue: formData.revenue.trim() || undefined,
       tags,
       isActive: isEdit ? company.isActive : true,
-      createdAt: isEdit ? company.createdAt : new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
       createdBy: isEdit ? company.createdBy : 'user-001',
     };
 
     if (isEdit) {
-      dispatch(updateCompany(companyData));
+      dispatch(updateCompany({ id: company.id, updates: companyData }));
     } else {
       dispatch(addCompany(companyData));
     }
 
-    onSuccess?.(companyData);
+    onSuccess?.(companyData as Company);
     onClose();
   };
 

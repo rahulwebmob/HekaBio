@@ -14,6 +14,9 @@ import type {
   NDAType,
   NDAStatus,
 } from '../../types/nda.types';
+import { ndaService } from '../../services/nda.service';
+import { ndaTemplateService } from '../../services/ndaTemplate.service';
+import { ndaActivityService } from '../../services/ndaActivity.service';
 
 interface NDAState {
   ndas: NDA[];
@@ -22,70 +25,43 @@ interface NDAState {
 }
 
 const initialState: NDAState = {
-  ndas: [],
-  templates: [],
-  activities: [],
+  ndas: ndaService.getAll(),
+  templates: ndaTemplateService.getAll(),
+  activities: ndaActivityService.getAll(),
 };
 
 const ndaSlice = createSlice({
   name: 'nda',
   initialState,
   reducers: {
+    // Load data
+    loadNDAs: (state) => {
+      state.ndas = ndaService.getAll();
+    },
+    loadTemplates: (state) => {
+      state.templates = ndaTemplateService.getAll();
+    },
+    loadActivities: (state) => {
+      state.activities = ndaActivityService.getAll();
+    },
+
     // Create a new NDA
     createNDA: (
       state,
-      action: PayloadAction<{
-        companyId: string;
-        companyName: string;
-        projectId?: string;
-        projectName?: string;
-        title: string;
-        type: NDAType;
-        purpose: string;
-        termYears?: number;
-      }>
+      action: PayloadAction<Omit<NDA, 'id' | 'createdAt' | 'updatedAt'>>
     ) => {
-      const now = new Date().toISOString();
-      const {
-        companyId,
-        companyName,
-        projectId,
-        projectName,
-        title,
-        type,
-        purpose,
-        termYears = 2,
-      } = action.payload;
-
-      const newNDA: NDA = {
-        id: `nda-${Date.now()}`,
-        companyId,
-        companyName,
-        projectId,
-        projectName,
-        title,
-        type,
-        status: 'DRAFT',
-        purpose,
-        termYears,
-        draftedDate: now,
-        documents: [],
-        signatories: [],
-        createdAt: now,
-        createdBy: 'user-001',
-      };
-
+      const newNDA = ndaService.create(action.payload);
       state.ndas.push(newNDA);
 
       // Log activity
-      state.activities.push({
-        id: `activity-${Date.now()}`,
-        ndaId: newNDA.id,
-        type: 'CREATED',
-        description: `NDA created: ${title}`,
-        actorName: 'Current User',
-        occurredAt: now,
-      });
+      const activity = ndaActivityService.logActivity(
+        newNDA.id,
+        'CREATED',
+        `NDA created: ${newNDA.title}`,
+        'Current User',
+        'user-001'
+      );
+      state.activities.unshift(activity);
     },
 
     // Update NDA status
@@ -98,35 +74,26 @@ const ndaSlice = createSlice({
       }>
     ) => {
       const nda = state.ndas.find((n) => n.id === action.payload.ndaId);
-      if (nda) {
-        const oldStatus = nda.status;
-        nda.status = action.payload.status;
-        nda.updatedAt = new Date().toISOString();
-        nda.updatedBy = 'user-001';
+      const oldStatus = nda?.status;
 
-        // Update relevant dates
-        const now = new Date().toISOString();
-        if (action.payload.status === 'PENDING_SIGNATURES' && !nda.sentDate) {
-          nda.sentDate = now;
-        }
-        if (action.payload.status === 'FULLY_SIGNED' && !nda.signedDate) {
-          nda.signedDate = now;
-        }
-        if (action.payload.status === 'TERMINATED' && !nda.terminatedDate) {
-          nda.terminatedDate = now;
+      const updated = ndaService.updateStatus(action.payload.ndaId, action.payload.status);
+      if (updated) {
+        const index = state.ndas.findIndex((n) => n.id === action.payload.ndaId);
+        if (index !== -1) {
+          state.ndas[index] = updated;
         }
 
         // Log activity
-        state.activities.push({
-          id: `activity-${Date.now()}`,
-          ndaId: nda.id,
-          type: 'STATUS_CHANGED',
-          description: `Status changed from ${oldStatus} to ${action.payload.status}${
+        const activity = ndaActivityService.logActivity(
+          action.payload.ndaId,
+          'STATUS_CHANGED',
+          `Status changed from ${oldStatus} to ${action.payload.status}${
             action.payload.note ? `: ${action.payload.note}` : ''
           }`,
-          actorName: 'Current User',
-          occurredAt: now,
-        });
+          'Current User',
+          'user-001'
+        );
+        state.activities.unshift(activity);
       }
     },
 
@@ -135,14 +102,15 @@ const ndaSlice = createSlice({
       state,
       action: PayloadAction<{
         ndaId: string;
-        updates: Partial<Omit<NDA, 'id' | 'createdAt' | 'createdBy'>>;
+        updates: Partial<NDA>;
       }>
     ) => {
-      const nda = state.ndas.find((n) => n.id === action.payload.ndaId);
-      if (nda) {
-        Object.assign(nda, action.payload.updates);
-        nda.updatedAt = new Date().toISOString();
-        nda.updatedBy = 'user-001';
+      const updated = ndaService.update(action.payload.ndaId, action.payload.updates);
+      if (updated) {
+        const index = state.ndas.findIndex((n) => n.id === action.payload.ndaId);
+        if (index !== -1) {
+          state.ndas[index] = updated;
+        }
       }
     },
 
@@ -154,19 +122,12 @@ const ndaSlice = createSlice({
         signatory: Omit<NDASignatory, 'id' | 'ndaId' | 'createdAt' | 'createdBy'>;
       }>
     ) => {
-      const nda = state.ndas.find((n) => n.id === action.payload.ndaId);
-      if (nda) {
-        const now = new Date().toISOString();
-        const newSignatory: NDASignatory = {
-          id: `signatory-${Date.now()}-${Math.random()}`,
-          ndaId: action.payload.ndaId,
-          ...action.payload.signatory,
-          createdAt: now,
-          createdBy: 'user-001',
-        };
-
-        nda.signatories.push(newSignatory);
-        nda.updatedAt = now;
+      const updated = ndaService.addSignatory(action.payload.ndaId, action.payload.signatory);
+      if (updated) {
+        const index = state.ndas.findIndex((n) => n.id === action.payload.ndaId);
+        if (index !== -1) {
+          state.ndas[index] = updated;
+        }
       }
     },
 
@@ -180,57 +141,48 @@ const ndaSlice = createSlice({
       }>
     ) => {
       const nda = state.ndas.find((n) => n.id === action.payload.ndaId);
-      if (nda) {
-        const signatory = nda.signatories.find((s) => s.id === action.payload.signatoryId);
-        if (signatory) {
-          Object.assign(signatory, action.payload.updates);
-          signatory.updatedAt = new Date().toISOString();
-          nda.updatedAt = new Date().toISOString();
+      const signatory = nda?.signatories.find((s) => s.id === action.payload.signatoryId);
 
-          // Log signature if status changed to SIGNED
-          if (action.payload.updates.status === 'SIGNED') {
-            const now = new Date().toISOString();
-            state.activities.push({
-              id: `activity-${Date.now()}`,
-              ndaId: nda.id,
-              type: 'SIGNED',
-              description: `Signed by ${signatory.name} (${signatory.organization})`,
-              actorName: signatory.name,
-              actorEmail: signatory.email,
-              occurredAt: now,
-            });
+      const updated = ndaService.updateSignatory(
+        action.payload.ndaId,
+        action.payload.signatoryId,
+        action.payload.updates
+      );
 
-            // Check if all signatories have signed
-            const allSigned = nda.signatories.every((s) => s.status === 'SIGNED');
-            if (allSigned && nda.status !== 'FULLY_SIGNED') {
-              nda.status = 'FULLY_SIGNED';
-              nda.signedDate = now;
-            } else if (nda.signatories.some((s) => s.status === 'SIGNED')) {
-              nda.status = 'PARTIALLY_SIGNED';
-            }
-          }
+      if (updated) {
+        const index = state.ndas.findIndex((n) => n.id === action.payload.ndaId);
+        if (index !== -1) {
+          state.ndas[index] = updated;
+        }
 
-          // Log decline if status changed to DECLINED
-          if (action.payload.updates.status === 'DECLINED') {
-            state.activities.push({
-              id: `activity-${Date.now()}`,
-              ndaId: nda.id,
-              type: 'DECLINED',
-              description: `Declined by ${signatory.name} (${signatory.organization})${
-                action.payload.updates.declinedReason
-                  ? `: ${action.payload.updates.declinedReason}`
-                  : ''
-              }`,
-              actorName: signatory.name,
-              actorEmail: signatory.email,
-              occurredAt: new Date().toISOString(),
-            });
+        // Log signature if status changed to SIGNED
+        if (action.payload.updates.status === 'SIGNED' && signatory) {
+          const activity = ndaActivityService.logActivity(
+            action.payload.ndaId,
+            'SIGNED',
+            `Signed by ${signatory.name} (${signatory.organization})`,
+            signatory.name,
+            undefined,
+            signatory.email
+          );
+          state.activities.unshift(activity);
+        }
 
-            // Update NDA status
-            if (nda.status !== 'DECLINED') {
-              nda.status = 'DECLINED';
-            }
-          }
+        // Log decline if status changed to DECLINED
+        if (action.payload.updates.status === 'DECLINED' && signatory) {
+          const activity = ndaActivityService.logActivity(
+            action.payload.ndaId,
+            'DECLINED',
+            `Declined by ${signatory.name} (${signatory.organization})${
+              action.payload.updates.declinedReason
+                ? `: ${action.payload.updates.declinedReason}`
+                : ''
+            }`,
+            signatory.name,
+            undefined,
+            signatory.email
+          );
+          state.activities.unshift(activity);
         }
       }
     },
@@ -243,10 +195,12 @@ const ndaSlice = createSlice({
         signatoryId: string;
       }>
     ) => {
-      const nda = state.ndas.find((n) => n.id === action.payload.ndaId);
-      if (nda) {
-        nda.signatories = nda.signatories.filter((s) => s.id !== action.payload.signatoryId);
-        nda.updatedAt = new Date().toISOString();
+      const updated = ndaService.removeSignatory(action.payload.ndaId, action.payload.signatoryId);
+      if (updated) {
+        const index = state.ndas.findIndex((n) => n.id === action.payload.ndaId);
+        if (index !== -1) {
+          state.ndas[index] = updated;
+        }
       }
     },
 
@@ -258,29 +212,22 @@ const ndaSlice = createSlice({
         document: Omit<NDADocument, 'id' | 'ndaId' | 'uploadedAt' | 'uploadedBy'>;
       }>
     ) => {
-      const nda = state.ndas.find((n) => n.id === action.payload.ndaId);
-      if (nda) {
-        const now = new Date().toISOString();
-        const newDocument: NDADocument = {
-          id: `doc-${Date.now()}-${Math.random()}`,
-          ndaId: action.payload.ndaId,
-          ...action.payload.document,
-          uploadedAt: now,
-          uploadedBy: 'user-001',
-        };
-
-        nda.documents.push(newDocument);
-        nda.updatedAt = now;
+      const updated = ndaService.addDocument(action.payload.ndaId, action.payload.document);
+      if (updated) {
+        const index = state.ndas.findIndex((n) => n.id === action.payload.ndaId);
+        if (index !== -1) {
+          state.ndas[index] = updated;
+        }
 
         // Log activity
-        state.activities.push({
-          id: `activity-${Date.now()}`,
-          ndaId: nda.id,
-          type: 'DOCUMENT_UPLOADED',
-          description: `Document uploaded: ${newDocument.name}`,
-          actorName: 'Current User',
-          occurredAt: now,
-        });
+        const activity = ndaActivityService.logActivity(
+          action.payload.ndaId,
+          'DOCUMENT_UPLOADED',
+          `Document uploaded: ${action.payload.document.name}`,
+          'Current User',
+          'user-001'
+        );
+        state.activities.unshift(activity);
       }
     },
 
@@ -292,10 +239,12 @@ const ndaSlice = createSlice({
         documentId: string;
       }>
     ) => {
-      const nda = state.ndas.find((n) => n.id === action.payload.ndaId);
-      if (nda) {
-        nda.documents = nda.documents.filter((d) => d.id !== action.payload.documentId);
-        nda.updatedAt = new Date().toISOString();
+      const updated = ndaService.removeDocument(action.payload.ndaId, action.payload.documentId);
+      if (updated) {
+        const index = state.ndas.findIndex((n) => n.id === action.payload.ndaId);
+        if (index !== -1) {
+          state.ndas[index] = updated;
+        }
       }
     },
 
@@ -307,80 +256,58 @@ const ndaSlice = createSlice({
         signatoryId?: string;
       }>
     ) => {
-      const nda = state.ndas.find((n) => n.id === action.payload.ndaId);
-      if (nda) {
-        const now = new Date().toISOString();
-
-        if (action.payload.signatoryId) {
-          // Remind specific signatory
-          const signatory = nda.signatories.find((s) => s.id === action.payload.signatoryId);
-          if (signatory) {
-            signatory.lastReminderSent = now;
-            signatory.reminderCount = (signatory.reminderCount || 0) + 1;
-
-            state.activities.push({
-              id: `activity-${Date.now()}`,
-              ndaId: nda.id,
-              type: 'REMINDED',
-              description: `Reminder sent to ${signatory.name}`,
-              actorName: 'Current User',
-              occurredAt: now,
-            });
-          }
-        } else {
-          // Remind all pending signatories
-          nda.signatories
-            .filter((s) => s.status === 'PENDING')
-            .forEach((signatory) => {
-              signatory.lastReminderSent = now;
-              signatory.reminderCount = (signatory.reminderCount || 0) + 1;
-            });
-
-          nda.lastReminderSent = now;
-
-          state.activities.push({
-            id: `activity-${Date.now()}`,
-            ndaId: nda.id,
-            type: 'REMINDED',
-            description: 'Reminder sent to all pending signatories',
-            actorName: 'Current User',
-            occurredAt: now,
-          });
+      const updated = ndaService.sendReminder(action.payload.ndaId, action.payload.signatoryId);
+      if (updated) {
+        const index = state.ndas.findIndex((n) => n.id === action.payload.ndaId);
+        if (index !== -1) {
+          state.ndas[index] = updated;
         }
 
-        nda.updatedAt = now;
+        // Log activity
+        const nda = updated;
+        const signatory = action.payload.signatoryId
+          ? nda.signatories.find((s) => s.id === action.payload.signatoryId)
+          : null;
+
+        const description = signatory
+          ? `Reminder sent to ${signatory.name}`
+          : 'Reminder sent to all pending signatories';
+
+        const activity = ndaActivityService.logActivity(
+          action.payload.ndaId,
+          'REMINDED',
+          description,
+          'Current User',
+          'user-001'
+        );
+        state.activities.unshift(activity);
       }
     },
 
     // Delete NDA
     deleteNDA: (state, action: PayloadAction<string>) => {
-      state.ndas = state.ndas.filter((n) => n.id !== action.payload);
-      state.activities = state.activities.filter((a) => a.ndaId !== action.payload);
+      const success = ndaService.delete(action.payload);
+      if (success) {
+        state.ndas = state.ndas.filter((n) => n.id !== action.payload);
+
+        // Also clean up activities for this NDA
+        const ndaActivities = state.activities.filter((a) => a.ndaId === action.payload);
+        ndaActivities.forEach((a) => ndaActivityService.delete(a.id));
+        state.activities = state.activities.filter((a) => a.ndaId !== action.payload);
+      }
     },
 
     // Template management
     createTemplate: (
       state,
-      action: PayloadAction<{
-        name: string;
-        description: string;
-        type: NDAType;
-        defaultTermYears: number;
-        defaultPurpose?: string;
-        defaultJurisdiction?: string;
-        defaultGoverningLaw?: string;
-      }>
+      action: PayloadAction<Omit<NDATemplate, 'id' | 'isActive' | 'usageCount' | 'createdAt' | 'updatedAt' | 'createdBy'>>
     ) => {
-      const now = new Date().toISOString();
-      const newTemplate: NDATemplate = {
-        id: `template-${Date.now()}`,
+      const newTemplate = ndaTemplateService.create({
         ...action.payload,
         isActive: true,
         usageCount: 0,
-        createdAt: now,
         createdBy: 'user-001',
-      };
-
+      });
       state.templates.push(newTemplate);
     },
 
@@ -388,23 +315,61 @@ const ndaSlice = createSlice({
       state,
       action: PayloadAction<{
         templateId: string;
-        updates: Partial<Omit<NDATemplate, 'id' | 'createdAt' | 'createdBy'>>;
+        updates: Partial<NDATemplate>;
       }>
     ) => {
-      const template = state.templates.find((t) => t.id === action.payload.templateId);
-      if (template) {
-        Object.assign(template, action.payload.updates);
-        template.updatedAt = new Date().toISOString();
+      const updated = ndaTemplateService.update(action.payload.templateId, action.payload.updates);
+      if (updated) {
+        const index = state.templates.findIndex((t) => t.id === action.payload.templateId);
+        if (index !== -1) {
+          state.templates[index] = updated;
+        }
       }
     },
 
     deleteTemplate: (state, action: PayloadAction<string>) => {
-      state.templates = state.templates.filter((t) => t.id !== action.payload);
+      const success = ndaTemplateService.delete(action.payload);
+      if (success) {
+        state.templates = state.templates.filter((t) => t.id !== action.payload);
+      }
+    },
+
+    toggleTemplateActive: (state, action: PayloadAction<string>) => {
+      const updated = ndaTemplateService.toggleActive(action.payload);
+      if (updated) {
+        const index = state.templates.findIndex((t) => t.id === action.payload);
+        if (index !== -1) {
+          state.templates[index] = updated;
+        }
+      }
+    },
+
+    incrementTemplateUsage: (state, action: PayloadAction<string>) => {
+      const updated = ndaTemplateService.incrementUsage(action.payload);
+      if (updated) {
+        const index = state.templates.findIndex((t) => t.id === action.payload);
+        if (index !== -1) {
+          state.templates[index] = updated;
+        }
+      }
+    },
+
+    // Clear all NDA data
+    clearAllNDAs: (state) => {
+      ndaService.clear();
+      ndaTemplateService.clear();
+      ndaActivityService.clear();
+      state.ndas = [];
+      state.templates = [];
+      state.activities = [];
     },
   },
 });
 
 export const {
+  loadNDAs,
+  loadTemplates,
+  loadActivities,
   createNDA,
   updateNDAStatus,
   updateNDA,
@@ -418,6 +383,9 @@ export const {
   createTemplate,
   updateTemplate,
   deleteTemplate,
+  toggleTemplateActive,
+  incrementTemplateUsage,
+  clearAllNDAs,
 } = ndaSlice.actions;
 
 export default ndaSlice.reducer;

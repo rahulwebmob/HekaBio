@@ -13,8 +13,11 @@ import type {
   ContractDocument,
   ContractActivity,
   ContractTemplate,
-  ContractType,
+  ContractStatus,
 } from '../../types/contract.types';
+import { contractService } from '../../services/contract.service';
+import { contractTemplateService } from '../../services/contractTemplate.service';
+import { contractActivityService } from '../../services/contractActivity.service';
 
 interface ContractState {
   contracts: Contract[];
@@ -23,54 +26,43 @@ interface ContractState {
 }
 
 const initialState: ContractState = {
-  contracts: [],
-  templates: [],
-  activities: [],
+  contracts: contractService.getAll(),
+  templates: contractTemplateService.getAll(),
+  activities: contractActivityService.getAll(),
 };
 
 const contractSlice = createSlice({
   name: 'contract',
   initialState,
   reducers: {
+    // Load data
+    loadContracts: (state) => {
+      state.contracts = contractService.getAll();
+    },
+    loadTemplates: (state) => {
+      state.templates = contractTemplateService.getAll();
+    },
+    loadActivities: (state) => {
+      state.activities = contractActivityService.getAll();
+    },
+
     // Create contract
     createContract: (
       state,
-      action: PayloadAction<{
-        title: string;
-        type: ContractType;
-        projectId?: string;
-        projectName?: string;
-        companyId?: string;
-        companyName?: string;
-        description?: string;
-      }>
+      action: PayloadAction<Omit<Contract, 'id' | 'createdAt' | 'updatedAt'>>
     ) => {
-      const now = new Date().toISOString();
-      const newContract: Contract = {
-        id: `contract-${Date.now()}`,
-        ...action.payload,
-        status: 'DRAFT',
-        parties: [],
-        payments: [],
-        milestones: [],
-        documents: [],
-        requiresLegalReview: true,
-        requiresFinanceApproval: false,
-        createdAt: now,
-        createdBy: 'user-001',
-      };
-
+      const newContract = contractService.create(action.payload);
       state.contracts.push(newContract);
 
-      state.activities.push({
-        id: `activity-${Date.now()}`,
-        contractId: newContract.id,
-        type: 'CREATED',
-        description: `Contract created: ${action.payload.title}`,
-        actorId: 'user-001',
-        actorName: 'Current User',
-        occurredAt: now,
-      });
+      // Log activity
+      const activity = contractActivityService.logActivity(
+        newContract.id,
+        'CREATED',
+        `Contract created: ${newContract.title}`,
+        'Current User',
+        'user-001'
+      );
+      state.activities.unshift(activity);
     },
 
     // Update contract
@@ -78,34 +70,66 @@ const contractSlice = createSlice({
       state,
       action: PayloadAction<{
         contractId: string;
-        updates: Partial<
-          Omit<
-            Contract,
-            'id' | 'parties' | 'payments' | 'milestones' | 'documents' | 'createdAt' | 'createdBy'
-          >
-        >;
+        updates: Partial<Contract>;
       }>
     ) => {
       const contract = state.contracts.find((c) => c.id === action.payload.contractId);
-      if (contract) {
-        const oldStatus = contract.status;
-        Object.assign(contract, action.payload.updates);
-        contract.updatedAt = new Date().toISOString();
+      const oldStatus = contract?.status;
+
+      const updated = contractService.update(action.payload.contractId, action.payload.updates);
+      if (updated) {
+        const index = state.contracts.findIndex((c) => c.id === action.payload.contractId);
+        if (index !== -1) {
+          state.contracts[index] = updated;
+        }
 
         // Log status change
         if (action.payload.updates.status && oldStatus !== action.payload.updates.status) {
-          const now = new Date().toISOString();
-          state.activities.push({
-            id: `activity-${Date.now()}`,
-            contractId: contract.id,
-            type: 'STATUS_CHANGED',
-            description: `Status changed from ${oldStatus} to ${action.payload.updates.status}`,
-            actorId: 'user-001',
-            actorName: 'Current User',
-            occurredAt: now,
-            metadata: { oldStatus, newStatus: action.payload.updates.status },
-          });
+          const activity = contractActivityService.logActivity(
+            action.payload.contractId,
+            'STATUS_CHANGED',
+            `Status changed from ${oldStatus} to ${action.payload.updates.status}`,
+            'Current User',
+            'user-001',
+            { oldStatus, newStatus: action.payload.updates.status }
+          );
+          state.activities.unshift(activity);
         }
+      }
+    },
+
+    // Update contract status
+    updateContractStatus: (
+      state,
+      action: PayloadAction<{
+        contractId: string;
+        status: ContractStatus;
+      }>
+    ) => {
+      const contract = state.contracts.find((c) => c.id === action.payload.contractId);
+      const oldStatus = contract?.status;
+
+      const updated = contractService.update(action.payload.contractId, {
+        status: action.payload.status,
+        updatedAt: new Date().toISOString(),
+      });
+
+      if (updated) {
+        const index = state.contracts.findIndex((c) => c.id === action.payload.contractId);
+        if (index !== -1) {
+          state.contracts[index] = updated;
+        }
+
+        // Log activity
+        const activity = contractActivityService.logActivity(
+          action.payload.contractId,
+          'STATUS_CHANGED',
+          `Status changed from ${oldStatus} to ${action.payload.status}`,
+          'Current User',
+          'user-001',
+          { oldStatus, newStatus: action.payload.status }
+        );
+        state.activities.unshift(activity);
       }
     },
 
@@ -117,17 +141,12 @@ const contractSlice = createSlice({
         party: Omit<ContractParty, 'id' | 'contractId' | 'createdAt'>;
       }>
     ) => {
-      const contract = state.contracts.find((c) => c.id === action.payload.contractId);
-      if (contract) {
-        const newParty: ContractParty = {
-          ...action.payload.party,
-          id: `party-${Date.now()}-${Math.random()}`,
-          contractId: action.payload.contractId,
-          createdAt: new Date().toISOString(),
-        };
-
-        contract.parties.push(newParty);
-        contract.updatedAt = new Date().toISOString();
+      const updated = contractService.addParty(action.payload.contractId, action.payload.party);
+      if (updated) {
+        const index = state.contracts.findIndex((c) => c.id === action.payload.contractId);
+        if (index !== -1) {
+          state.contracts[index] = updated;
+        }
       }
     },
 
@@ -141,23 +160,29 @@ const contractSlice = createSlice({
       }>
     ) => {
       const contract = state.contracts.find((c) => c.id === action.payload.contractId);
-      if (contract) {
-        const party = contract.parties.find((p) => p.id === action.payload.partyId);
-        if (party) {
-          Object.assign(party, action.payload.updates);
-          contract.updatedAt = new Date().toISOString();
+      const party = contract?.parties.find((p) => p.id === action.payload.partyId);
 
-          // Log signature
-          if (action.payload.updates.signedDate && !party.signedDate) {
-            state.activities.push({
-              id: `activity-${Date.now()}`,
-              contractId: contract.id,
-              type: 'SIGNED',
-              description: `Signed by ${party.name}`,
-              actorName: party.contactName,
-              occurredAt: new Date().toISOString(),
-            });
-          }
+      const updated = contractService.updateParty(
+        action.payload.contractId,
+        action.payload.partyId,
+        action.payload.updates
+      );
+
+      if (updated) {
+        const index = state.contracts.findIndex((c) => c.id === action.payload.contractId);
+        if (index !== -1) {
+          state.contracts[index] = updated;
+        }
+
+        // Log signature
+        if (action.payload.updates.signedDate && party && !party.signedDate) {
+          const activity = contractActivityService.logActivity(
+            action.payload.contractId,
+            'SIGNED',
+            `Signed by ${party.name}`,
+            party.contactName
+          );
+          state.activities.unshift(activity);
         }
       }
     },
@@ -170,17 +195,12 @@ const contractSlice = createSlice({
         payment: Omit<ContractPayment, 'id' | 'contractId' | 'createdAt'>;
       }>
     ) => {
-      const contract = state.contracts.find((c) => c.id === action.payload.contractId);
-      if (contract) {
-        const newPayment: ContractPayment = {
-          ...action.payload.payment,
-          id: `payment-${Date.now()}-${Math.random()}`,
-          contractId: action.payload.contractId,
-          createdAt: new Date().toISOString(),
-        };
-
-        contract.payments.push(newPayment);
-        contract.updatedAt = new Date().toISOString();
+      const updated = contractService.addPayment(action.payload.contractId, action.payload.payment);
+      if (updated) {
+        const index = state.contracts.findIndex((c) => c.id === action.payload.contractId);
+        if (index !== -1) {
+          state.contracts[index] = updated;
+        }
       }
     },
 
@@ -194,26 +214,31 @@ const contractSlice = createSlice({
       }>
     ) => {
       const contract = state.contracts.find((c) => c.id === action.payload.contractId);
-      if (contract) {
-        const payment = contract.payments.find((p) => p.id === action.payload.paymentId);
-        if (payment) {
-          const oldStatus = payment.status;
-          Object.assign(payment, action.payload.updates);
-          payment.updatedAt = new Date().toISOString();
-          contract.updatedAt = new Date().toISOString();
+      const payment = contract?.payments.find((p) => p.id === action.payload.paymentId);
+      const oldStatus = payment?.status;
 
-          // Log payment completion
-          if (action.payload.updates.status === 'PAID' && oldStatus !== 'PAID') {
-            state.activities.push({
-              id: `activity-${Date.now()}`,
-              contractId: contract.id,
-              type: 'PAYMENT_MADE',
-              description: `Payment received: ${payment.description} (${payment.amount} ${payment.currency})`,
-              actorId: 'user-001',
-              actorName: 'Current User',
-              occurredAt: new Date().toISOString(),
-            });
-          }
+      const updated = contractService.updatePayment(
+        action.payload.contractId,
+        action.payload.paymentId,
+        action.payload.updates
+      );
+
+      if (updated) {
+        const index = state.contracts.findIndex((c) => c.id === action.payload.contractId);
+        if (index !== -1) {
+          state.contracts[index] = updated;
+        }
+
+        // Log payment completion
+        if (action.payload.updates.status === 'PAID' && oldStatus !== 'PAID' && payment) {
+          const activity = contractActivityService.logActivity(
+            action.payload.contractId,
+            'PAYMENT_MADE',
+            `Payment received: ${payment.description} (${payment.amount} ${payment.currency})`,
+            'Current User',
+            'user-001'
+          );
+          state.activities.unshift(activity);
         }
       }
     },
@@ -226,17 +251,15 @@ const contractSlice = createSlice({
         milestone: Omit<ContractMilestone, 'id' | 'contractId' | 'createdAt'>;
       }>
     ) => {
-      const contract = state.contracts.find((c) => c.id === action.payload.contractId);
-      if (contract) {
-        const newMilestone: ContractMilestone = {
-          ...action.payload.milestone,
-          id: `milestone-${Date.now()}-${Math.random()}`,
-          contractId: action.payload.contractId,
-          createdAt: new Date().toISOString(),
-        };
-
-        contract.milestones.push(newMilestone);
-        contract.updatedAt = new Date().toISOString();
+      const updated = contractService.addMilestone(
+        action.payload.contractId,
+        action.payload.milestone
+      );
+      if (updated) {
+        const index = state.contracts.findIndex((c) => c.id === action.payload.contractId);
+        if (index !== -1) {
+          state.contracts[index] = updated;
+        }
       }
     },
 
@@ -250,26 +273,31 @@ const contractSlice = createSlice({
       }>
     ) => {
       const contract = state.contracts.find((c) => c.id === action.payload.contractId);
-      if (contract) {
-        const milestone = contract.milestones.find((m) => m.id === action.payload.milestoneId);
-        if (milestone) {
-          const oldStatus = milestone.status;
-          Object.assign(milestone, action.payload.updates);
-          milestone.updatedAt = new Date().toISOString();
-          contract.updatedAt = new Date().toISOString();
+      const milestone = contract?.milestones.find((m) => m.id === action.payload.milestoneId);
+      const oldStatus = milestone?.status;
 
-          // Log milestone completion
-          if (action.payload.updates.status === 'COMPLETED' && oldStatus !== 'COMPLETED') {
-            state.activities.push({
-              id: `activity-${Date.now()}`,
-              contractId: contract.id,
-              type: 'MILESTONE_COMPLETED',
-              description: `Milestone completed: ${milestone.title}`,
-              actorId: 'user-001',
-              actorName: 'Current User',
-              occurredAt: new Date().toISOString(),
-            });
-          }
+      const updated = contractService.updateMilestone(
+        action.payload.contractId,
+        action.payload.milestoneId,
+        action.payload.updates
+      );
+
+      if (updated) {
+        const index = state.contracts.findIndex((c) => c.id === action.payload.contractId);
+        if (index !== -1) {
+          state.contracts[index] = updated;
+        }
+
+        // Log milestone completion
+        if (action.payload.updates.status === 'COMPLETED' && oldStatus !== 'COMPLETED' && milestone) {
+          const activity = contractActivityService.logActivity(
+            action.payload.contractId,
+            'MILESTONE_COMPLETED',
+            `Milestone completed: ${milestone.title}`,
+            'Current User',
+            'user-001'
+          );
+          state.activities.unshift(activity);
         }
       }
     },
@@ -282,55 +310,52 @@ const contractSlice = createSlice({
         document: Omit<ContractDocument, 'id' | 'contractId' | 'uploadedAt' | 'uploadedBy'>;
       }>
     ) => {
-      const contract = state.contracts.find((c) => c.id === action.payload.contractId);
-      if (contract) {
-        const now = new Date().toISOString();
-        const newDocument: ContractDocument = {
-          ...action.payload.document,
-          id: `doc-${Date.now()}-${Math.random()}`,
-          contractId: action.payload.contractId,
-          uploadedAt: now,
-          uploadedBy: 'user-001',
-        };
+      const updated = contractService.addDocument(
+        action.payload.contractId,
+        action.payload.document
+      );
+      if (updated) {
+        const index = state.contracts.findIndex((c) => c.id === action.payload.contractId);
+        if (index !== -1) {
+          state.contracts[index] = updated;
+        }
 
-        contract.documents.push(newDocument);
-        contract.updatedAt = now;
-
-        state.activities.push({
-          id: `activity-${Date.now()}`,
-          contractId: contract.id,
-          type: 'DOCUMENT_UPLOADED',
-          description: `Document uploaded: ${newDocument.name}`,
-          actorId: 'user-001',
-          actorName: 'Current User',
-          occurredAt: now,
-        });
+        // Log activity
+        const activity = contractActivityService.logActivity(
+          action.payload.contractId,
+          'DOCUMENT_UPLOADED',
+          `Document uploaded: ${action.payload.document.name}`,
+          'Current User',
+          'user-001'
+        );
+        state.activities.unshift(activity);
       }
     },
 
     // Delete contract
     deleteContract: (state, action: PayloadAction<string>) => {
-      state.contracts = state.contracts.filter((c) => c.id !== action.payload);
-      state.activities = state.activities.filter((a) => a.contractId !== action.payload);
+      const success = contractService.delete(action.payload);
+      if (success) {
+        state.contracts = state.contracts.filter((c) => c.id !== action.payload);
+
+        // Also clean up activities for this contract
+        const contractActivities = state.activities.filter((a) => a.contractId === action.payload);
+        contractActivities.forEach((a) => contractActivityService.delete(a.id));
+        state.activities = state.activities.filter((a) => a.contractId !== action.payload);
+      }
     },
 
     // Template management
     createContractTemplate: (
       state,
-      action: PayloadAction<
-        Omit<ContractTemplate, 'id' | 'isActive' | 'usageCount' | 'createdAt' | 'createdBy'>
-      >
+      action: PayloadAction<Omit<ContractTemplate, 'id' | 'isActive' | 'usageCount' | 'createdAt' | 'updatedAt' | 'createdBy'>>
     ) => {
-      const now = new Date().toISOString();
-      const newTemplate: ContractTemplate = {
+      const newTemplate = contractTemplateService.create({
         ...action.payload,
-        id: `template-${Date.now()}`,
         isActive: true,
         usageCount: 0,
-        createdAt: now,
         createdBy: 'user-001',
-      };
-
+      });
       state.templates.push(newTemplate);
     },
 
@@ -338,25 +363,67 @@ const contractSlice = createSlice({
       state,
       action: PayloadAction<{
         templateId: string;
-        updates: Partial<Omit<ContractTemplate, 'id' | 'createdAt' | 'createdBy'>>;
+        updates: Partial<ContractTemplate>;
       }>
     ) => {
-      const template = state.templates.find((t) => t.id === action.payload.templateId);
-      if (template) {
-        Object.assign(template, action.payload.updates);
-        template.updatedAt = new Date().toISOString();
+      const updated = contractTemplateService.update(
+        action.payload.templateId,
+        action.payload.updates
+      );
+      if (updated) {
+        const index = state.templates.findIndex((t) => t.id === action.payload.templateId);
+        if (index !== -1) {
+          state.templates[index] = updated;
+        }
       }
     },
 
     deleteContractTemplate: (state, action: PayloadAction<string>) => {
-      state.templates = state.templates.filter((t) => t.id !== action.payload);
+      const success = contractTemplateService.delete(action.payload);
+      if (success) {
+        state.templates = state.templates.filter((t) => t.id !== action.payload);
+      }
+    },
+
+    toggleTemplateActive: (state, action: PayloadAction<string>) => {
+      const updated = contractTemplateService.toggleActive(action.payload);
+      if (updated) {
+        const index = state.templates.findIndex((t) => t.id === action.payload);
+        if (index !== -1) {
+          state.templates[index] = updated;
+        }
+      }
+    },
+
+    incrementTemplateUsage: (state, action: PayloadAction<string>) => {
+      const updated = contractTemplateService.incrementUsage(action.payload);
+      if (updated) {
+        const index = state.templates.findIndex((t) => t.id === action.payload);
+        if (index !== -1) {
+          state.templates[index] = updated;
+        }
+      }
+    },
+
+    // Clear all contract data
+    clearAllContracts: (state) => {
+      contractService.clear();
+      contractTemplateService.clear();
+      contractActivityService.clear();
+      state.contracts = [];
+      state.templates = [];
+      state.activities = [];
     },
   },
 });
 
 export const {
+  loadContracts,
+  loadTemplates,
+  loadActivities,
   createContract,
   updateContract,
+  updateContractStatus,
   addContractParty,
   updateContractParty,
   addContractPayment,
@@ -368,6 +435,9 @@ export const {
   createContractTemplate,
   updateContractTemplate,
   deleteContractTemplate,
+  toggleTemplateActive,
+  incrementTemplateUsage,
+  clearAllContracts,
 } = contractSlice.actions;
 
 export default contractSlice.reducer;

@@ -14,8 +14,9 @@ import type {
   DDTemplate,
   DDSectionType,
 } from '../../types/dd.types';
-import { calculateDDCompletion } from '../../types/dd.types';
-import { DD_TEMPLATES } from '../../data/mockDDTemplates';
+import { ddWorkspaceService } from '../../services/ddWorkspace.service';
+import { ddTemplateService } from '../../services/ddTemplate.service';
+import { ddActivityService } from '../../services/ddActivity.service';
 
 interface DDState {
   workspaces: DDWorkspace[];
@@ -24,53 +25,43 @@ interface DDState {
 }
 
 const initialState: DDState = {
-  workspaces: [],
-  templates: DD_TEMPLATES,
-  activities: [],
+  workspaces: ddWorkspaceService.getAll(),
+  templates: ddTemplateService.getAll(),
+  activities: ddActivityService.getAll(),
 };
 
 const ddSlice = createSlice({
   name: 'dd',
   initialState,
   reducers: {
+    // Load data
+    loadWorkspaces: (state) => {
+      state.workspaces = ddWorkspaceService.getAll();
+    },
+    loadTemplates: (state) => {
+      state.templates = ddTemplateService.getAll();
+    },
+    loadActivities: (state) => {
+      state.activities = ddActivityService.getAll();
+    },
+
     // Create DD workspace
     createDDWorkspace: (
       state,
-      action: PayloadAction<{
-        projectId: string;
-        projectName: string;
-        companyId: string;
-        companyName: string;
-        title: string;
-        description?: string;
-      }>
+      action: PayloadAction<Omit<DDWorkspace, 'id' | 'createdAt' | 'updatedAt'>>
     ) => {
-      const now = new Date().toISOString();
-      const newWorkspace: DDWorkspace = {
-        id: `dd-${Date.now()}`,
-        ...action.payload,
-        status: 'NOT_STARTED',
-        sections: [],
-        overallCompletionPercentage: 0,
-        totalItems: 0,
-        completedItems: 0,
-        blockedItems: 0,
-        approvalRequired: true,
-        createdAt: now,
-        createdBy: 'user-001',
-      };
-
+      const newWorkspace = ddWorkspaceService.create(action.payload);
       state.workspaces.push(newWorkspace);
 
-      state.activities.push({
-        id: `activity-${Date.now()}`,
-        ddWorkspaceId: newWorkspace.id,
-        type: 'CREATED',
-        description: `DD Workspace created: ${action.payload.title}`,
-        actorId: 'user-001',
-        actorName: 'Current User',
-        occurredAt: now,
-      });
+      // Log activity
+      const activity = ddActivityService.logActivity(
+        newWorkspace.id,
+        'CREATED',
+        `DD Workspace created: ${newWorkspace.title}`,
+        'user-001',
+        'Current User'
+      );
+      state.activities.unshift(activity);
     },
 
     // Update DD workspace
@@ -78,13 +69,15 @@ const ddSlice = createSlice({
       state,
       action: PayloadAction<{
         workspaceId: string;
-        updates: Partial<Omit<DDWorkspace, 'id' | 'sections' | 'createdAt' | 'createdBy'>>;
+        updates: Partial<DDWorkspace>;
       }>
     ) => {
-      const workspace = state.workspaces.find((w) => w.id === action.payload.workspaceId);
-      if (workspace) {
-        Object.assign(workspace, action.payload.updates);
-        workspace.updatedAt = new Date().toISOString();
+      const updated = ddWorkspaceService.update(action.payload.workspaceId, action.payload.updates);
+      if (updated) {
+        const index = state.workspaces.findIndex((w) => w.id === action.payload.workspaceId);
+        if (index !== -1) {
+          state.workspaces[index] = updated;
+        }
       }
     },
 
@@ -98,27 +91,16 @@ const ddSlice = createSlice({
         description?: string;
       }>
     ) => {
-      const workspace = state.workspaces.find((w) => w.id === action.payload.workspaceId);
-      if (workspace) {
-        const now = new Date().toISOString();
-        const newSection: DDSection = {
-          id: `section-${Date.now()}-${Math.random()}`,
-          ddWorkspaceId: action.payload.workspaceId,
-          name: action.payload.name,
-          type: action.payload.type,
-          description: action.payload.description,
-          items: [],
-          completionPercentage: 0,
-          totalItems: 0,
-          completedItems: 0,
-          blockedItems: 0,
-          order: workspace.sections.length,
-          createdAt: now,
-          createdBy: 'user-001',
-        };
-
-        workspace.sections.push(newSection);
-        workspace.updatedAt = now;
+      const updated = ddWorkspaceService.addSection(action.payload.workspaceId, {
+        name: action.payload.name,
+        type: action.payload.type,
+        description: action.payload.description,
+      });
+      if (updated) {
+        const index = state.workspaces.findIndex((w) => w.id === action.payload.workspaceId);
+        if (index !== -1) {
+          state.workspaces[index] = updated;
+        }
       }
     },
 
@@ -128,16 +110,38 @@ const ddSlice = createSlice({
       action: PayloadAction<{
         workspaceId: string;
         sectionId: string;
-        updates: Partial<Omit<DDSection, 'id' | 'items' | 'createdAt' | 'createdBy'>>;
+        updates: Partial<DDSection>;
       }>
     ) => {
-      const workspace = state.workspaces.find((w) => w.id === action.payload.workspaceId);
-      if (workspace) {
-        const section = workspace.sections.find((s) => s.id === action.payload.sectionId);
-        if (section) {
-          Object.assign(section, action.payload.updates);
-          section.updatedAt = new Date().toISOString();
-          workspace.updatedAt = new Date().toISOString();
+      const updated = ddWorkspaceService.updateSection(
+        action.payload.workspaceId,
+        action.payload.sectionId,
+        action.payload.updates
+      );
+      if (updated) {
+        const index = state.workspaces.findIndex((w) => w.id === action.payload.workspaceId);
+        if (index !== -1) {
+          state.workspaces[index] = updated;
+        }
+      }
+    },
+
+    // Delete DD section
+    deleteDDSection: (
+      state,
+      action: PayloadAction<{
+        workspaceId: string;
+        sectionId: string;
+      }>
+    ) => {
+      const updated = ddWorkspaceService.deleteSection(
+        action.payload.workspaceId,
+        action.payload.sectionId
+      );
+      if (updated) {
+        const index = state.workspaces.findIndex((w) => w.id === action.payload.workspaceId);
+        if (index !== -1) {
+          state.workspaces[index] = updated;
         }
       }
     },
@@ -148,39 +152,18 @@ const ddSlice = createSlice({
       action: PayloadAction<{
         workspaceId: string;
         sectionId: string;
-        item: Omit<DDItem, 'id' | 'ddSectionId' | 'documents' | 'createdAt' | 'createdBy'>;
+        item: Omit<DDItem, 'id' | 'ddSectionId' | 'documents' | 'createdAt' | 'createdBy' | 'updatedAt'>;
       }>
     ) => {
-      const workspace = state.workspaces.find((w) => w.id === action.payload.workspaceId);
-      if (workspace) {
-        const section = workspace.sections.find((s) => s.id === action.payload.sectionId);
-        if (section) {
-          const now = new Date().toISOString();
-          const newItem: DDItem = {
-            ...action.payload.item,
-            id: `item-${Date.now()}-${Math.random()}`,
-            ddSectionId: action.payload.sectionId,
-            documents: [],
-            order: section.items.length,
-            createdAt: now,
-            createdBy: 'user-001',
-          };
-
-          section.items.push(newItem);
-          section.totalItems = section.items.length;
-          section.completionPercentage = calculateDDCompletion(section.items);
-          section.updatedAt = now;
-          workspace.updatedAt = now;
-
-          // Recalculate workspace totals
-          workspace.totalItems = workspace.sections.reduce((sum, s) => sum + s.totalItems, 0);
-          workspace.completedItems = workspace.sections.reduce(
-            (sum, s) => sum + s.completedItems,
-            0
-          );
-          workspace.overallCompletionPercentage = calculateDDCompletion(
-            workspace.sections.flatMap((s) => s.items)
-          );
+      const updated = ddWorkspaceService.addItem(
+        action.payload.workspaceId,
+        action.payload.sectionId,
+        action.payload.item
+      );
+      if (updated) {
+        const index = state.workspaces.findIndex((w) => w.id === action.payload.workspaceId);
+        if (index !== -1) {
+          state.workspaces[index] = updated;
         }
       }
     },
@@ -192,65 +175,64 @@ const ddSlice = createSlice({
         workspaceId: string;
         sectionId: string;
         itemId: string;
-        updates: Partial<Omit<DDItem, 'id' | 'ddSectionId' | 'createdAt' | 'createdBy'>>;
+        updates: Partial<DDItem>;
       }>
     ) => {
       const workspace = state.workspaces.find((w) => w.id === action.payload.workspaceId);
-      if (workspace) {
-        const section = workspace.sections.find((s) => s.id === action.payload.sectionId);
-        if (section) {
-          const item = section.items.find((i) => i.id === action.payload.itemId);
-          if (item) {
-            const now = new Date().toISOString();
-            const oldStatus = item.status;
+      const section = workspace?.sections.find((s) => s.id === action.payload.sectionId);
+      const item = section?.items.find((i) => i.id === action.payload.itemId);
+      const oldStatus = item?.status;
 
-            Object.assign(item, action.payload.updates);
-            item.updatedAt = now;
+      const updated = ddWorkspaceService.updateItem(
+        action.payload.workspaceId,
+        action.payload.sectionId,
+        action.payload.itemId,
+        action.payload.updates
+      );
+      if (updated) {
+        const index = state.workspaces.findIndex((w) => w.id === action.payload.workspaceId);
+        if (index !== -1) {
+          state.workspaces[index] = updated;
+        }
 
-            // Handle completion
-            if (action.payload.updates.status === 'COMPLETED' && !item.completedAt) {
-              item.completedAt = now;
-              item.completedBy = 'user-001';
-            }
+        // Log activity if status changed
+        if (action.payload.updates.status && oldStatus !== action.payload.updates.status) {
+          const activity = ddActivityService.logActivity(
+            action.payload.workspaceId,
+            'STATUS_CHANGED',
+            `Item status changed: ${item?.question}`,
+            'user-001',
+            'Current User',
+            {
+              oldStatus,
+              newStatus: action.payload.updates.status,
+            },
+            action.payload.sectionId,
+            action.payload.itemId
+          );
+          state.activities.unshift(activity);
+        }
+      }
+    },
 
-            // Recalculate section stats
-            section.completedItems = section.items.filter(
-              (i) => i.status === 'COMPLETED' || i.status === 'NOT_APPLICABLE'
-            ).length;
-            section.blockedItems = section.items.filter((i) => i.status === 'BLOCKED').length;
-            section.completionPercentage = calculateDDCompletion(section.items);
-            section.updatedAt = now;
-
-            // Recalculate workspace totals
-            workspace.completedItems = workspace.sections.reduce(
-              (sum, s) => sum + s.completedItems,
-              0
-            );
-            workspace.blockedItems = workspace.sections.reduce((sum, s) => sum + s.blockedItems, 0);
-            workspace.overallCompletionPercentage = calculateDDCompletion(
-              workspace.sections.flatMap((s) => s.items)
-            );
-            workspace.updatedAt = now;
-
-            // Log activity if status changed
-            if (action.payload.updates.status && oldStatus !== action.payload.updates.status) {
-              state.activities.push({
-                id: `activity-${Date.now()}`,
-                ddWorkspaceId: workspace.id,
-                ddSectionId: section.id,
-                ddItemId: item.id,
-                type: 'STATUS_CHANGED',
-                description: `Item status changed: ${item.question}`,
-                actorId: 'user-001',
-                actorName: 'Current User',
-                occurredAt: now,
-                metadata: {
-                  oldStatus,
-                  newStatus: action.payload.updates.status,
-                },
-              });
-            }
-          }
+    // Delete DD item
+    deleteDDItem: (
+      state,
+      action: PayloadAction<{
+        workspaceId: string;
+        sectionId: string;
+        itemId: string;
+      }>
+    ) => {
+      const updated = ddWorkspaceService.deleteItem(
+        action.payload.workspaceId,
+        action.payload.sectionId,
+        action.payload.itemId
+      );
+      if (updated) {
+        const index = state.workspaces.findIndex((w) => w.id === action.payload.workspaceId);
+        if (index !== -1) {
+          state.workspaces[index] = updated;
         }
       }
     },
@@ -265,98 +247,70 @@ const ddSlice = createSlice({
         document: Omit<DDDocument, 'id' | 'ddItemId' | 'uploadedAt' | 'uploadedBy'>;
       }>
     ) => {
-      const workspace = state.workspaces.find((w) => w.id === action.payload.workspaceId);
-      if (workspace) {
-        const section = workspace.sections.find((s) => s.id === action.payload.sectionId);
-        if (section) {
-          const item = section.items.find((i) => i.id === action.payload.itemId);
-          if (item) {
-            const now = new Date().toISOString();
-            const newDocument: DDDocument = {
-              ...action.payload.document,
-              id: `doc-${Date.now()}-${Math.random()}`,
-              ddItemId: action.payload.itemId,
-              uploadedAt: now,
-              uploadedBy: 'user-001',
-            };
-
-            item.documents.push(newDocument);
-            item.updatedAt = now;
-            section.updatedAt = now;
-            workspace.updatedAt = now;
-
-            if (workspace.documentCount !== undefined) {
-              workspace.documentCount += 1;
-            }
-
-            state.activities.push({
-              id: `activity-${Date.now()}`,
-              ddWorkspaceId: workspace.id,
-              ddSectionId: section.id,
-              ddItemId: item.id,
-              type: 'DOCUMENT_UPLOADED',
-              description: `Document uploaded: ${newDocument.name}`,
-              actorId: 'user-001',
-              actorName: 'Current User',
-              occurredAt: now,
-            });
-          }
+      const updated = ddWorkspaceService.addDocument(
+        action.payload.workspaceId,
+        action.payload.sectionId,
+        action.payload.itemId,
+        action.payload.document
+      );
+      if (updated) {
+        const index = state.workspaces.findIndex((w) => w.id === action.payload.workspaceId);
+        if (index !== -1) {
+          state.workspaces[index] = updated;
         }
-      }
-    },
 
-    // Remove document from DD item
-    removeDDDocument: (
-      state,
-      action: PayloadAction<{
-        workspaceId: string;
-        sectionId: string;
-        itemId: string;
-        documentId: string;
-      }>
-    ) => {
-      const workspace = state.workspaces.find((w) => w.id === action.payload.workspaceId);
-      if (workspace) {
-        const section = workspace.sections.find((s) => s.id === action.payload.sectionId);
-        if (section) {
-          const item = section.items.find((i) => i.id === action.payload.itemId);
-          if (item) {
-            item.documents = item.documents.filter((d) => d.id !== action.payload.documentId);
-            item.updatedAt = new Date().toISOString();
-            section.updatedAt = new Date().toISOString();
-            workspace.updatedAt = new Date().toISOString();
-
-            if (workspace.documentCount !== undefined && workspace.documentCount > 0) {
-              workspace.documentCount -= 1;
-            }
-          }
-        }
+        // Log activity
+        const activity = ddActivityService.logActivity(
+          action.payload.workspaceId,
+          'DOCUMENT_UPLOADED',
+          `Document uploaded: ${action.payload.document.name}`,
+          'user-001',
+          'Current User',
+          undefined,
+          action.payload.sectionId,
+          action.payload.itemId
+        );
+        state.activities.unshift(activity);
       }
     },
 
     // Delete DD workspace
     deleteDDWorkspace: (state, action: PayloadAction<string>) => {
-      state.workspaces = state.workspaces.filter((w) => w.id !== action.payload);
-      state.activities = state.activities.filter((a) => a.ddWorkspaceId !== action.payload);
+      const success = ddWorkspaceService.delete(action.payload);
+      if (success) {
+        state.workspaces = state.workspaces.filter((w) => w.id !== action.payload);
+        // Also clean up activities for this workspace
+        const workspaceActivities = state.activities.filter((a) => a.ddWorkspaceId === action.payload);
+        workspaceActivities.forEach((a) => ddActivityService.delete(a.id));
+        state.activities = state.activities.filter((a) => a.ddWorkspaceId !== action.payload);
+      }
+    },
+
+    // Approve workspace
+    approveDDWorkspace: (
+      state,
+      action: PayloadAction<{ workspaceId: string; approvedBy: string }>
+    ) => {
+      const updated = ddWorkspaceService.approve(action.payload.workspaceId, action.payload.approvedBy);
+      if (updated) {
+        const index = state.workspaces.findIndex((w) => w.id === action.payload.workspaceId);
+        if (index !== -1) {
+          state.workspaces[index] = updated;
+        }
+      }
     },
 
     // Template management
     createDDTemplate: (
       state,
-      action: PayloadAction<
-        Omit<DDTemplate, 'id' | 'isActive' | 'usageCount' | 'createdAt' | 'createdBy'>
-      >
+      action: PayloadAction<Omit<DDTemplate, 'id' | 'isActive' | 'usageCount' | 'createdAt' | 'updatedAt' | 'createdBy'>>
     ) => {
-      const now = new Date().toISOString();
-      const newTemplate: DDTemplate = {
+      const newTemplate = ddTemplateService.create({
         ...action.payload,
-        id: `template-${Date.now()}`,
         isActive: true,
         usageCount: 0,
-        createdAt: now,
         createdBy: 'user-001',
-      };
-
+      });
       state.templates.push(newTemplate);
     },
 
@@ -364,35 +318,78 @@ const ddSlice = createSlice({
       state,
       action: PayloadAction<{
         templateId: string;
-        updates: Partial<Omit<DDTemplate, 'id' | 'createdAt' | 'createdBy'>>;
+        updates: Partial<DDTemplate>;
       }>
     ) => {
-      const template = state.templates.find((t) => t.id === action.payload.templateId);
-      if (template) {
-        Object.assign(template, action.payload.updates);
-        template.updatedAt = new Date().toISOString();
+      const updated = ddTemplateService.update(action.payload.templateId, action.payload.updates);
+      if (updated) {
+        const index = state.templates.findIndex((t) => t.id === action.payload.templateId);
+        if (index !== -1) {
+          state.templates[index] = updated;
+        }
       }
     },
 
     deleteDDTemplate: (state, action: PayloadAction<string>) => {
-      state.templates = state.templates.filter((t) => t.id !== action.payload);
+      const success = ddTemplateService.delete(action.payload);
+      if (success) {
+        state.templates = state.templates.filter((t) => t.id !== action.payload);
+      }
+    },
+
+    toggleDDTemplateActive: (state, action: PayloadAction<string>) => {
+      const updated = ddTemplateService.toggleActive(action.payload);
+      if (updated) {
+        const index = state.templates.findIndex((t) => t.id === action.payload);
+        if (index !== -1) {
+          state.templates[index] = updated;
+        }
+      }
+    },
+
+    incrementTemplateUsage: (state, action: PayloadAction<string>) => {
+      const updated = ddTemplateService.incrementUsage(action.payload);
+      if (updated) {
+        const index = state.templates.findIndex((t) => t.id === action.payload);
+        if (index !== -1) {
+          state.templates[index] = updated;
+        }
+      }
+    },
+
+    // Clear all
+    clearAllDD: (state) => {
+      ddWorkspaceService.clear();
+      ddTemplateService.clear();
+      ddActivityService.clear();
+      state.workspaces = [];
+      state.templates = [];
+      state.activities = [];
     },
   },
 });
 
 export const {
+  loadWorkspaces,
+  loadTemplates,
+  loadActivities,
   createDDWorkspace,
   updateDDWorkspace,
   addDDSection,
   updateDDSection,
+  deleteDDSection,
   addDDItem,
   updateDDItem,
+  deleteDDItem,
   addDDDocument,
-  removeDDDocument,
   deleteDDWorkspace,
+  approveDDWorkspace,
   createDDTemplate,
   updateDDTemplate,
   deleteDDTemplate,
+  toggleDDTemplateActive,
+  incrementTemplateUsage,
+  clearAllDD,
 } = ddSlice.actions;
 
 export default ddSlice.reducer;

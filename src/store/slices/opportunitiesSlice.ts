@@ -15,7 +15,7 @@ import type {
 } from '../../types/opportunity.types';
 import type { Company } from '../../types/addressBook.types';
 import type { ProjectTag } from '../../types/project.types';
-import { mockOpportunities } from '../../data/mockOpportunities';
+import { opportunityService } from '../../services/opportunity.service';
 
 interface OpportunitiesState {
   opportunities: Opportunity[];
@@ -25,7 +25,7 @@ interface OpportunitiesState {
 }
 
 const initialState: OpportunitiesState = {
-  opportunities: mockOpportunities,
+  opportunities: opportunityService.getAll(),
   selectedOpportunityId: null,
   isLoading: false,
   error: null,
@@ -35,32 +35,21 @@ const opportunitiesSlice = createSlice({
   name: 'opportunities',
   initialState,
   reducers: {
+    // Load opportunities
+    loadOpportunities: (state) => {
+      state.opportunities = opportunityService.getAll();
+    },
+
     // Create new opportunity
     createOpportunity: (
       state,
-      action: PayloadAction<{
-        name: string;
-        company: Company;
-        description?: string;
-        tags: ProjectTag[];
-        source: OpportunitySource;
-        sourceDetails?: string;
-        priority?: OpportunityPriority;
-        primaryContactName?: string;
-        primaryContactEmail?: string;
-      }>
+      action: PayloadAction<Omit<Opportunity, 'id' | 'createdAt' | 'updatedAt'>>
     ) => {
-      const now = new Date().toISOString();
-      const newOpportunity: Opportunity = {
-        id: `opp-${Date.now()}`,
+      const newOpportunity = opportunityService.create({
         ...action.payload,
         status: 'NEW',
         priority: action.payload.priority || 'MEDIUM',
-        createdAt: now,
-        updatedAt: now,
-        createdBy: 'user-001',
-        createdByName: 'Current User',
-      };
+      });
       state.opportunities.unshift(newOpportunity);
     },
 
@@ -69,21 +58,26 @@ const opportunitiesSlice = createSlice({
       state,
       action: PayloadAction<{
         opportunityId: string;
-        updates: Partial<Omit<Opportunity, 'id' | 'createdAt' | 'createdBy'>>;
+        updates: Partial<Opportunity>;
       }>
     ) => {
-      const opportunity = state.opportunities.find((o) => o.id === action.payload.opportunityId);
-      if (opportunity) {
-        Object.assign(opportunity, action.payload.updates);
-        opportunity.updatedAt = new Date().toISOString();
+      const updated = opportunityService.update(action.payload.opportunityId, action.payload.updates);
+      if (updated) {
+        const index = state.opportunities.findIndex((o) => o.id === action.payload.opportunityId);
+        if (index !== -1) {
+          state.opportunities[index] = updated;
+        }
       }
     },
 
     // Delete opportunity
     deleteOpportunity: (state, action: PayloadAction<string>) => {
-      state.opportunities = state.opportunities.filter((o) => o.id !== action.payload);
-      if (state.selectedOpportunityId === action.payload) {
-        state.selectedOpportunityId = null;
+      const success = opportunityService.delete(action.payload);
+      if (success) {
+        state.opportunities = state.opportunities.filter((o) => o.id !== action.payload);
+        if (state.selectedOpportunityId === action.payload) {
+          state.selectedOpportunityId = null;
+        }
       }
     },
 
@@ -92,10 +86,15 @@ const opportunitiesSlice = createSlice({
       state,
       action: PayloadAction<{ opportunityId: string; status: OpportunityStatus }>
     ) => {
-      const opportunity = state.opportunities.find((o) => o.id === action.payload.opportunityId);
-      if (opportunity) {
-        opportunity.status = action.payload.status;
-        opportunity.updatedAt = new Date().toISOString();
+      const updated = opportunityService.updateStatus(
+        action.payload.opportunityId,
+        action.payload.status
+      );
+      if (updated) {
+        const index = state.opportunities.findIndex((o) => o.id === action.payload.opportunityId);
+        if (index !== -1) {
+          state.opportunities[index] = updated;
+        }
       }
     },
 
@@ -104,29 +103,22 @@ const opportunitiesSlice = createSlice({
       state,
       action: PayloadAction<{
         opportunityId: string;
-        assessment: Omit<
-          QuickAssessment,
-          'id' | 'opportunityId' | 'assessedBy' | 'assessedByName' | 'assessedAt' | 'createdAt'
-        >;
+        assessment: QuickAssessment;
+        assessedBy: string;
+        assessedByName: string;
       }>
     ) => {
-      const opportunity = state.opportunities.find((o) => o.id === action.payload.opportunityId);
-      if (opportunity) {
-        const now = new Date().toISOString();
-        const quickAssessment: QuickAssessment = {
-          ...action.payload.assessment,
-          id: `assess-${Date.now()}`,
-          opportunityId: action.payload.opportunityId,
-          assessedBy: 'user-001',
-          assessedByName: 'Current User',
-          assessedAt: now,
-          createdAt: now,
-        };
-
-        opportunity.quickAssessment = quickAssessment;
-        opportunity.assessmentCompletedAt = now;
-        opportunity.status = 'AWAITING_DECISION';
-        opportunity.updatedAt = now;
+      const updated = opportunityService.submitAssessment(
+        action.payload.opportunityId,
+        action.payload.assessment,
+        action.payload.assessedBy,
+        action.payload.assessedByName
+      );
+      if (updated) {
+        const index = state.opportunities.findIndex((o) => o.id === action.payload.opportunityId);
+        if (index !== -1) {
+          state.opportunities[index] = updated;
+        }
       }
     },
 
@@ -135,14 +127,18 @@ const opportunitiesSlice = createSlice({
       state,
       action: PayloadAction<{
         opportunityId: string;
-        updates: Partial<Omit<QuickAssessment, 'id' | 'opportunityId' | 'createdAt'>>;
+        updates: Partial<QuickAssessment>;
       }>
     ) => {
-      const opportunity = state.opportunities.find((o) => o.id === action.payload.opportunityId);
-      if (opportunity && opportunity.quickAssessment) {
-        Object.assign(opportunity.quickAssessment, action.payload.updates);
-        opportunity.quickAssessment.updatedAt = new Date().toISOString();
-        opportunity.updatedAt = new Date().toISOString();
+      const updated = opportunityService.updateAssessment(
+        action.payload.opportunityId,
+        action.payload.updates
+      );
+      if (updated) {
+        const index = state.opportunities.findIndex((o) => o.id === action.payload.opportunityId);
+        if (index !== -1) {
+          state.opportunities[index] = updated;
+        }
       }
     },
 
@@ -151,38 +147,21 @@ const opportunitiesSlice = createSlice({
       state,
       action: PayloadAction<{
         opportunityId: string;
-        decision: Omit<
-          GoNoGoDecision,
-          'id' | 'opportunityId' | 'decidedBy' | 'decidedByName' | 'decisionDate' | 'createdAt'
-        >;
+        decision: GoNoGoDecision;
+        decidedBy: string;
+        decidedByName: string;
       }>
     ) => {
-      const opportunity = state.opportunities.find((o) => o.id === action.payload.opportunityId);
-      if (opportunity) {
-        const now = new Date().toISOString();
-        const decision: GoNoGoDecision = {
-          ...action.payload.decision,
-          id: `decision-${Date.now()}`,
-          opportunityId: action.payload.opportunityId,
-          decidedBy: 'user-001',
-          decidedByName: 'Current User',
-          decisionDate: now,
-          createdAt: now,
-        };
-
-        opportunity.goNoGoDecision = decision;
-        opportunity.decisionMadeAt = now;
-        opportunity.updatedAt = now;
-
-        // Update status based on decision
-        if (decision.decision === 'GO') {
-          opportunity.status = 'APPROVED';
-        } else if (decision.decision === 'NO_GO') {
-          opportunity.status = 'DECLINED';
-        } else if (decision.decision === 'DEFER') {
-          opportunity.status = 'ON_HOLD';
-        } else if (decision.decision === 'REQUEST_MORE_INFO') {
-          opportunity.status = 'REVIEWING';
+      const updated = opportunityService.makeDecision(
+        action.payload.opportunityId,
+        action.payload.decision,
+        action.payload.decidedBy,
+        action.payload.decidedByName
+      );
+      if (updated) {
+        const index = state.opportunities.findIndex((o) => o.id === action.payload.opportunityId);
+        if (index !== -1) {
+          state.opportunities[index] = updated;
         }
       }
     },
@@ -195,13 +174,15 @@ const opportunitiesSlice = createSlice({
         projectId: string;
       }>
     ) => {
-      const opportunity = state.opportunities.find((o) => o.id === action.payload.opportunityId);
-      if (opportunity) {
-        const now = new Date().toISOString();
-        opportunity.convertedToProjectId = action.payload.projectId;
-        opportunity.convertedAt = now;
-        opportunity.status = 'CONVERTED';
-        opportunity.updatedAt = now;
+      const updated = opportunityService.convertToProject(
+        action.payload.opportunityId,
+        action.payload.projectId
+      );
+      if (updated) {
+        const index = state.opportunities.findIndex((o) => o.id === action.payload.opportunityId);
+        if (index !== -1) {
+          state.opportunities[index] = updated;
+        }
       }
     },
 
@@ -214,11 +195,16 @@ const opportunitiesSlice = createSlice({
         assignedToName: string;
       }>
     ) => {
-      const opportunity = state.opportunities.find((o) => o.id === action.payload.opportunityId);
-      if (opportunity) {
-        opportunity.assignedTo = action.payload.assignedTo;
-        opportunity.assignedToName = action.payload.assignedToName;
-        opportunity.updatedAt = new Date().toISOString();
+      const updated = opportunityService.assignTo(
+        action.payload.opportunityId,
+        action.payload.assignedTo,
+        action.payload.assignedToName
+      );
+      if (updated) {
+        const index = state.opportunities.findIndex((o) => o.id === action.payload.opportunityId);
+        if (index !== -1) {
+          state.opportunities[index] = updated;
+        }
       }
     },
 
@@ -235,23 +221,31 @@ const opportunitiesSlice = createSlice({
         status: OpportunityStatus;
       }>
     ) => {
-      const now = new Date().toISOString();
-      action.payload.opportunityIds.forEach((id) => {
-        const opportunity = state.opportunities.find((o) => o.id === id);
-        if (opportunity) {
-          opportunity.status = action.payload.status;
-          opportunity.updatedAt = now;
-        }
-      });
+      const count = opportunityService.bulkUpdateStatus(
+        action.payload.opportunityIds,
+        action.payload.status
+      );
+      if (count > 0) {
+        // Reload all opportunities to reflect changes
+        state.opportunities = opportunityService.getAll();
+      }
     },
 
     // Archive opportunity
     archiveOpportunity: (state, action: PayloadAction<string>) => {
-      const opportunity = state.opportunities.find((o) => o.id === action.payload);
-      if (opportunity) {
-        opportunity.status = 'ARCHIVED';
-        opportunity.updatedAt = new Date().toISOString();
+      const updated = opportunityService.archive(action.payload);
+      if (updated) {
+        const index = state.opportunities.findIndex((o) => o.id === action.payload);
+        if (index !== -1) {
+          state.opportunities[index] = updated;
+        }
       }
+    },
+
+    // Clear all opportunities
+    clearAllOpportunities: (state) => {
+      opportunityService.clear();
+      state.opportunities = [];
     },
 
     // Set loading
@@ -267,6 +261,7 @@ const opportunitiesSlice = createSlice({
 });
 
 export const {
+  loadOpportunities,
   createOpportunity,
   updateOpportunity,
   deleteOpportunity,
@@ -279,6 +274,7 @@ export const {
   setSelectedOpportunity,
   bulkUpdateStatus,
   archiveOpportunity,
+  clearAllOpportunities,
   setLoading,
   setError,
 } = opportunitiesSlice.actions;

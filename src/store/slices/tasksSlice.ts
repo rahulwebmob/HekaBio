@@ -5,56 +5,57 @@
 
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 import type { Task, TaskStatus, TaskPriority } from '../../types/task.types';
-import { mockTasks } from '../../data/mockTasks';
+import { taskService } from '../../services/task.service';
 
 interface TasksState {
   tasks: Task[];
 }
 
 const initialState: TasksState = {
-  tasks: mockTasks,
+  tasks: taskService.getAll(),
 };
 
 const tasksSlice = createSlice({
   name: 'tasks',
   initialState,
   reducers: {
-    addTask: (state, action: PayloadAction<Task>) => {
-      state.tasks.push(action.payload);
+    loadTasks: (state) => {
+      state.tasks = taskService.getAll();
     },
-    updateTask: (state, action: PayloadAction<Task>) => {
-      const index = state.tasks.findIndex((t) => t.id === action.payload.id);
-      if (index !== -1) {
-        state.tasks[index] = action.payload;
+    addTask: (state, action: PayloadAction<Omit<Task, 'id' | 'createdAt' | 'updatedAt'>>) => {
+      const newTask = taskService.create(action.payload);
+      state.tasks.push(newTask);
+    },
+    updateTask: (state, action: PayloadAction<{ id: string; updates: Partial<Task> }>) => {
+      const updated = taskService.update(action.payload.id, action.payload.updates);
+      if (updated) {
+        const index = state.tasks.findIndex((t) => t.id === action.payload.id);
+        if (index !== -1) {
+          state.tasks[index] = updated;
+        }
       }
     },
     deleteTask: (state, action: PayloadAction<string>) => {
-      state.tasks = state.tasks.filter((t) => t.id !== action.payload);
+      const success = taskService.delete(action.payload);
+      if (success) {
+        state.tasks = state.tasks.filter((t) => t.id !== action.payload);
+      }
     },
     updateTaskStatus: (state, action: PayloadAction<{ taskId: string; status: TaskStatus }>) => {
-      const task = state.tasks.find((t) => t.id === action.payload.taskId);
-      if (task) {
-        task.status = action.payload.status;
-        task.updatedAt = new Date().toISOString();
-
-        const now = new Date().toISOString();
-        if (action.payload.status === 'IN_PROGRESS' && !task.startedAt) {
-          task.startedAt = now;
-        } else if (action.payload.status === 'COMPLETED' && !task.completedAt) {
-          task.completedAt = now;
-          task.progress = 100;
+      const updated = taskService.updateStatus(action.payload.taskId, action.payload.status);
+      if (updated) {
+        const index = state.tasks.findIndex((t) => t.id === action.payload.taskId);
+        if (index !== -1) {
+          state.tasks[index] = updated;
         }
       }
     },
     updateTaskProgress: (state, action: PayloadAction<{ taskId: string; progress: number }>) => {
-      const task = state.tasks.find((t) => t.id === action.payload.taskId);
-      if (task) {
-        task.progress = action.payload.progress;
-        task.updatedAt = new Date().toISOString();
-
-        if (action.payload.progress === 100 && task.status !== 'COMPLETED') {
-          task.status = 'COMPLETED';
-          task.completedAt = new Date().toISOString();
+      const updated = taskService.updateProgress(action.payload.taskId, action.payload.progress);
+      if (updated) {
+        const index = state.tasks.findIndex((t) => t.id === action.payload.taskId);
+        if (index !== -1) {
+          state.tasks[index] = updated;
         }
       }
     },
@@ -62,10 +63,15 @@ const tasksSlice = createSlice({
       state,
       action: PayloadAction<{ taskId: string; priority: TaskPriority }>
     ) => {
-      const task = state.tasks.find((t) => t.id === action.payload.taskId);
-      if (task) {
-        task.priority = action.payload.priority;
-        task.updatedAt = new Date().toISOString();
+      const updated = taskService.update(action.payload.taskId, {
+        priority: action.payload.priority,
+        updatedAt: new Date().toISOString(),
+      });
+      if (updated) {
+        const index = state.tasks.findIndex((t) => t.id === action.payload.taskId);
+        if (index !== -1) {
+          state.tasks[index] = updated;
+        }
       }
     },
     toggleChecklistItem: (
@@ -77,14 +83,29 @@ const tasksSlice = createSlice({
         const item = task.checklist.find((c) => c.id === action.payload.checklistId);
         if (item) {
           item.completed = !item.completed;
-          task.updatedAt = new Date().toISOString();
+
+          const updated = taskService.update(action.payload.taskId, {
+            checklist: task.checklist,
+            updatedAt: new Date().toISOString(),
+          });
+          if (updated) {
+            const index = state.tasks.findIndex((t) => t.id === action.payload.taskId);
+            if (index !== -1) {
+              state.tasks[index] = updated;
+            }
+          }
         }
       }
+    },
+    clearAllTasks: (state) => {
+      taskService.clear();
+      state.tasks = [];
     },
   },
 });
 
 export const {
+  loadTasks,
   addTask,
   updateTask,
   deleteTask,
@@ -92,6 +113,7 @@ export const {
   updateTaskProgress,
   updateTaskPriority,
   toggleChecklistItem,
+  clearAllTasks,
 } = tasksSlice.actions;
 
 export default tasksSlice.reducer;
