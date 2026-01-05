@@ -13,8 +13,10 @@ import { Button, Card, Input, Select } from '../components/ui';
 import {
   CompanyRole,
   CompanyCategory,
+  Modality,
   CompanyRoleLabels,
   CompanyCategoryLabels,
+  ModalityLabels,
 } from '../types/addressBook.types';
 import type { Company, Address } from '../types/addressBook.types';
 
@@ -35,6 +37,7 @@ export default function CompanyFormPage() {
     nameLocal: '',
     role: '' as CompanyRole | '',
     category: '' as CompanyCategory | '',
+    modality: '' as Modality | '',
     website: '',
     phone: '',
     email: '',
@@ -48,6 +51,13 @@ export default function CompanyFormPage() {
     employeeCount: '',
     revenue: '',
     tags: '',
+    // Key Contacts
+    managementContactName: '',
+    managementContactEmail: '',
+    bdContactName: '',
+    bdContactEmail: '',
+    rdContactName: '',
+    rdContactEmail: '',
   });
 
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -60,6 +70,7 @@ export default function CompanyFormPage() {
         nameLocal: existingCompany.nameLocal || '',
         role: existingCompany.role,
         category: existingCompany.category,
+        modality: existingCompany.modality || ('' as const),
         website: existingCompany.website || '',
         phone: existingCompany.phone || '',
         email: existingCompany.email || '',
@@ -73,6 +84,13 @@ export default function CompanyFormPage() {
         employeeCount: existingCompany.employeeCount?.toString() || '',
         revenue: existingCompany.revenue || '',
         tags: existingCompany.tags.join(', '),
+        // Key Contacts
+        managementContactName: existingCompany.managementContact?.name || '',
+        managementContactEmail: existingCompany.managementContact?.email || '',
+        bdContactName: existingCompany.bdContact?.name || '',
+        bdContactEmail: existingCompany.bdContact?.email || '',
+        rdContactName: existingCompany.rdContact?.name || '',
+        rdContactEmail: existingCompany.rdContact?.email || '',
       };
 
       // Defer state update to avoid direct setState in effect
@@ -160,12 +178,38 @@ export default function CompanyFormPage() {
           .filter((tag) => tag.length > 0)
       : [];
 
+    // Build key contact objects
+    const managementContact =
+      formData.managementContactName.trim() && formData.managementContactEmail.trim()
+        ? {
+            name: formData.managementContactName.trim(),
+            email: formData.managementContactEmail.trim(),
+          }
+        : undefined;
+
+    const bdContact =
+      formData.bdContactName.trim() && formData.bdContactEmail.trim()
+        ? {
+            name: formData.bdContactName.trim(),
+            email: formData.bdContactEmail.trim(),
+          }
+        : undefined;
+
+    const rdContact =
+      formData.rdContactName.trim() && formData.rdContactEmail.trim()
+        ? {
+            name: formData.rdContactName.trim(),
+            email: formData.rdContactEmail.trim(),
+          }
+        : undefined;
+
     const companyData: Company = {
       id: isEdit ? existingCompany.id : `comp-${Date.now()}`,
       name: formData.name.trim(),
       nameLocal: formData.nameLocal.trim() || undefined,
       role: formData.role as CompanyRole,
       category: formData.category as CompanyCategory,
+      modality: formData.modality ? (formData.modality as Modality) : undefined,
       website: formData.website.trim() || undefined,
       phone: formData.phone.trim() || undefined,
       email: formData.email.trim() || undefined,
@@ -175,6 +219,10 @@ export default function CompanyFormPage() {
       employeeCount: formData.employeeCount ? parseInt(formData.employeeCount) : undefined,
       revenue: formData.revenue.trim() || undefined,
       tags,
+      // Key Contacts
+      managementContact,
+      bdContact,
+      rdContact,
       isActive: isEdit ? existingCompany.isActive : true,
       createdAt: isEdit ? existingCompany.createdAt : new Date().toISOString(),
       updatedAt: new Date().toISOString(),
@@ -199,6 +247,14 @@ export default function CompanyFormPage() {
     value: category,
     label: CompanyCategoryLabels[category],
   }));
+
+  const modalityOptions = [
+    { value: '', label: 'Select modality (optional)' },
+    ...Object.values(Modality).map((modality) => ({
+      value: modality,
+      label: ModalityLabels[modality],
+    })),
+  ];
 
   return (
     <AppLayout>
@@ -275,6 +331,15 @@ export default function CompanyFormPage() {
                   setFormData({ ...formData, category: e.target.value as CompanyCategory })
                 }
                 error={errors.category}
+                fullWidth
+              />
+
+              <Select
+                label="Modality"
+                placeholder="Select modality"
+                options={modalityOptions}
+                value={formData.modality}
+                onChange={(e) => setFormData({ ...formData, modality: e.target.value as Modality })}
                 fullWidth
               />
 
@@ -430,6 +495,87 @@ export default function CompanyFormPage() {
                   helperText="Separate multiple tags with commas"
                   fullWidth
                 />
+              </div>
+            </div>
+          </Card>
+
+          {/* Key Contacts */}
+          <Card
+            padding="lg"
+            shadow="sm"
+            header={<h2 className="text-xl font-semibold text-gray-900">Key Contacts</h2>}
+          >
+            <div className="space-y-6">
+              {/* Management Contact */}
+              <div>
+                <h3 className="text-sm font-medium text-gray-700 mb-3">Management Contact</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <Input
+                    label="Name"
+                    placeholder="e.g., John Smith"
+                    value={formData.managementContactName}
+                    onChange={(e) =>
+                      setFormData({ ...formData, managementContactName: e.target.value })
+                    }
+                    fullWidth
+                  />
+                  <Input
+                    label="Email"
+                    type="email"
+                    placeholder="e.g., john.smith@company.com"
+                    value={formData.managementContactEmail}
+                    onChange={(e) =>
+                      setFormData({ ...formData, managementContactEmail: e.target.value })
+                    }
+                    fullWidth
+                  />
+                </div>
+              </div>
+
+              {/* Business Development Contact */}
+              <div>
+                <h3 className="text-sm font-medium text-gray-700 mb-3">
+                  Business Development Contact
+                </h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <Input
+                    label="Name"
+                    placeholder="e.g., Jane Doe"
+                    value={formData.bdContactName}
+                    onChange={(e) => setFormData({ ...formData, bdContactName: e.target.value })}
+                    fullWidth
+                  />
+                  <Input
+                    label="Email"
+                    type="email"
+                    placeholder="e.g., jane.doe@company.com"
+                    value={formData.bdContactEmail}
+                    onChange={(e) => setFormData({ ...formData, bdContactEmail: e.target.value })}
+                    fullWidth
+                  />
+                </div>
+              </div>
+
+              {/* R&D Contact */}
+              <div>
+                <h3 className="text-sm font-medium text-gray-700 mb-3">R&D Contact</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <Input
+                    label="Name"
+                    placeholder="e.g., Dr. Robert Johnson"
+                    value={formData.rdContactName}
+                    onChange={(e) => setFormData({ ...formData, rdContactName: e.target.value })}
+                    fullWidth
+                  />
+                  <Input
+                    label="Email"
+                    type="email"
+                    placeholder="e.g., robert.johnson@company.com"
+                    value={formData.rdContactEmail}
+                    onChange={(e) => setFormData({ ...formData, rdContactEmail: e.target.value })}
+                    fullWidth
+                  />
+                </div>
               </div>
             </div>
           </Card>

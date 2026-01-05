@@ -3,16 +3,15 @@
  */
 
 import { lazy, type LazyExoticComponent, type ReactElement } from 'react';
+import { Navigate } from 'react-router-dom';
 import type { UserRole } from '../types/auth.types';
 
 // Lazy load pages for better performance
 const LandingPage = lazy(() => import('../pages/LandingPage'));
 const LoginPage = lazy(() => import('../features/auth/pages/LoginPage'));
 const DashboardPage = lazy(() => import('../pages/DashboardPage'));
-const CompaniesPage = lazy(() => import('../pages/CompaniesPage'));
 const CompanyDetailPage = lazy(() => import('../pages/CompanyDetailPage'));
 const CompanyFormPage = lazy(() => import('../pages/CompanyFormPage'));
-const ContactsPage = lazy(() => import('../pages/ContactsPage'));
 const ProjectsPage = lazy(() => import('../pages/ProjectsPage'));
 const ProjectDetailPage = lazy(() => import('../pages/ProjectDetailPage'));
 const OpportunitiesPage = lazy(() => import('../pages/OpportunitiesPage'));
@@ -21,9 +20,7 @@ const SurveyDetailPage = lazy(() => import('../pages/SurveyDetailPage'));
 const PublicSurveyPage = lazy(() => import('../pages/PublicSurveyPage'));
 const SurveyTemplatesPage = lazy(() => import('../pages/SurveyTemplatesPage'));
 const SurveyBuilderPage = lazy(() => import('../pages/SurveyBuilderPage'));
-const LeadScorePage = lazy(() => import('../pages/LeadScorePage'));
 const JapanScreeningPage = lazy(() => import('../pages/JapanScreeningPage'));
-const ScreeningsPage = lazy(() => import('../pages/ScreeningsPage'));
 const AutomationPage = lazy(() => import('../pages/AutomationPage'));
 const CommunicationsPage = lazy(() => import('../pages/CommunicationsPage'));
 const TasksPage = lazy(() => import('../pages/TasksPage'));
@@ -35,13 +32,17 @@ const DocumentsPage = lazy(() => import('../pages/DocumentsPage'));
 const ContractsPage = lazy(() => import('../pages/ContractsPage'));
 const NDAPage = lazy(() => import('../pages/NDAPage'));
 const DDWorkspacePage = lazy(() => import('../pages/DDWorkspacePage'));
+const AddressBookPage = lazy(() => import('../pages/AddressBookPage'));
 
 // 404 Page
 const NotFoundPage = lazy(() => import('../pages/NotFoundPage'));
 
+// Redirect component helper
+const RedirectComponent = ({ to }: { to: string }) => <Navigate to={to} replace />;
+
 export interface RouteConfig {
   path: string;
-  element: LazyExoticComponent<() => ReactElement>;
+  element: LazyExoticComponent<() => ReactElement> | (() => React.ReactElement);
   isPublic?: boolean;
   allowedRoles?: UserRole[];
   title?: string;
@@ -117,19 +118,12 @@ export const routes: RouteConfig[] = [
     title: 'Survey Detail - HekaBio',
   },
 
-  // Lead Scoring
+  // Lead Scoring (REDIRECT to Opportunities)
   {
     path: '/lead-scoring',
-    element: LeadScorePage,
+    element: () => RedirectComponent({ to: '/opportunities' }),
     isPublic: false,
-    allowedRoles: [
-      'super_admin',
-      'crm_owner',
-      'gate_1_analyst',
-      'gate_2_analyst',
-      'gate_3_decision_maker',
-    ],
-    title: 'Lead Scoring - HekaBio',
+    title: 'Redirect - HekaBio',
   },
 
   // Japan Market Screening
@@ -147,19 +141,12 @@ export const routes: RouteConfig[] = [
     title: 'Japan Market Screening - HekaBio',
   },
 
-  // General Screenings
+  // General Screenings (REDIRECT to Opportunities)
   {
     path: '/screenings',
-    element: ScreeningsPage,
+    element: () => RedirectComponent({ to: '/opportunities' }),
     isPublic: false,
-    allowedRoles: [
-      'super_admin',
-      'crm_owner',
-      'gate_1_analyst',
-      'gate_2_analyst',
-      'gate_3_decision_maker',
-    ],
-    title: 'Pre-Project Screenings - HekaBio',
+    title: 'Redirect - HekaBio',
   },
 
   // Automation
@@ -293,8 +280,8 @@ export const routes: RouteConfig[] = [
 
   // Phase 1: Address Book
   {
-    path: '/companies',
-    element: CompaniesPage,
+    path: '/address-book',
+    element: AddressBookPage,
     isPublic: false,
     allowedRoles: [
       'super_admin',
@@ -303,8 +290,10 @@ export const routes: RouteConfig[] = [
       'gate_2_analyst',
       'gate_3_decision_maker',
     ],
-    title: 'Companies - HekaBio',
+    title: 'Address Book - HekaBio',
   },
+
+  // Company routes (specific routes BEFORE redirect)
   {
     path: '/companies/new',
     element: CompanyFormPage,
@@ -344,18 +333,20 @@ export const routes: RouteConfig[] = [
     ],
     title: 'Company Detail - HekaBio',
   },
+  // OLD: Companies main route (REDIRECT to Address Book) - MUST be AFTER specific routes
+  {
+    path: '/companies',
+    element: () => RedirectComponent({ to: '/address-book?tab=companies' }),
+    isPublic: false,
+    title: 'Redirect - HekaBio',
+  },
+
+  // OLD: Contacts route (REDIRECT to Address Book)
   {
     path: '/contacts',
-    element: ContactsPage,
+    element: () => RedirectComponent({ to: '/address-book?tab=contacts' }),
     isPublic: false,
-    allowedRoles: [
-      'super_admin',
-      'crm_owner',
-      'gate_1_analyst',
-      'gate_2_analyst',
-      'gate_3_decision_maker',
-    ],
-    title: 'Contacts - HekaBio',
+    title: 'Redirect - HekaBio',
   },
 
   // Phase 1 Routes (will be added as we build)

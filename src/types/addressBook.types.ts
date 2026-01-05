@@ -5,6 +5,29 @@
 
 import type { ID, Timestamp, Email } from './common.types';
 
+// ===== Modality =====
+export const Modality = {
+  DRUG: 'DRUG',
+  DEVICE: 'DEVICE',
+  DIAGNOSTIC: 'DIAGNOSTIC',
+  DIGITAL_HEALTH: 'DIGITAL_HEALTH',
+} as const;
+
+export type Modality = (typeof Modality)[keyof typeof Modality];
+
+export const ModalityLabels: Record<Modality, string> = {
+  [Modality.DRUG]: 'Drug',
+  [Modality.DEVICE]: 'Device',
+  [Modality.DIAGNOSTIC]: 'Diagnostic',
+  [Modality.DIGITAL_HEALTH]: 'Digital Health',
+};
+
+// ===== Key Contact =====
+export interface KeyContact {
+  name: string;
+  email: Email;
+}
+
 // ===== Company Types =====
 export const CompanyRole = {
   HOSPITAL: 'HOSPITAL',
@@ -44,6 +67,7 @@ export interface Company {
   nameLocal?: string; // Local language name (e.g., Japanese name)
   role: CompanyRole;
   category: CompanyCategory;
+  modality?: Modality; // Product modality (Drug, Device, etc.)
   website?: string;
   phone?: string;
   email?: Email;
@@ -53,6 +77,12 @@ export interface Company {
   employeeCount?: number;
   revenue?: string; // e.g., "$10M-$50M"
   tags: string[]; // e.g., ["Medical Device", "Oncology"]
+
+  // Key Contacts
+  managementContact?: KeyContact; // Management Contact
+  bdContact?: KeyContact; // Business Development Contact
+  rdContact?: KeyContact; // R&D Contact
+
   isActive: boolean;
   createdAt: Timestamp;
   updatedAt: Timestamp;

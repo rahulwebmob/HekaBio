@@ -22,7 +22,7 @@ import { AppLayout } from '../components/layout';
 import { Card, Badge, Button, Input, Select } from '../components/ui';
 import { getDocumentCategoryColor, formatFileSize } from '../types/document.types';
 import type { DocumentCategory, DocumentStatus, Document } from '../types/document.types';
-import DocumentFormDrawer from '../components/features/documents/DocumentFormDrawer';
+// import DocumentFormDrawer from '../components/features/documents/DocumentFormDrawer'; // TODO: Create this component
 import DocumentDetailDrawer from '../components/features/documents/DocumentDetailDrawer';
 import { DocumentPreviewModal } from '../components/features/documents';
 
@@ -35,11 +35,9 @@ export default function DocumentsPage() {
   const [statusFilter, setStatusFilter] = useState<string>('');
 
   // Drawer states
-  const [isFormDrawerOpen, setIsFormDrawerOpen] = useState(false);
   const [isDetailDrawerOpen, setIsDetailDrawerOpen] = useState(false);
   const [isPreviewModalOpen, setIsPreviewModalOpen] = useState(false);
   const [selectedDocument, setSelectedDocument] = useState<Document | null>(null);
-  const [isEditMode, setIsEditMode] = useState(false);
 
   // Filter documents
   const filteredDocuments = useMemo(() => {
@@ -103,9 +101,8 @@ export default function DocumentsPage() {
 
   // Handler functions
   const handleOpenUpload = () => {
-    setSelectedDocument(null);
-    setIsEditMode(false);
-    setIsFormDrawerOpen(true);
+    // TODO: Implement when DocumentFormDrawer is created
+    console.log('Upload document - TODO: Create DocumentFormDrawer');
   };
 
   const handleViewDetails = (doc: Document) => {
@@ -115,20 +112,12 @@ export default function DocumentsPage() {
   };
 
   const handleEditDocument = (doc: Document) => {
-    setSelectedDocument(doc);
-    setIsEditMode(true);
-    setIsDetailDrawerOpen(false);
-    setIsFormDrawerOpen(true);
+    // TODO: Implement when DocumentFormDrawer is created
+    console.log('Edit document - TODO: Create DocumentFormDrawer', doc);
   };
 
   const handleDownload = (docId: string) => {
     dispatch(incrementDownloadCount(docId));
-  };
-
-  const handleCloseFormDrawer = () => {
-    setIsFormDrawerOpen(false);
-    setSelectedDocument(null);
-    setIsEditMode(false);
   };
 
   const handleCloseDetailDrawer = () => {
@@ -427,11 +416,13 @@ export default function DocumentsPage() {
       </div>
 
       {/* Drawers */}
+      {/* TODO: Create DocumentFormDrawer component
       <DocumentFormDrawer
         isOpen={isFormDrawerOpen}
         onClose={handleCloseFormDrawer}
         document={isEditMode ? selectedDocument : null}
       />
+      */}
 
       <DocumentDetailDrawer
         isOpen={isDetailDrawerOpen}

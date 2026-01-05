@@ -6,10 +6,9 @@
 import { Link, useLocation } from 'react-router-dom';
 import {
   IconFlask,
-  IconBuildingHospital,
+  IconAddressBook,
   IconFileText,
   IconTemplate,
-  IconTrendingUp,
   IconMail,
   IconChecklist,
   IconBell,
@@ -20,10 +19,9 @@ import {
   IconClipboardCheck,
   IconContract,
   IconBulb,
-  IconThermometer,
   IconBolt,
 } from '@tabler/icons-react';
-import { ChevronLeftIcon, GridIcon, UserIcon } from '../../icons';
+import { ChevronLeftIcon, GridIcon } from '../../icons';
 import { useSidebar } from '../../contexts/SidebarContext';
 import { useAuthorization } from '../../hooks/useAuthorization';
 import type { UserRole } from '../../types/auth.types';
@@ -54,30 +52,6 @@ const menuItems: MenuItem[] = [
     icon: <IconBulb size={20} stroke={1.5} />,
     path: '/opportunities',
     allowedRoles: ['super_admin', 'crm_owner', 'gate_1_analyst'],
-  },
-  {
-    label: 'Lead Scoring',
-    icon: <IconTrendingUp size={20} stroke={1.5} />,
-    path: '/lead-scoring',
-    allowedRoles: [
-      'super_admin',
-      'crm_owner',
-      'gate_1_analyst',
-      'gate_2_analyst',
-      'gate_3_decision_maker',
-    ],
-  },
-  {
-    label: 'Screenings',
-    icon: <IconThermometer size={20} stroke={1.5} />,
-    path: '/screenings',
-    allowedRoles: [
-      'super_admin',
-      'crm_owner',
-      'gate_1_analyst',
-      'gate_2_analyst',
-      'gate_3_decision_maker',
-    ],
   },
   {
     label: 'Pipeline',
@@ -146,6 +120,18 @@ const menuItems: MenuItem[] = [
     // All roles can view documents
   },
   {
+    label: 'Address Book',
+    icon: <IconAddressBook size={20} stroke={1.5} />,
+    path: '/address-book',
+    allowedRoles: [
+      'super_admin',
+      'crm_owner',
+      'gate_1_analyst',
+      'gate_2_analyst',
+      'gate_3_decision_maker',
+    ],
+  },
+  {
     label: 'Contracts',
     icon: <IconContract size={20} stroke={1.5} />,
     path: '/contracts',
@@ -168,30 +154,6 @@ const menuItems: MenuItem[] = [
       'dd_specialist_regulatory',
       'dd_specialist_commercial',
       'dd_specialist_financial',
-    ],
-  },
-  {
-    label: 'Companies',
-    icon: <IconBuildingHospital size={20} stroke={1.5} />,
-    path: '/companies',
-    allowedRoles: [
-      'super_admin',
-      'crm_owner',
-      'gate_1_analyst',
-      'gate_2_analyst',
-      'gate_3_decision_maker',
-    ],
-  },
-  {
-    label: 'Contacts',
-    icon: <UserIcon className="w-5 h-5" />,
-    path: '/contacts',
-    allowedRoles: [
-      'super_admin',
-      'crm_owner',
-      'gate_1_analyst',
-      'gate_2_analyst',
-      'gate_3_decision_maker',
     ],
   },
 ];

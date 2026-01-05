@@ -17,13 +17,12 @@ import {
   IconDownload,
   IconBookmark,
 } from '@tabler/icons-react';
-import { PlusIcon } from '../icons';
 import { useAppSelector, useAppDispatch } from '../app/store';
 import { bulkMoveToStage, loadSavedFiltersFromStorage } from '../store/slices/projectsSlice';
 import { AppLayout } from '../components/layout';
 import { Button, Card, Input, Select } from '../components/ui';
 import { ProjectCard } from '../components/common/ProjectCard';
-import { ProjectFormModal, BulkStageMovementModal } from '../components/features';
+import { BulkStageMovementModal } from '../components/features';
 import SavedFilters from '../components/features/projects/SavedFilters';
 import FilterPresets from '../components/features/projects/FilterPresets';
 import { exportProjectsToCSV } from '../utils/csvUtils';
@@ -36,7 +35,6 @@ export default function ProjectsPage() {
   const projects = useAppSelector((state) => state.projects.projects);
 
   // Modal state
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const [isBulkModalOpen, setIsBulkModalOpen] = useState(false);
   const [isSavedFiltersOpen, setIsSavedFiltersOpen] = useState(false);
 
@@ -302,13 +300,6 @@ export default function ProjectsPage() {
             >
               {selectionMode ? 'Cancel Selection' : 'Select Projects'}
             </Button>
-            <Button
-              variant="primary"
-              leftIcon={<PlusIcon className="w-[18px] h-[18px]" />}
-              onClick={() => setIsModalOpen(true)}
-            >
-              New Project
-            </Button>
           </div>
         </div>
 
@@ -524,18 +515,11 @@ export default function ProjectsPage() {
                 <IconFlask size={32} className="text-gray-400" />
               </div>
               <h3 className="text-lg font-semibold text-gray-900 mb-2">No projects found</h3>
-              <p className="text-gray-600 mb-6">
+              <p className="text-gray-600">
                 {hasFilters
                   ? 'Try adjusting your filters'
-                  : 'Get started by creating your first project'}
+                  : 'Projects are created from Opportunities that pass screening'}
               </p>
-              <Button
-                variant="primary"
-                leftIcon={<PlusIcon className="w-[18px] h-[18px]" />}
-                onClick={() => setIsModalOpen(true)}
-              >
-                New Project
-              </Button>
             </div>
           </Card>
         )}
@@ -593,9 +577,6 @@ export default function ProjectsPage() {
           </div>
         )}
       </div>
-
-      {/* Project Form Modal */}
-      <ProjectFormModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
 
       {/* Bulk Stage Movement Modal */}
       <BulkStageMovementModal

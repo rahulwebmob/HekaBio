@@ -5,7 +5,6 @@
 
 import { useState, useMemo } from 'react';
 import {
-  IconPlus,
   IconTrendingUp,
   IconCurrencyDollar,
   IconPercentage,
@@ -20,7 +19,7 @@ import { AppLayout } from '../components/layout';
 import { Card, Badge, Button } from '../components/ui';
 import type { PipelineStage, PipelineOpportunity } from '../types/pipeline.types';
 import { PIPELINE_STAGE_CONFIG, getActiveStages } from '../types/pipeline.types';
-import { OpportunityDetailDrawer, OpportunityFormDrawer } from '../components/features/pipeline';
+import { OpportunityDetailDrawer } from '../components/features/pipeline';
 
 export default function PipelinePage() {
   const dispatch = useAppDispatch();
@@ -33,9 +32,6 @@ export default function PipelinePage() {
   // Opportunity detail drawer state
   const [isDetailDrawerOpen, setIsDetailDrawerOpen] = useState(false);
   const [selectedOpportunity, setSelectedOpportunity] = useState<PipelineOpportunity | null>(null);
-
-  // Opportunity form drawer state
-  const [isFormDrawerOpen, setIsFormDrawerOpen] = useState(false);
 
   // Get stages to display
   const activeStages = getActiveStages();
@@ -199,23 +195,14 @@ export default function PipelinePage() {
               Track opportunities through your business development funnel
             </p>
           </div>
-          <div className="flex items-center gap-3">
-            <Button
-              variant="outline"
-              size="sm"
-              leftIcon={<IconFilter size={16} />}
-              onClick={() => setShowClosedDeals(!showClosedDeals)}
-            >
-              {showClosedDeals ? 'Hide' : 'Show'} Closed Deals
-            </Button>
-            <Button
-              variant="primary"
-              leftIcon={<IconPlus size={18} />}
-              onClick={() => setIsFormDrawerOpen(true)}
-            >
-              New Opportunity
-            </Button>
-          </div>
+          <Button
+            variant="outline"
+            size="sm"
+            leftIcon={<IconFilter size={16} />}
+            onClick={() => setShowClosedDeals(!showClosedDeals)}
+          >
+            {showClosedDeals ? 'Hide' : 'Show'} Closed Deals
+          </Button>
         </div>
 
         {/* Metrics Cards */}
@@ -432,9 +419,6 @@ export default function PipelinePage() {
         opportunity={selectedOpportunity}
         onEdit={handleEditOpportunity}
       />
-
-      {/* Opportunity Form Drawer */}
-      <OpportunityFormDrawer isOpen={isFormDrawerOpen} onClose={() => setIsFormDrawerOpen(false)} />
     </AppLayout>
   );
 }

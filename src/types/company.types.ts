@@ -4,6 +4,22 @@
 
 import type { ID, Timestamp, Email, PhoneNumber, URL, Address } from './common.types';
 
+// ===== Modality =====
+export type Modality = 'DRUG' | 'DEVICE' | 'DIAGNOSTIC' | 'DIGITAL_HEALTH';
+
+export const ModalityLabels: Record<Modality, string> = {
+  DRUG: 'Drug',
+  DEVICE: 'Device',
+  DIAGNOSTIC: 'Diagnostic',
+  DIGITAL_HEALTH: 'Digital Health',
+};
+
+// ===== Key Contact =====
+export interface KeyContact {
+  name: string;
+  email: Email;
+}
+
 // ===== Company Role =====
 export type CompanyRole =
   | 'PRODUCT_OWNER'
@@ -36,9 +52,15 @@ export interface Company {
 
   // Categorization
   category?: string;
+  modality?: Modality;
   diseaseArea?: string[];
   productCategory?: string[];
   focusAreas?: string[];
+
+  // Key Contacts
+  managementContact?: KeyContact;
+  bdContact?: KeyContact; // Business Development Contact
+  rdContact?: KeyContact; // R&D Contact
 
   // Additional Info
   foundedYear?: number;

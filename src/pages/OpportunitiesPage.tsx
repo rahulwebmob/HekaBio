@@ -244,15 +244,6 @@ export default function OpportunitiesPage() {
             <h1 className="text-3xl font-semibold text-gray-900">Opportunities</h1>
             <p className="text-gray-600 mt-1">Lead qualification and assessment pipeline</p>
           </div>
-          <Button
-            variant="primary"
-            leftIcon={<IconPlus size={18} />}
-            onClick={() => {
-              // TODO: Open create opportunity modal
-            }}
-          >
-            New Opportunity
-          </Button>
         </div>
 
         {/* Stats Cards */}
@@ -494,20 +485,11 @@ export default function OpportunitiesPage() {
                 <IconFilter size={32} className="text-gray-400" />
               </div>
               <h3 className="text-lg font-semibold text-gray-900 mb-2">No opportunities found</h3>
-              <p className="text-gray-600 mb-6">
+              <p className="text-gray-600">
                 {hasFilters
                   ? 'Try adjusting your filters'
-                  : 'Get started by creating your first opportunity'}
+                  : 'Opportunities are created when companies submit surveys'}
               </p>
-              <Button
-                variant="primary"
-                leftIcon={<IconPlus size={18} />}
-                onClick={() => {
-                  // TODO: Open create opportunity modal
-                }}
-              >
-                New Opportunity
-              </Button>
             </div>
           </Card>
         )}

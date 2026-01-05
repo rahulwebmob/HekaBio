@@ -7,7 +7,6 @@ import { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   IconSearch,
-  IconPlus,
   IconFilter,
   IconChevronDown,
   IconCheck,
@@ -140,20 +139,11 @@ export default function ScreeningsPage() {
     <AppLayout>
       <div className="space-y-6">
         {/* Header */}
-        <div className="flex items-start justify-between">
-          <div>
-            <h1 className="text-3xl font-semibold text-gray-900">Pre-Project Screenings</h1>
-            <p className="text-gray-600 mt-1">
-              Technology readiness, therapeutic fit, and market assessment
-            </p>
-          </div>
-          <Button
-            variant="primary"
-            leftIcon={<IconPlus size={18} />}
-            onClick={() => navigate('/screenings/new')}
-          >
-            New Screening
-          </Button>
+        <div>
+          <h1 className="text-3xl font-semibold text-gray-900">Pre-Project Screenings</h1>
+          <p className="text-gray-600 mt-1">
+            Screenings are automatically created from opportunities. Review TRL, therapeutic fit, and market assessment.
+          </p>
         </div>
 
         {/* Stats Cards */}
