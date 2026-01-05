@@ -14,7 +14,7 @@ const CompanyDetailPage = lazy(() => import('../pages/CompanyDetailPage'));
 const CompanyFormPage = lazy(() => import('../pages/CompanyFormPage'));
 const ProjectsPage = lazy(() => import('../pages/ProjectsPage'));
 const ProjectDetailPage = lazy(() => import('../pages/ProjectDetailPage'));
-const OpportunitiesPage = lazy(() => import('../pages/OpportunitiesPage'));
+// const OpportunitiesPage = lazy(() => import('../pages/OpportunitiesPage')); // REMOVED: Out of scope
 const SurveysPage = lazy(() => import('../pages/SurveysPage'));
 const SurveyDetailPage = lazy(() => import('../pages/SurveyDetailPage'));
 const PublicSurveyPage = lazy(() => import('../pages/PublicSurveyPage'));
@@ -22,12 +22,12 @@ const SurveyTemplatesPage = lazy(() => import('../pages/SurveyTemplatesPage'));
 const SurveyBuilderPage = lazy(() => import('../pages/SurveyBuilderPage'));
 const JapanScreeningPage = lazy(() => import('../pages/JapanScreeningPage'));
 const AutomationPage = lazy(() => import('../pages/AutomationPage'));
-const CommunicationsPage = lazy(() => import('../pages/CommunicationsPage'));
-const TasksPage = lazy(() => import('../pages/TasksPage'));
-const NotificationsPage = lazy(() => import('../pages/NotificationsPage'));
+// const CommunicationsPage = lazy(() => import('../pages/CommunicationsPage')); // REMOVED: Utils out of scope
+// const TasksPage = lazy(() => import('../pages/TasksPage')); // REMOVED: Utils out of scope
+// const NotificationsPage = lazy(() => import('../pages/NotificationsPage')); // REMOVED: Utils out of scope
 const SettingsPage = lazy(() => import('../pages/SettingsPage'));
-const PipelinePage = lazy(() => import('../pages/PipelinePage'));
-const CalendarPage = lazy(() => import('../pages/CalendarPage'));
+// const PipelinePage = lazy(() => import('../pages/PipelinePage')); // REMOVED: Out of scope
+// const CalendarPage = lazy(() => import('../pages/CalendarPage')); // REMOVED: Utils out of scope
 const DocumentsPage = lazy(() => import('../pages/DocumentsPage'));
 const ContractsPage = lazy(() => import('../pages/ContractsPage'));
 const NDAPage = lazy(() => import('../pages/NDAPage'));
@@ -93,28 +93,21 @@ export const routes: RouteConfig[] = [
     title: 'Project Detail - HekaBio',
   },
 
-  // Phase 1: Opportunities
-  {
-    path: '/opportunities',
-    element: OpportunitiesPage,
-    isPublic: false,
-    allowedRoles: ['super_admin', 'crm_owner', 'gate_1_analyst'],
-    title: 'Opportunities - HekaBio',
-  },
+  // Opportunities REMOVED - out of scope (auto-create projects from surveys instead)
 
   // Phase 1: Surveys
   {
     path: '/surveys',
     element: SurveysPage,
     isPublic: false,
-    allowedRoles: ['super_admin', 'crm_owner', 'gate_1_analyst'],
+    allowedRoles: ['super_admin', 'crm_owner', 'analyst'],
     title: 'Surveys - HekaBio',
   },
   {
     path: '/surveys/:id',
     element: SurveyDetailPage,
     isPublic: false,
-    allowedRoles: ['super_admin', 'crm_owner', 'gate_1_analyst'],
+    allowedRoles: ['super_admin', 'crm_owner', 'analyst'],
     title: 'Survey Detail - HekaBio',
   },
 
@@ -131,13 +124,7 @@ export const routes: RouteConfig[] = [
     path: '/projects/:projectId/japan-screening',
     element: JapanScreeningPage,
     isPublic: false,
-    allowedRoles: [
-      'super_admin',
-      'crm_owner',
-      'gate_1_analyst',
-      'gate_2_analyst',
-      'gate_3_decision_maker',
-    ],
+    allowedRoles: ['super_admin', 'crm_owner', 'analyst'],
     title: 'Japan Market Screening - HekaBio',
   },
 
@@ -158,51 +145,51 @@ export const routes: RouteConfig[] = [
     title: 'Automation Rules - HekaBio',
   },
 
-  // Pipeline
-  {
-    path: '/pipeline',
-    element: PipelinePage,
-    isPublic: false,
-    allowedRoles: [
-      'super_admin',
-      'crm_owner',
-      'gate_1_analyst',
-      'gate_2_analyst',
-      'gate_3_decision_maker',
-    ],
-    title: 'Sales Pipeline - HekaBio',
-  },
+  // Pipeline - REMOVED: Out of scope
+  // {
+  //   path: '/pipeline',
+  //   element: PipelinePage,
+  //   isPublic: false,
+  //   allowedRoles: [
+  //     'super_admin',
+  //     'crm_owner',
+  //     'gate_1_analyst',
+  //     'gate_2_analyst',
+  //     'gate_3_decision_maker',
+  //   ],
+  //   title: 'Sales Pipeline - HekaBio',
+  // },
 
-  // Communications
-  {
-    path: '/communications',
-    element: CommunicationsPage,
-    isPublic: false,
-    allowedRoles: [
-      'super_admin',
-      'crm_owner',
-      'gate_1_analyst',
-      'gate_2_analyst',
-      'gate_3_decision_maker',
-    ],
-    title: 'Communications - HekaBio',
-  },
+  // Communications - REMOVED: Utils out of scope
+  // {
+  //   path: '/communications',
+  //   element: CommunicationsPage,
+  //   isPublic: false,
+  //   allowedRoles: [
+  //     'super_admin',
+  //     'crm_owner',
+  //     'gate_1_analyst',
+  //     'gate_2_analyst',
+  //     'gate_3_decision_maker',
+  //   ],
+  //   title: 'Communications - HekaBio',
+  // },
 
-  // Tasks
-  {
-    path: '/tasks',
-    element: TasksPage,
-    isPublic: false,
-    title: 'Tasks - HekaBio',
-  },
+  // Tasks - REMOVED: Utils out of scope
+  // {
+  //   path: '/tasks',
+  //   element: TasksPage,
+  //   isPublic: false,
+  //   title: 'Tasks - HekaBio',
+  // },
 
-  // Notifications
-  {
-    path: '/notifications',
-    element: NotificationsPage,
-    isPublic: false,
-    title: 'Notifications - HekaBio',
-  },
+  // Notifications - REMOVED: Utils out of scope
+  // {
+  //   path: '/notifications',
+  //   element: NotificationsPage,
+  //   isPublic: false,
+  //   title: 'Notifications - HekaBio',
+  // },
 
   // Settings
   {
@@ -212,13 +199,13 @@ export const routes: RouteConfig[] = [
     title: 'Settings - HekaBio',
   },
 
-  // Calendar
-  {
-    path: '/calendar',
-    element: CalendarPage,
-    isPublic: false,
-    title: 'Calendar - HekaBio',
-  },
+  // Calendar - REMOVED: Utils out of scope
+  // {
+  //   path: '/calendar',
+  //   element: CalendarPage,
+  //   isPublic: false,
+  //   title: 'Calendar - HekaBio',
+  // },
 
   // Documents
   {
@@ -233,7 +220,7 @@ export const routes: RouteConfig[] = [
     path: '/contracts',
     element: ContractsPage,
     isPublic: false,
-    allowedRoles: ['super_admin', 'crm_owner', 'gate_3_decision_maker'],
+    allowedRoles: ['super_admin', 'crm_owner', 'analyst'],
     title: 'Contracts - HekaBio',
   },
 
@@ -242,7 +229,7 @@ export const routes: RouteConfig[] = [
     path: '/ndas',
     element: NDAPage,
     isPublic: false,
-    allowedRoles: ['super_admin', 'crm_owner', 'gate_2_analyst', 'gate_3_decision_maker'],
+    allowedRoles: ['super_admin', 'crm_owner', 'analyst'],
     title: 'NDAs - HekaBio',
   },
 
@@ -251,14 +238,7 @@ export const routes: RouteConfig[] = [
     path: '/dd-workspace',
     element: DDWorkspacePage,
     isPublic: false,
-    allowedRoles: [
-      'super_admin',
-      'crm_owner',
-      'dd_specialist_scientific',
-      'dd_specialist_regulatory',
-      'dd_specialist_commercial',
-      'dd_specialist_financial',
-    ],
+    allowedRoles: ['super_admin', 'crm_owner', 'analyst', 'dd_specialist'],
     title: 'Due Diligence - HekaBio',
   },
 
@@ -283,13 +263,7 @@ export const routes: RouteConfig[] = [
     path: '/address-book',
     element: AddressBookPage,
     isPublic: false,
-    allowedRoles: [
-      'super_admin',
-      'crm_owner',
-      'gate_1_analyst',
-      'gate_2_analyst',
-      'gate_3_decision_maker',
-    ],
+    allowedRoles: ['super_admin', 'crm_owner', 'analyst'],
     title: 'Address Book - HekaBio',
   },
 
@@ -298,39 +272,21 @@ export const routes: RouteConfig[] = [
     path: '/companies/new',
     element: CompanyFormPage,
     isPublic: false,
-    allowedRoles: [
-      'super_admin',
-      'crm_owner',
-      'gate_1_analyst',
-      'gate_2_analyst',
-      'gate_3_decision_maker',
-    ],
+    allowedRoles: ['super_admin', 'crm_owner', 'analyst'],
     title: 'Add Company - HekaBio',
   },
   {
     path: '/companies/:id/edit',
     element: CompanyFormPage,
     isPublic: false,
-    allowedRoles: [
-      'super_admin',
-      'crm_owner',
-      'gate_1_analyst',
-      'gate_2_analyst',
-      'gate_3_decision_maker',
-    ],
+    allowedRoles: ['super_admin', 'crm_owner', 'analyst'],
     title: 'Edit Company - HekaBio',
   },
   {
     path: '/companies/:id',
     element: CompanyDetailPage,
     isPublic: false,
-    allowedRoles: [
-      'super_admin',
-      'crm_owner',
-      'gate_1_analyst',
-      'gate_2_analyst',
-      'gate_3_decision_maker',
-    ],
+    allowedRoles: ['super_admin', 'crm_owner', 'analyst'],
     title: 'Company Detail - HekaBio',
   },
   // OLD: Companies main route (REDIRECT to Address Book) - MUST be AFTER specific routes

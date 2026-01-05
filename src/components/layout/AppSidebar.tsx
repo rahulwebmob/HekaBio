@@ -3,23 +3,19 @@
  * Collapsible sidebar with hover expand
  */
 
+import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import {
   IconFlask,
   IconAddressBook,
   IconFileText,
   IconTemplate,
-  IconMail,
-  IconChecklist,
-  IconBell,
-  IconCalendar,
-  IconChartDots,
   IconFolder,
   IconShieldCheck,
   IconClipboardCheck,
   IconContract,
-  IconBulb,
   IconBolt,
+  IconChevronDown,
 } from '@tabler/icons-react';
 import { ChevronLeftIcon, GridIcon } from '../../icons';
 import { useSidebar } from '../../contexts/SidebarContext';
@@ -29,9 +25,10 @@ import type { UserRole } from '../../types/auth.types';
 interface MenuItem {
   label: string;
   icon: React.ReactNode;
-  path: string;
+  path?: string;
   badge?: string;
   allowedRoles?: UserRole[]; // Roles that can see this menu item
+  children?: MenuItem[]; // Submenu items
 }
 
 const menuItems: MenuItem[] = [
@@ -47,29 +44,13 @@ const menuItems: MenuItem[] = [
     path: '/projects',
     // All roles can view projects
   },
-  {
-    label: 'Opportunities',
-    icon: <IconBulb size={20} stroke={1.5} />,
-    path: '/opportunities',
-    allowedRoles: ['super_admin', 'crm_owner', 'gate_1_analyst'],
-  },
-  {
-    label: 'Pipeline',
-    icon: <IconChartDots size={20} stroke={1.5} />,
-    path: '/pipeline',
-    allowedRoles: [
-      'super_admin',
-      'crm_owner',
-      'gate_1_analyst',
-      'gate_2_analyst',
-      'gate_3_decision_maker',
-    ],
-  },
+  // Opportunities and Pipeline features removed - out of scope per client requirements
+  // Projects are now auto-created from surveys/intro decks (Cold/Warm/Hot reach)
   {
     label: 'Surveys',
     icon: <IconFileText size={20} stroke={1.5} />,
     path: '/surveys',
-    allowedRoles: ['super_admin', 'crm_owner', 'gate_1_analyst'],
+    allowedRoles: ['super_admin', 'crm_owner', 'analyst'],
   },
   {
     label: 'Survey Templates',
@@ -83,36 +64,7 @@ const menuItems: MenuItem[] = [
     path: '/automation',
     allowedRoles: ['super_admin', 'crm_owner'],
   },
-  {
-    label: 'Communications',
-    icon: <IconMail size={20} stroke={1.5} />,
-    path: '/communications',
-    allowedRoles: [
-      'super_admin',
-      'crm_owner',
-      'gate_1_analyst',
-      'gate_2_analyst',
-      'gate_3_decision_maker',
-    ],
-  },
-  {
-    label: 'Tasks',
-    icon: <IconChecklist size={20} stroke={1.5} />,
-    path: '/tasks',
-    // All roles can access tasks
-  },
-  {
-    label: 'Notifications',
-    icon: <IconBell size={20} stroke={1.5} />,
-    path: '/notifications',
-    // All roles can access notifications
-  },
-  {
-    label: 'Calendar',
-    icon: <IconCalendar size={20} stroke={1.5} />,
-    path: '/calendar',
-    // All roles can access calendar
-  },
+  // Utils dropdown removed - tasks, notifications, calendar, communications out of scope
   {
     label: 'Documents',
     icon: <IconFolder size={20} stroke={1.5} />,
@@ -123,38 +75,25 @@ const menuItems: MenuItem[] = [
     label: 'Address Book',
     icon: <IconAddressBook size={20} stroke={1.5} />,
     path: '/address-book',
-    allowedRoles: [
-      'super_admin',
-      'crm_owner',
-      'gate_1_analyst',
-      'gate_2_analyst',
-      'gate_3_decision_maker',
-    ],
+    allowedRoles: ['super_admin', 'crm_owner', 'analyst'],
   },
   {
     label: 'Contracts',
     icon: <IconContract size={20} stroke={1.5} />,
     path: '/contracts',
-    allowedRoles: ['super_admin', 'crm_owner', 'gate_3_decision_maker'],
+    allowedRoles: ['super_admin', 'crm_owner', 'analyst'],
   },
   {
     label: 'NDAs',
     icon: <IconShieldCheck size={20} stroke={1.5} />,
     path: '/ndas',
-    allowedRoles: ['super_admin', 'crm_owner', 'gate_2_analyst', 'gate_3_decision_maker'],
+    allowedRoles: ['super_admin', 'crm_owner', 'analyst'],
   },
   {
     label: 'Due Diligence',
     icon: <IconClipboardCheck size={20} stroke={1.5} />,
     path: '/dd-workspace',
-    allowedRoles: [
-      'super_admin',
-      'crm_owner',
-      'dd_specialist_scientific',
-      'dd_specialist_regulatory',
-      'dd_specialist_commercial',
-      'dd_specialist_financial',
-    ],
+    allowedRoles: ['super_admin', 'crm_owner', 'analyst', 'dd_specialist'],
   },
 ];
 
@@ -163,6 +102,7 @@ export default function AppSidebar() {
   const { isCollapsed, isMobileOpen, isHoverExpanded, setHoverExpanded, closeMobile } =
     useSidebar();
   const { hasRole } = useAuthorization();
+  const [expandedSubmenu, setExpandedSubmenu] = useState<string | null>(null);
 
   const isExpanded = !isCollapsed || isHoverExpanded;
   const sidebarWidth = isExpanded ? 'w-64' : 'w-20';
@@ -171,15 +111,40 @@ export default function AppSidebar() {
     return location.pathname === path || location.pathname.startsWith(path + '/');
   };
 
+  const isSubmenuActive = (children?: MenuItem[]) => {
+    if (!children) return false;
+    return children.some((child) => child.path && isActive(child.path));
+  };
+
+  const toggleSubmenu = (label: string) => {
+    setExpandedSubmenu(expandedSubmenu === label ? null : label);
+  };
+
   // Filter menu items based on user's role
-  const visibleMenuItems = menuItems.filter((item) => {
-    // If no allowedRoles specified, item is visible to all
-    if (!item.allowedRoles || item.allowedRoles.length === 0) {
-      return true;
+  const filterMenuItem = (item: MenuItem): MenuItem | null => {
+    // Check if item itself is allowed
+    const isItemAllowed =
+      !item.allowedRoles || item.allowedRoles.length === 0 || hasRole(item.allowedRoles);
+
+    // If item has children, filter them too
+    if (item.children) {
+      const visibleChildren = item.children
+        .map(filterMenuItem)
+        .filter((child): child is MenuItem => child !== null);
+
+      // Only show parent if it has visible children
+      if (visibleChildren.length > 0) {
+        return { ...item, children: visibleChildren };
+      }
+      return null;
     }
-    // Check if user has one of the allowed roles
-    return hasRole(item.allowedRoles);
-  });
+
+    return isItemAllowed ? item : null;
+  };
+
+  const visibleMenuItems = menuItems
+    .map(filterMenuItem)
+    .filter((item): item is MenuItem => item !== null);
 
   return (
     <>
@@ -223,28 +188,91 @@ export default function AppSidebar() {
           <ul className="space-y-1">
             {visibleMenuItems.map((item) => (
               <li key={item.label}>
-                <Link
-                  to={item.path}
-                  onClick={() => isMobileOpen && closeMobile()}
-                  className={`
-                    flex items-center gap-3 px-3 py-2.5 rounded-lg
-                    transition-all duration-200
-                    ${
-                      isActive(item.path)
-                        ? 'bg-brand-50 text-brand-600 shadow-sm'
-                        : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900'
-                    }
-                    ${!isExpanded && 'justify-center'}
-                  `}
-                >
-                  <span className="flex-shrink-0">{item.icon}</span>
-                  {isExpanded && <span className="text-sm font-medium">{item.label}</span>}
-                  {item.badge && isExpanded && (
-                    <span className="ml-auto text-xs bg-brand-500 text-white px-2 py-0.5 rounded-full">
-                      {item.badge}
-                    </span>
-                  )}
-                </Link>
+                {item.children ? (
+                  // Parent menu with submenu
+                  <div>
+                    <button
+                      onClick={() => toggleSubmenu(item.label)}
+                      className={`
+                        w-full flex items-center gap-3 px-3 py-2.5 rounded-lg
+                        transition-all duration-200
+                        ${
+                          isSubmenuActive(item.children)
+                            ? 'bg-brand-50 text-brand-600 shadow-sm'
+                            : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900'
+                        }
+                        ${!isExpanded && 'justify-center'}
+                      `}
+                    >
+                      <span className="flex-shrink-0">{item.icon}</span>
+                      {isExpanded && (
+                        <>
+                          <span className="text-sm font-medium">{item.label}</span>
+                          <IconChevronDown
+                            size={16}
+                            className={`ml-auto transition-transform duration-200 ${
+                              expandedSubmenu === item.label ? 'rotate-180' : ''
+                            }`}
+                          />
+                        </>
+                      )}
+                    </button>
+                    {/* Submenu items */}
+                    {isExpanded && expandedSubmenu === item.label && (
+                      <ul className="mt-1 space-y-1 ml-4">
+                        {item.children.map((child) => (
+                          <li key={child.label}>
+                            <Link
+                              to={child.path || '#'}
+                              onClick={() => isMobileOpen && closeMobile()}
+                              className={`
+                                flex items-center gap-3 px-3 py-2 rounded-lg
+                                transition-all duration-200
+                                ${
+                                  child.path && isActive(child.path)
+                                    ? 'bg-brand-50 text-brand-600 shadow-sm'
+                                    : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'
+                                }
+                              `}
+                            >
+                              <span className="flex-shrink-0">{child.icon}</span>
+                              <span className="text-sm font-medium">{child.label}</span>
+                              {child.badge && (
+                                <span className="ml-auto text-xs bg-brand-500 text-white px-2 py-0.5 rounded-full">
+                                  {child.badge}
+                                </span>
+                              )}
+                            </Link>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                  </div>
+                ) : (
+                  // Regular menu item
+                  <Link
+                    to={item.path || '#'}
+                    onClick={() => isMobileOpen && closeMobile()}
+                    className={`
+                      flex items-center gap-3 px-3 py-2.5 rounded-lg
+                      transition-all duration-200
+                      ${
+                        item.path && isActive(item.path)
+                          ? 'bg-brand-50 text-brand-600 shadow-sm'
+                          : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900'
+                      }
+                      ${!isExpanded && 'justify-center'}
+                    `}
+                  >
+                    <span className="flex-shrink-0">{item.icon}</span>
+                    {isExpanded && <span className="text-sm font-medium">{item.label}</span>}
+                    {item.badge && isExpanded && (
+                      <span className="ml-auto text-xs bg-brand-500 text-white px-2 py-0.5 rounded-full">
+                        {item.badge}
+                      </span>
+                    )}
+                  </Link>
+                )}
               </li>
             ))}
           </ul>

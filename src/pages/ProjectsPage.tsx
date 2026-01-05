@@ -22,12 +22,12 @@ import { bulkMoveToStage, loadSavedFiltersFromStorage } from '../store/slices/pr
 import { AppLayout } from '../components/layout';
 import { Button, Card, Input, Select } from '../components/ui';
 import { ProjectCard } from '../components/common/ProjectCard';
-import { BulkStageMovementModal } from '../components/features';
+// import { BulkStageMovementModal } from '../components/features'; // REMOVED: Outdated component
 import SavedFilters from '../components/features/projects/SavedFilters';
-import FilterPresets from '../components/features/projects/FilterPresets';
+// import FilterPresets from '../components/features/projects/FilterPresets'; // REMOVED: Outdated component
 import { exportProjectsToCSV } from '../utils/csvUtils';
-import type { ProjectTag, Stage } from '../types/project.types';
-import { StageLabels } from '../types/project.types';
+import type { Stage, ReachType } from '../types/project.types';
+import { StageLabels, ReachTypeLabels } from '../types/project.types';
 
 export default function ProjectsPage() {
   const navigate = useNavigate();
@@ -67,46 +67,44 @@ export default function ProjectsPage() {
     { value: 'Development Services', label: 'Development Services' },
   ];
 
-  // Tag statistics
-  const tagStats = useMemo(() => {
+  // Reach Type statistics
+  const reachTypeStats = useMemo(() => {
     const stats: Record<string, number> = {
-      'Strategic Portfolio': 0,
-      Finders: 0,
-      'Development Services': 0,
+      COLD: 0,
+      WARM: 0,
+      HOT: 0,
     };
 
     projects.forEach((project) => {
-      project.tags.forEach((tag) => {
-        if (stats[tag] !== undefined) {
-          stats[tag]++;
-        }
-      });
+      if (stats[project.reachType] !== undefined) {
+        stats[project.reachType]++;
+      }
     });
 
     return stats;
   }, [projects]);
 
-  const tagConfigs = [
+  const reachTypeConfigs = [
     {
-      value: 'Strategic Portfolio',
-      label: 'Strategic Portfolio',
+      value: 'COLD',
+      label: 'Cold Reach',
+      icon: IconSearch,
+      color: 'info',
+      description: 'Survey-based discovery',
+    },
+    {
+      value: 'WARM',
+      label: 'Warm Reach',
       icon: IconBriefcase,
-      color: 'brand',
-      description: 'Core strategic initiatives',
+      color: 'warning',
+      description: 'Intro deck outreach',
     },
     {
-      value: 'Finders',
-      label: 'Finders',
-      icon: IconFinders,
-      color: 'purple',
-      description: 'Discovery & scouting projects',
-    },
-    {
-      value: 'Development Services',
-      label: 'Development Services',
-      icon: IconBuilding,
-      color: 'cyan',
-      description: 'Client development work',
+      value: 'HOT',
+      label: 'Hot Reach',
+      icon: IconFlask,
+      color: 'error',
+      description: 'Direct engagement',
     },
   ];
 
@@ -160,8 +158,8 @@ export default function ProjectsPage() {
         project.company.name.toLowerCase().includes(searchLower) ||
         project.description?.toLowerCase().includes(searchLower);
 
-      // Tag filter
-      const matchesTag = !tagFilter || project.tags.includes(tagFilter as ProjectTag);
+      // Reach Type filter (replaces tag filter)
+      const matchesReachType = !tagFilter || project.reachType === tagFilter;
 
       // Stage filter
       const matchesStage = !stageFilter || project.currentStage === stageFilter;
@@ -180,13 +178,13 @@ export default function ProjectsPage() {
       // Flag filter
       let matchesFlag = true;
       if (flagFilter === 'hot') matchesFlag = !!project.isHot;
-      if (flagFilter === 'diamond') matchesFlag = !!project.isDiamond;
+      if (flagFilter === 'priority') matchesFlag = !!project.isPriority;
       if (flagFilter === 'stalled') matchesFlag = !!project.isStalled;
       if (flagFilter === 'japan') matchesFlag = !!project.japanInterest;
 
       return (
         matchesSearch &&
-        matchesTag &&
+        matchesReachType &&
         matchesStage &&
         matchesJapanFit &&
         matchesScore &&
@@ -198,9 +196,9 @@ export default function ProjectsPage() {
   // Sort by score (highest first) and then by updated date
   const sortedProjects = useMemo(() => {
     return [...filteredProjects].sort((a, b) => {
-      // Hot and Diamond projects first
-      if (a.isDiamond && !b.isDiamond) return -1;
-      if (!a.isDiamond && b.isDiamond) return 1;
+      // Hot and Priority projects first
+      if (a.isPriority && !b.isPriority) return -1;
+      if (!a.isPriority && b.isPriority) return 1;
       if (a.isHot && !b.isHot) return -1;
       if (!a.isHot && b.isHot) return 1;
 
@@ -246,12 +244,12 @@ export default function ProjectsPage() {
     }
   };
 
-  // Determine if bulk movement is possible (all selected projects must have same tag)
+  // Determine if bulk movement is possible (all selected projects must have same reach type)
   const selectedProjects = projects.filter((p) => selectedProjectIds.includes(p.id));
   const canBulkMove =
     selectedProjects.length > 0 &&
-    selectedProjects.every((p) => p.tags[0] === selectedProjects[0].tags[0]);
-  const bulkProjectTag = canBulkMove ? selectedProjects[0].tags[0] : 'Strategic Portfolio';
+    selectedProjects.every((p) => p.reachType === selectedProjects[0].reachType);
+  const bulkReachType = canBulkMove ? selectedProjects[0].reachType : 'COLD';
 
   const handleBulkMove = (newStage: Stage, reason: string, notes?: string) => {
     dispatch(
@@ -319,8 +317,8 @@ export default function ProjectsPage() {
                     </p>
                     <p className="text-xs text-gray-600">
                       {canBulkMove
-                        ? `Ready for bulk actions (${bulkProjectTag})`
-                        : 'Selected projects have different tags - bulk move unavailable'}
+                        ? `Ready for bulk actions (${ReachTypeLabels[bulkReachType]})`
+                        : 'Selected projects have different reach types - bulk move unavailable'}
                     </p>
                   </div>
                 </div>
@@ -578,14 +576,14 @@ export default function ProjectsPage() {
         )}
       </div>
 
-      {/* Bulk Stage Movement Modal */}
-      <BulkStageMovementModal
+      {/* Bulk Stage Movement Modal - REMOVED: Component outdated, will be rebuilt */}
+      {/* <BulkStageMovementModal
         isOpen={isBulkModalOpen}
         onClose={() => setIsBulkModalOpen(false)}
         selectedCount={selectedProjectIds.length}
-        projectTag={bulkProjectTag}
+        reachType={bulkReachType}
         onConfirm={handleBulkMove}
-      />
+      /> */}
 
       {/* Saved Filters Modal */}
       {isSavedFiltersOpen && (

@@ -64,22 +64,14 @@ export default function LoginPage() {
     }
   };
 
-  // Prepare role options for Select component
+  // Prepare role options for Select component - Updated for simplified roles
   const roleOptions = [
     { value: UserRole.SUPER_ADMIN, label: RoleLabels[UserRole.SUPER_ADMIN] },
     { value: UserRole.CRM_OWNER, label: RoleLabels[UserRole.CRM_OWNER] },
-    { value: UserRole.GATE_1_ANALYST, label: RoleLabels[UserRole.GATE_1_ANALYST] },
-    { value: UserRole.GATE_2_ANALYST, label: RoleLabels[UserRole.GATE_2_ANALYST] },
-    { value: UserRole.GATE_3_DECISION_MAKER, label: RoleLabels[UserRole.GATE_3_DECISION_MAKER] },
-    {
-      value: UserRole.DD_SPECIALIST_SCIENTIFIC,
-      label: RoleLabels[UserRole.DD_SPECIALIST_SCIENTIFIC],
-    },
+    { value: UserRole.ANALYST, label: RoleLabels[UserRole.ANALYST] },
+    { value: UserRole.DD_SPECIALIST, label: RoleLabels[UserRole.DD_SPECIALIST] },
+    { value: UserRole.VIEWER, label: RoleLabels[UserRole.VIEWER] },
     { value: UserRole.PRODUCT_OWNER, label: RoleLabels[UserRole.PRODUCT_OWNER] },
-    { value: UserRole.HOSPITAL_STAFF, label: RoleLabels[UserRole.HOSPITAL_STAFF] },
-    { value: UserRole.DISTRIBUTOR_STAFF, label: RoleLabels[UserRole.DISTRIBUTOR_STAFF] },
-    { value: UserRole.LICENSE_HOLDER_STAFF, label: RoleLabels[UserRole.LICENSE_HOLDER_STAFF] },
-    { value: UserRole.MANUFACTURING_STAFF, label: RoleLabels[UserRole.MANUFACTURING_STAFF] },
   ];
 
   return (

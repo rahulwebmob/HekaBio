@@ -123,7 +123,7 @@ export const mockAutomationRules: AutomationRule[] = [
         type: 'UPDATE_PROJECT_STAGE',
         order: 1,
         config: {
-          newStage: 'SURVEY_1',
+          newStage: 'INTERNAL_REVIEW',
         },
       },
       {
@@ -131,9 +131,9 @@ export const mockAutomationRules: AutomationRule[] = [
         order: 2,
         config: {
           notificationTo: 'PROJECT_OWNER',
-          notificationTitle: 'Project Auto-Advanced to Gate 1',
+          notificationTitle: 'Project Auto-Advanced to Internal Review',
           notificationMessage:
-            '{{project.name}} scored {{project.score}} and has been automatically advanced to Gate 1 Review',
+            '{{project.name}} scored {{project.score}} and has been automatically advanced to Internal Review',
           notificationLink: '/projects/{{project.id}}',
         },
       },
@@ -141,7 +141,7 @@ export const mockAutomationRules: AutomationRule[] = [
         type: 'CREATE_TASK',
         order: 3,
         config: {
-          taskTitle: 'Prepare Gate 1 Review for {{project.name}}',
+          taskTitle: 'Prepare Internal Review for {{project.name}}',
           taskDescription:
             'Project has been auto-advanced due to high score ({{project.score}}). Prepare all Gate 1 review materials and schedule the review meeting.',
           taskPriority: 'HIGH',

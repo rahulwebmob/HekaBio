@@ -13,10 +13,10 @@ import { Button, Card, Input, Select } from '../components/ui';
 import {
   CompanyRole,
   CompanyCategory,
-  Modality,
+  // Modality, // REMOVED: Now uses modalities array
   CompanyRoleLabels,
   CompanyCategoryLabels,
-  ModalityLabels,
+  // ModalityLabels, // REMOVED: Now uses modalities array
 } from '../types/addressBook.types';
 import type { Company, Address } from '../types/addressBook.types';
 
@@ -37,7 +37,7 @@ export default function CompanyFormPage() {
     nameLocal: '',
     role: '' as CompanyRole | '',
     category: '' as CompanyCategory | '',
-    modality: '' as Modality | '',
+    // modality: '' as Modality | '', // REMOVED: Now uses modalities array in partner matching
     website: '',
     phone: '',
     email: '',
@@ -70,7 +70,7 @@ export default function CompanyFormPage() {
         nameLocal: existingCompany.nameLocal || '',
         role: existingCompany.role,
         category: existingCompany.category,
-        modality: existingCompany.modality || ('' as const),
+        // modality: existingCompany.modality || ('' as const), // REMOVED
         website: existingCompany.website || '',
         phone: existingCompany.phone || '',
         email: existingCompany.email || '',
@@ -209,7 +209,7 @@ export default function CompanyFormPage() {
       nameLocal: formData.nameLocal.trim() || undefined,
       role: formData.role as CompanyRole,
       category: formData.category as CompanyCategory,
-      modality: formData.modality ? (formData.modality as Modality) : undefined,
+      // modality: formData.modality ? (formData.modality as Modality) : undefined, // REMOVED: Now uses modalities array
       website: formData.website.trim() || undefined,
       phone: formData.phone.trim() || undefined,
       email: formData.email.trim() || undefined,
@@ -248,13 +248,13 @@ export default function CompanyFormPage() {
     label: CompanyCategoryLabels[category],
   }));
 
-  const modalityOptions = [
-    { value: '', label: 'Select modality (optional)' },
-    ...Object.values(Modality).map((modality) => ({
-      value: modality,
-      label: ModalityLabels[modality],
-    })),
-  ];
+  // const modalityOptions = [ // REMOVED: Modality field removed
+  //   { value: '', label: 'Select modality (optional)' },
+  //   ...Object.values(Modality).map((modality) => ({
+  //     value: modality,
+  //     label: ModalityLabels[modality],
+  //   })),
+  // ];
 
   return (
     <AppLayout>
@@ -334,14 +334,7 @@ export default function CompanyFormPage() {
                 fullWidth
               />
 
-              <Select
-                label="Modality"
-                placeholder="Select modality"
-                options={modalityOptions}
-                value={formData.modality}
-                onChange={(e) => setFormData({ ...formData, modality: e.target.value as Modality })}
-                fullWidth
-              />
+              {/* Modality field removed - now uses modalities array in partner matching fields */}
 
               <div className="md:col-span-2">
                 <label className="block text-sm font-medium text-gray-700 mb-2">Description</label>

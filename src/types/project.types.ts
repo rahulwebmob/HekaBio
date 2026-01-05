@@ -5,65 +5,64 @@
 import type { ID, Timestamp } from './common.types';
 import type { Company } from './addressBook.types';
 
-// ===== Project Tag =====
-export type ProjectTag = 'Strategic Portfolio' | 'Finders' | 'Development Services';
+// ===== Reach Type =====
+// How the project originated (Cold/Warm/Hot Reach)
+export type ReachType = 'COLD' | 'WARM' | 'HOT';
+
+export const ReachTypeLabels: Record<ReachType, string> = {
+  COLD: 'Cold Reach',
+  WARM: 'Warm Reach',
+  HOT: 'Hot Reach',
+};
+
+// ===== Project Status =====
+// Whether project is active business or monitoring
+export type ProjectStatus = 'ACTIVE' | 'MONITORING' | 'COMPLETED' | 'ARCHIVED';
 
 // ===== Stage Types =====
+// Simplified linear workflow matching client requirements
 export type Stage =
-  // Strategic Portfolio Stages
-  | 'LOBBY'
-  | 'SURVEY_1'
-  | 'SURVEY_2'
-  | 'JAPAN_EARLY_ASSESSMENT'
-  | 'NDA'
-  | 'SURVEY_3'
-  | 'DUE_DILIGENCE'
-  | 'CONTRACT_DECISION'
-  // Finders Stages
-  | 'DATA_ANALYSIS'
-  | 'CONTRACT_DECISION_FINDERS'
-  | 'OUTREACH_LIST'
-  | 'MAKE_INTRODUCTIONS'
-  | 'REVENUE_GENERATED';
+  | 'NEW' // Just created from survey/intro deck
+  | 'DATA_GATHERING' // Collecting survey/introduction deck data
+  | 'SCREENING' // AI analysis + Japanese market analysis
+  | 'INTERNAL_REVIEW' // Decision point: Proceed or Monitor
+  | 'MONITORING' // In monitoring bucket
+  | 'NDA_REQUESTED' // NDA requested from originator
+  | 'DUE_DILIGENCE' // Full DD in progress
+  | 'PARTNER_MATCHING' // AI matching with potential partners
+  | 'OUTREACH' // Reaching out to matched partners
+  | 'CONTRACT_NEGOTIATION' // Negotiating contracts
+  | 'COMPLETED'; // Successfully closed
 
 export const StageLabels: Record<Stage, string> = {
-  LOBBY: 'Lobby',
-  SURVEY_1: 'Survey 1',
-  SURVEY_2: 'Survey 2',
-  JAPAN_EARLY_ASSESSMENT: 'Japan Early Assessment',
-  NDA: 'NDA',
-  SURVEY_3: 'Survey 3',
+  NEW: 'New',
+  DATA_GATHERING: 'Data Gathering',
+  SCREENING: 'Screening',
+  INTERNAL_REVIEW: 'Internal Review',
+  MONITORING: 'Monitoring',
+  NDA_REQUESTED: 'NDA Requested',
   DUE_DILIGENCE: 'Due Diligence',
-  CONTRACT_DECISION: 'Contract Decision',
-  DATA_ANALYSIS: 'Data Analysis',
-  CONTRACT_DECISION_FINDERS: 'Contract Decision (Finders)',
-  OUTREACH_LIST: 'Outreach List',
-  MAKE_INTRODUCTIONS: 'Make Introductions',
-  REVENUE_GENERATED: 'Revenue Generated',
+  PARTNER_MATCHING: 'Partner Matching',
+  OUTREACH: 'Partner Outreach',
+  CONTRACT_NEGOTIATION: 'Contract Negotiation',
+  COMPLETED: 'Completed',
 };
 
-// Stage workflows by project tag
-export const StageWorkflows: Record<ProjectTag, Stage[]> = {
-  'Strategic Portfolio': [
-    'LOBBY',
-    'SURVEY_1',
-    'SURVEY_2',
-    'JAPAN_EARLY_ASSESSMENT',
-    'NDA',
-    'SURVEY_3',
-    'DUE_DILIGENCE',
-    'CONTRACT_DECISION',
-  ],
-  Finders: [
-    'LOBBY',
-    'DATA_ANALYSIS',
-    'CONTRACT_DECISION_FINDERS',
-    'OUTREACH_LIST',
-    'MAKE_INTRODUCTIONS',
-    'REVENUE_GENERATED',
-  ],
-  'Development Services': ['LOBBY', 'DATA_ANALYSIS', 'CONTRACT_DECISION'],
-};
+// Standard workflow progression
+export const STANDARD_WORKFLOW: Stage[] = [
+  'NEW',
+  'DATA_GATHERING',
+  'SCREENING',
+  'INTERNAL_REVIEW',
+  // Branch 1: MONITORING (stays here until reactivated)
+  // Branch 2: Continue with NDA_REQUESTED → DUE_DILIGENCE → etc.
+  'NDA_REQUESTED',
+  'DUE_DILIGENCE',
+  'PARTNER_MATCHING',
+  'OUTREACH',
+  'CONTRACT_NEGOTIATION',
+  'COMPLETED',
+];
 
 // ===== Japan Market Fit =====
 export type JapanMarketFit = 'HIGH' | 'MEDIUM' | 'LOW' | 'NOT_ASSESSED';
@@ -79,28 +78,40 @@ export interface Project {
   id: ID;
 
   // Basic Info
-  name: string;
+  name: string; // Format: "CompanyName_DiseaseArea"
   company: Company;
-  tags: ProjectTag[];
   description?: string;
+  diseaseArea?: string; // Disease area for the project
+
+  // Origin & Type
+  reachType: ReachType; // COLD, WARM, or HOT reach
+  projectStatus: ProjectStatus; // ACTIVE, MONITORING, COMPLETED, ARCHIVED
 
   // Stage & Workflow
   currentStage: Stage;
   stageHistory: StageChange[];
 
   // Scoring & Assessment
-  score: number; // 0-100
+  score: number; // 0-100, AI-based scoring
   scoreBreakdown?: ScoreBreakdown;
   lastScoredAt?: Timestamp;
+  autoScoredBy?: 'AI' | 'MANUAL'; // How score was generated
 
-  // Japan Market
+  // Missing Data Tracking
+  missingDataItems?: string[]; // List of missing information
+  missingDataFromScreening?: string[]; // Missing items identified during screening
+  missingDataLastUpdated?: Timestamp;
+
+  // Japan Market Analysis
   japanInterest: boolean;
   japanMarketFit?: JapanMarketFit;
-  japanSummary?: string;
+  japanMarketAnalysis?: string; // AI-generated Japanese market analysis brief
   japanScreeningCompletedAt?: Timestamp;
 
-  // Partner Network
-  partnerTags: string[]; // Internal tags for potential partners
+  // Partner Matching
+  matchedPartners?: ID[]; // IDs of matched partner companies
+  partnerMatchingCompletedAt?: Timestamp;
+  partnerOutreachStatus?: PartnerOutreachStatus[]; // Track outreach to each partner
 
   // NDA
   ndaStatus: NDAStatus;
@@ -111,17 +122,23 @@ export interface Project {
   ddProgress?: number; // 0-100 percentage
   ddStartedAt?: Timestamp;
   ddCompletedAt?: Timestamp;
+  ddWorkspaceId?: ID; // Reference to DD workspace
 
   // Contract
   contractStatus?: ContractStatus;
   contractDecisionAt?: Timestamp;
+  contractIds?: ID[]; // References to Contract records
 
-  // Gate Reviews
-  currentGate?: 1 | 2 | 3; // Current gate the project is at
-  gate1Status?: 'PENDING' | 'APPROVED' | 'REJECTED' | 'CONDITIONAL' | 'DEFERRED';
-  gate2Status?: 'PENDING' | 'APPROVED' | 'REJECTED' | 'CONDITIONAL' | 'DEFERRED';
-  gate3Status?: 'PENDING' | 'APPROVED' | 'REJECTED' | 'CONDITIONAL' | 'DEFERRED';
-  gateReviewIds?: ID[]; // References to GateReview records
+  // Internal Review Decision
+  internalReviewDecision?: 'PROCEED' | 'MONITOR' | 'REJECT' | 'PENDING';
+  internalReviewDate?: Timestamp;
+  internalReviewNotes?: string;
+  internalReviewBy?: ID;
+
+  // Automation & Email Tracking
+  thankYouEmailSent?: boolean;
+  thankYouEmailSentAt?: Timestamp;
+  autoCreatedFrom?: 'SURVEY' | 'INTRO_DECK' | 'MANUAL';
 
   // Metadata
   createdAt: Timestamp;
@@ -131,8 +148,23 @@ export interface Project {
 
   // Flags
   isStalled?: boolean; // No activity > 30 days
-  isHot?: boolean; // Score > 80 && Japan interest
-  isDiamond?: boolean; // Strategic + High potential
+  isHot?: boolean; // Score > threshold (e.g., 80)
+  isPriority?: boolean; // High priority project
+}
+
+// ===== Partner Outreach Status =====
+export interface PartnerOutreachStatus {
+  partnerId: ID; // Reference to Company in address book
+  partnerName: string;
+  status: 'NOT_CONTACTED' | 'CONTACTED' | 'INTERESTED' | 'NOT_INTERESTED' | 'NEGOTIATING' | 'CLOSED';
+  contactedAt?: Timestamp;
+  contactedBy?: ID;
+  responseReceived?: boolean;
+  responseDate?: Timestamp;
+  interestLevel?: 'HIGH' | 'MEDIUM' | 'LOW';
+  actionItems?: string[]; // Follow-up tasks
+  notes?: string;
+  lastUpdated: Timestamp;
 }
 
 // ===== Stage Change History =====
@@ -183,25 +215,25 @@ export interface ScoringCriterion {
   condition: string;
 }
 
-// ===== Gate Decision =====
-export type GateType = 'GATE_1' | 'GATE_2' | 'GATE_3';
-export type GateDecisionType = 'APPROVE' | 'HOLD' | 'CLOSE' | 'REQUEST_INFO';
+// ===== Internal Review Decision (replacing complex gates) =====
+export type InternalReviewDecision = 'PROCEED' | 'MONITOR' | 'REJECT' | 'PENDING';
 
-export interface GateDecision {
+export interface InternalReviewRecord {
   id: ID;
   projectId: ID;
-  gate: GateType;
-  decision: GateDecisionType;
+  decision: InternalReviewDecision;
   reviewer: ID;
   reviewerName: string;
   reviewedAt: Timestamp;
   reasoning: string;
   nextSteps?: string;
+  conditions?: string[]; // If conditional proceed
 }
 
 // ===== Project Filters =====
 export interface ProjectFilters {
-  tags?: ProjectTag[];
+  reachType?: ReachType[]; // COLD, WARM, HOT
+  projectStatus?: ProjectStatus[]; // ACTIVE, MONITORING, COMPLETED, ARCHIVED
   stages?: Stage[];
   scoreMin?: number;
   scoreMax?: number;
@@ -209,11 +241,13 @@ export interface ProjectFilters {
   japanMarketFit?: JapanMarketFit[];
   ndaStatus?: NDAStatus[];
   contractStatus?: ContractStatus[];
+  internalReviewDecision?: InternalReviewDecision[];
   assignedTo?: ID[];
-  partnerTags?: string[];
+  diseaseArea?: string[];
   isHot?: boolean;
-  isDiamond?: boolean;
+  isPriority?: boolean;
   isStalled?: boolean;
+  hasMissingData?: boolean;
   search?: string;
   dateFrom?: Timestamp;
   dateTo?: Timestamp;
@@ -242,9 +276,11 @@ export type FilterPresetType =
   | 'PENDING_NDA'
   | 'IN_DD'
   | 'AWAITING_CONTRACT'
-  | 'GATE_1_PENDING'
-  | 'GATE_2_PENDING'
-  | 'GATE_3_PENDING';
+  | 'INTERNAL_REVIEW_PENDING'
+  | 'MONITORING_BUCKET'
+  | 'ACTIVE_BUSINESS'
+  | 'PARTNER_MATCHING'
+  | 'MISSING_DATA';
 
 export interface FilterPreset {
   type: FilterPresetType;
@@ -259,10 +295,14 @@ export interface FilterPreset {
 export interface ProjectStats {
   total: number;
   byStage: Record<Stage, number>;
-  byTag: Record<ProjectTag, number>;
+  byReachType: Record<ReachType, number>;
+  byProjectStatus: Record<ProjectStatus, number>;
   byJapanFit: Record<JapanMarketFit, number>;
+  byInternalReview: Record<InternalReviewDecision | 'NOT_REVIEWED', number>;
   averageScore: number;
   hotCount: number;
-  diamondCount: number;
+  priorityCount: number;
   stalledCount: number;
+  monitoringCount: number;
+  activeBusinessCount: number;
 }

@@ -27,9 +27,11 @@ export default function DashboardPage() {
   // Calculate stats
   const stats = useMemo(() => {
     const hotProjects = projects.filter((p) => p.isHot).length;
-    const diamondProjects = projects.filter((p) => p.isDiamond).length;
+    const priorityProjects = projects.filter((p) => p.isPriority).length;
     const stalledProjects = projects.filter((p) => p.isStalled).length;
-    const activeProjects = projects.filter((p) => !p.isStalled).length;
+    const activeProjects = projects.filter((p) => p.projectStatus === 'ACTIVE').length;
+    const monitoringProjects = projects.filter((p) => p.projectStatus === 'MONITORING').length;
+    const completedProjects = projects.filter((p) => p.projectStatus === 'COMPLETED').length;
     const avgScore =
       projects.length > 0
         ? Math.round(projects.reduce((sum, p) => sum + p.score, 0) / projects.length)
@@ -39,33 +41,41 @@ export default function DashboardPage() {
       (s) => s.status === 'NOT_STARTED' || s.status === 'IN_PROGRESS'
     ).length;
 
-    // Projects by tag
-    const strategicPortfolio = projects.filter((p) =>
-      p.tags.includes('Strategic Portfolio')
-    ).length;
-    const finders = projects.filter((p) => p.tags.includes('Finders')).length;
-    const developmentServices = projects.filter((p) =>
-      p.tags.includes('Development Services')
-    ).length;
+    // Projects by reach type
+    const coldReach = projects.filter((p) => p.reachType === 'COLD').length;
+    const warmReach = projects.filter((p) => p.reachType === 'WARM').length;
+    const hotReach = projects.filter((p) => p.reachType === 'HOT').length;
 
     // Projects with Japan interest
     const japanInterest = projects.filter((p) => p.japanInterest).length;
 
+    // Projects in key stages
+    const inScreening = projects.filter((p) => p.currentStage === 'SCREENING').length;
+    const inInternalReview = projects.filter((p) => p.currentStage === 'INTERNAL_REVIEW').length;
+    const inDueDiligence = projects.filter((p) => p.currentStage === 'DUE_DILIGENCE').length;
+    const inPartnerMatching = projects.filter((p) => p.currentStage === 'PARTNER_MATCHING').length;
+
     return {
       totalProjects: projects.length,
       activeProjects,
+      monitoringProjects,
+      completedProjects,
       stalledProjects,
       totalCompanies: companies.length,
       totalContacts: contacts.length,
       totalSurveys: surveys.length,
       hotProjects,
-      diamondProjects,
+      priorityProjects,
       avgScore,
       pendingSurveys,
-      strategicPortfolio,
-      finders,
-      developmentServices,
+      coldReach,
+      warmReach,
+      hotReach,
       japanInterest,
+      inScreening,
+      inInternalReview,
+      inDueDiligence,
+      inPartnerMatching,
     };
   }, [projects, companies, contacts, surveys]);
 
@@ -258,9 +268,15 @@ export default function DashboardPage() {
                   </Badge>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-sm text-gray-600">Diamond Projects</span>
+                  <span className="text-sm text-gray-600">Priority Projects</span>
                   <Badge variant="success" size="md">
-                    {stats.diamondProjects}
+                    {stats.priorityProjects}
+                  </Badge>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-gray-600">Monitoring</span>
+                  <Badge variant="default" size="md">
+                    {stats.monitoringProjects}
                   </Badge>
                 </div>
                 <div className="flex items-center justify-between">

@@ -5,21 +5,130 @@
 
 import type { ID, Timestamp, Email } from './common.types';
 
+// ===== Therapeutic Area =====
+// Broad medical specialties for partner matching
+export const TherapeuticArea = {
+  ONCOLOGY: 'ONCOLOGY',
+  CARDIOLOGY: 'CARDIOLOGY',
+  NEUROLOGY: 'NEUROLOGY',
+  IMMUNOLOGY: 'IMMUNOLOGY',
+  INFECTIOUS_DISEASE: 'INFECTIOUS_DISEASE',
+  METABOLIC_DISORDERS: 'METABOLIC_DISORDERS',
+  RESPIRATORY: 'RESPIRATORY',
+  GASTROENTEROLOGY: 'GASTROENTEROLOGY',
+  NEPHROLOGY: 'NEPHROLOGY',
+  HEMATOLOGY: 'HEMATOLOGY',
+  OPHTHALMOLOGY: 'OPHTHALMOLOGY',
+  DERMATOLOGY: 'DERMATOLOGY',
+  ORTHOPEDICS: 'ORTHOPEDICS',
+  RARE_DISEASES: 'RARE_DISEASES',
+  OTHER: 'OTHER',
+} as const;
+
+export type TherapeuticArea = (typeof TherapeuticArea)[keyof typeof TherapeuticArea];
+
+export const TherapeuticAreaLabels: Record<TherapeuticArea, string> = {
+  [TherapeuticArea.ONCOLOGY]: 'Oncology',
+  [TherapeuticArea.CARDIOLOGY]: 'Cardiology',
+  [TherapeuticArea.NEUROLOGY]: 'Neurology',
+  [TherapeuticArea.IMMUNOLOGY]: 'Immunology',
+  [TherapeuticArea.INFECTIOUS_DISEASE]: 'Infectious Disease',
+  [TherapeuticArea.METABOLIC_DISORDERS]: 'Metabolic Disorders',
+  [TherapeuticArea.RESPIRATORY]: 'Respiratory',
+  [TherapeuticArea.GASTROENTEROLOGY]: 'Gastroenterology',
+  [TherapeuticArea.NEPHROLOGY]: 'Nephrology',
+  [TherapeuticArea.HEMATOLOGY]: 'Hematology',
+  [TherapeuticArea.OPHTHALMOLOGY]: 'Ophthalmology',
+  [TherapeuticArea.DERMATOLOGY]: 'Dermatology',
+  [TherapeuticArea.ORTHOPEDICS]: 'Orthopedics',
+  [TherapeuticArea.RARE_DISEASES]: 'Rare Diseases',
+  [TherapeuticArea.OTHER]: 'Other',
+};
+
+// ===== Disease Area =====
+// Specific disease indications for partner matching
+// This is a sample list - should be extended based on actual needs
+export const DiseaseArea = {
+  BREAST_CANCER: 'BREAST_CANCER',
+  LUNG_CANCER: 'LUNG_CANCER',
+  COLORECTAL_CANCER: 'COLORECTAL_CANCER',
+  LEUKEMIA: 'LEUKEMIA',
+  LYMPHOMA: 'LYMPHOMA',
+  DIABETES_TYPE_1: 'DIABETES_TYPE_1',
+  DIABETES_TYPE_2: 'DIABETES_TYPE_2',
+  ALZHEIMERS: 'ALZHEIMERS',
+  PARKINSONS: 'PARKINSONS',
+  MULTIPLE_SCLEROSIS: 'MULTIPLE_SCLEROSIS',
+  RHEUMATOID_ARTHRITIS: 'RHEUMATOID_ARTHRITIS',
+  LUPUS: 'LUPUS',
+  CROHNS_DISEASE: 'CROHNS_DISEASE',
+  ULCERATIVE_COLITIS: 'ULCERATIVE_COLITIS',
+  ASTHMA: 'ASTHMA',
+  COPD: 'COPD',
+  HYPERTENSION: 'HYPERTENSION',
+  HEART_FAILURE: 'HEART_FAILURE',
+  COVID_19: 'COVID_19',
+  HIV: 'HIV',
+  HEPATITIS_C: 'HEPATITIS_C',
+  OTHER: 'OTHER',
+} as const;
+
+export type DiseaseArea = (typeof DiseaseArea)[keyof typeof DiseaseArea];
+
+export const DiseaseAreaLabels: Record<DiseaseArea, string> = {
+  [DiseaseArea.BREAST_CANCER]: 'Breast Cancer',
+  [DiseaseArea.LUNG_CANCER]: 'Lung Cancer',
+  [DiseaseArea.COLORECTAL_CANCER]: 'Colorectal Cancer',
+  [DiseaseArea.LEUKEMIA]: 'Leukemia',
+  [DiseaseArea.LYMPHOMA]: 'Lymphoma',
+  [DiseaseArea.DIABETES_TYPE_1]: 'Diabetes Type 1',
+  [DiseaseArea.DIABETES_TYPE_2]: 'Diabetes Type 2',
+  [DiseaseArea.ALZHEIMERS]: "Alzheimer's Disease",
+  [DiseaseArea.PARKINSONS]: "Parkinson's Disease",
+  [DiseaseArea.MULTIPLE_SCLEROSIS]: 'Multiple Sclerosis',
+  [DiseaseArea.RHEUMATOID_ARTHRITIS]: 'Rheumatoid Arthritis',
+  [DiseaseArea.LUPUS]: 'Lupus',
+  [DiseaseArea.CROHNS_DISEASE]: "Crohn's Disease",
+  [DiseaseArea.ULCERATIVE_COLITIS]: 'Ulcerative Colitis',
+  [DiseaseArea.ASTHMA]: 'Asthma',
+  [DiseaseArea.COPD]: 'COPD',
+  [DiseaseArea.HYPERTENSION]: 'Hypertension',
+  [DiseaseArea.HEART_FAILURE]: 'Heart Failure',
+  [DiseaseArea.COVID_19]: 'COVID-19',
+  [DiseaseArea.HIV]: 'HIV/AIDS',
+  [DiseaseArea.HEPATITIS_C]: 'Hepatitis C',
+  [DiseaseArea.OTHER]: 'Other',
+};
+
 // ===== Modality =====
 export const Modality = {
-  DRUG: 'DRUG',
-  DEVICE: 'DEVICE',
+  SMALL_MOLECULE: 'SMALL_MOLECULE',
+  BIOLOGICS: 'BIOLOGICS',
+  ANTIBODY: 'ANTIBODY',
+  CELL_THERAPY: 'CELL_THERAPY',
+  GENE_THERAPY: 'GENE_THERAPY',
+  RNA_THERAPY: 'RNA_THERAPY',
+  VACCINE: 'VACCINE',
+  MEDICAL_DEVICE: 'MEDICAL_DEVICE',
   DIAGNOSTIC: 'DIAGNOSTIC',
   DIGITAL_HEALTH: 'DIGITAL_HEALTH',
+  OTHER: 'OTHER',
 } as const;
 
 export type Modality = (typeof Modality)[keyof typeof Modality];
 
 export const ModalityLabels: Record<Modality, string> = {
-  [Modality.DRUG]: 'Drug',
-  [Modality.DEVICE]: 'Device',
+  [Modality.SMALL_MOLECULE]: 'Small Molecule Drug',
+  [Modality.BIOLOGICS]: 'Biologics',
+  [Modality.ANTIBODY]: 'Antibody',
+  [Modality.CELL_THERAPY]: 'Cell Therapy',
+  [Modality.GENE_THERAPY]: 'Gene Therapy',
+  [Modality.RNA_THERAPY]: 'RNA Therapy',
+  [Modality.VACCINE]: 'Vaccine',
+  [Modality.MEDICAL_DEVICE]: 'Medical Device',
   [Modality.DIAGNOSTIC]: 'Diagnostic',
   [Modality.DIGITAL_HEALTH]: 'Digital Health',
+  [Modality.OTHER]: 'Other',
 };
 
 // ===== Key Contact =====
@@ -67,7 +176,6 @@ export interface Company {
   nameLocal?: string; // Local language name (e.g., Japanese name)
   role: CompanyRole;
   category: CompanyCategory;
-  modality?: Modality; // Product modality (Drug, Device, etc.)
   website?: string;
   phone?: string;
   email?: Email;
@@ -77,6 +185,16 @@ export interface Company {
   employeeCount?: number;
   revenue?: string; // e.g., "$10M-$50M"
   tags: string[]; // e.g., ["Medical Device", "Oncology"]
+
+  // Partner Matching Fields (for AI matching algorithm)
+  focusedTherapeuticAreas?: TherapeuticArea[]; // e.g., [ONCOLOGY, CARDIOLOGY]
+  focusedDiseaseAreas?: DiseaseArea[]; // e.g., [BREAST_CANCER, LUNG_CANCER]
+  modalities?: Modality[]; // e.g., [SMALL_MOLECULE, BIOLOGICS]
+
+  // Partner Capabilities (for distributors, investors, consultants, etc.)
+  partnerType?: ('DISTRIBUTOR' | 'INVESTOR' | 'CONSULTANT' | 'SERVICE_PROVIDER' | 'OTHER')[];
+  geographicFocus?: string[]; // e.g., ["Japan", "Asia-Pacific", "Global"]
+  capabilities?: string[]; // e.g., ["Clinical Development", "Regulatory Affairs", "Distribution"]
 
   // Key Contacts
   managementContact?: KeyContact; // Management Contact

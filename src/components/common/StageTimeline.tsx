@@ -1,29 +1,38 @@
 /**
  * Stage Timeline Component
  * Visual timeline/stepper showing project workflow stages
+ * Updated for simplified linear workflow
  */
 
 import { IconCheck, IconClock, IconCircle } from '@tabler/icons-react';
-import type { Stage, ProjectTag } from '../../types/project.types';
-import { StageLabels, StageWorkflows } from '../../types/project.types';
+import type { Stage } from '../../types/project.types';
+import { StageLabels, STANDARD_WORKFLOW } from '../../types/project.types';
 
 interface StageTimelineProps {
   currentStage: Stage;
-  projectTag: ProjectTag;
   onStageClick?: (stage: Stage) => void;
   compact?: boolean;
 }
 
 export function StageTimeline({
   currentStage,
-  projectTag,
   onStageClick,
   compact = false,
 }: StageTimelineProps) {
-  const workflow = StageWorkflows[projectTag];
-  const currentIndex = workflow.indexOf(currentStage);
+  // Use standard workflow, filtering out MONITORING stage for display
+  // (MONITORING is a branch, not part of linear flow)
+  const workflow = STANDARD_WORKFLOW.filter(
+    (stage): stage is Exclude<Stage, 'MONITORING'> => stage !== 'MONITORING'
+  );
+
+  // Special handling for MONITORING stage
+  const isMonitoring = currentStage === 'MONITORING';
+
+  // Find current index (if MONITORING, treat as no current stage in main flow)
+  const currentIndex = isMonitoring ? -1 : workflow.indexOf(currentStage);
 
   const getStageStatus = (index: number): 'completed' | 'current' | 'upcoming' => {
+    if (isMonitoring) return 'upcoming'; // All stages are upcoming if in monitoring
     if (index < currentIndex) return 'completed';
     if (index === currentIndex) return 'current';
     return 'upcoming';

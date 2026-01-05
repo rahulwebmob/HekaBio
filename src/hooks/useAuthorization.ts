@@ -52,28 +52,27 @@ export function useAuthorization() {
   };
 
   /**
-   * Check if current user is a gate analyst (any gate level)
+   * Check if current user is an analyst
    */
-  const isGateAnalyst = (): boolean => {
+  const isAnalyst = (): boolean => {
     if (!user) return false;
-    return (
-      user.role === 'gate_1_analyst' ||
-      user.role === 'gate_2_analyst' ||
-      user.role === 'gate_3_decision_maker'
-    );
+    return user.role === 'analyst';
   };
 
   /**
-   * Check if current user is a DD specialist (any type)
+   * Check if current user is a DD specialist
    */
   const isDDSpecialist = (): boolean => {
     if (!user) return false;
-    return (
-      user.role === 'dd_specialist_scientific' ||
-      user.role === 'dd_specialist_regulatory' ||
-      user.role === 'dd_specialist_commercial' ||
-      user.role === 'dd_specialist_financial'
-    );
+    return user.role === 'dd_specialist';
+  };
+
+  /**
+   * Check if current user can edit projects (admin or analyst)
+   */
+  const canEditProjects = (): boolean => {
+    if (!user) return false;
+    return user.role === 'super_admin' || user.role === 'crm_owner' || user.role === 'analyst';
   };
 
   return {
@@ -82,8 +81,9 @@ export function useAuthorization() {
     checkAllPermissions,
     hasRole,
     isAdmin,
-    isGateAnalyst,
+    isAnalyst,
     isDDSpecialist,
+    canEditProjects,
     currentRole: user?.role || null,
   };
 }

@@ -10,15 +10,15 @@ import type { TypedUseSelectorHook } from 'react-redux';
 import authReducer from '../features/auth/authSlice';
 import addressBookReducer from '../store/slices/addressBookSlice';
 import projectsReducer from '../store/slices/projectsSlice';
-import opportunitiesReducer from '../store/slices/opportunitiesSlice';
+// import opportunitiesReducer from '../store/slices/opportunitiesSlice'; // REMOVED: Out of scope
 import surveysReducer from '../store/slices/surveysSlice';
-import communicationsReducer from '../store/slices/communicationsSlice';
-import tasksReducer from '../store/slices/tasksSlice';
-import notificationsReducer from '../store/slices/notificationsSlice';
-import pipelineReducer from '../store/slices/pipelineSlice';
-import calendarReducer from '../store/slices/calendarSlice';
+// import communicationsReducer from '../store/slices/communicationsSlice'; // REMOVED: Out of scope (Utils)
+// import tasksReducer from '../store/slices/tasksSlice'; // REMOVED: Out of scope (Utils)
+// import notificationsReducer from '../store/slices/notificationsSlice'; // REMOVED: Out of scope (Utils)
+// import pipelineReducer from '../store/slices/pipelineSlice'; // REMOVED: Out of scope
+// import calendarReducer from '../store/slices/calendarSlice'; // REMOVED: Out of scope (Utils)
 import documentsReducer from '../store/slices/documentsSlice';
-import gateReducer from '../store/slices/gateSlice';
+// import gateReducer from '../store/slices/gateSlice'; // REMOVED: Replaced with internal review
 import ndaReducer from '../store/slices/ndaSlice';
 import ddReducer from '../store/slices/ddSlice';
 import contractReducer from '../store/slices/contractSlice';
@@ -33,15 +33,15 @@ export const store = configureStore({
     auth: authReducer,
     addressBook: addressBookReducer,
     projects: projectsReducer,
-    opportunities: opportunitiesReducer,
+    // opportunities: opportunitiesReducer, // REMOVED: Out of scope
     surveys: surveysReducer,
-    communications: communicationsReducer,
-    tasks: tasksReducer,
-    notifications: notificationsReducer,
-    pipeline: pipelineReducer,
-    calendar: calendarReducer,
+    // communications: communicationsReducer, // REMOVED: Out of scope (Utils)
+    // tasks: tasksReducer, // REMOVED: Out of scope (Utils)
+    // notifications: notificationsReducer, // REMOVED: Out of scope (Utils)
+    // pipeline: pipelineReducer, // REMOVED: Out of scope
+    // calendar: calendarReducer, // REMOVED: Out of scope (Utils)
     documents: documentsReducer,
-    gate: gateReducer,
+    // gate: gateReducer, // REMOVED: Replaced with internal review in projects
     nda: ndaReducer,
     dd: ddReducer,
     contract: contractReducer,

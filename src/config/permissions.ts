@@ -54,7 +54,7 @@ export const Permission = {
 
 export type Permission = (typeof Permission)[keyof typeof Permission];
 
-// Permission sets for each role
+// Permission sets for each role - Updated for simplified role structure
 export const rolePermissions: Record<UserRole, Permission[]> = {
   [UserRole.SUPER_ADMIN]: [
     // Super Admin has all permissions
@@ -67,6 +67,10 @@ export const rolePermissions: Record<UserRole, Permission[]> = {
     Permission.EDIT_ANY_INNOVATION,
     Permission.DELETE_INNOVATION,
     Permission.VIEW_EVALUATIONS,
+    Permission.EVALUATE_GATE_1,
+    Permission.EVALUATE_GATE_2,
+    Permission.EVALUATE_GATE_3,
+    Permission.CONDUCT_DUE_DILIGENCE,
     Permission.VIEW_USERS,
     Permission.CREATE_USER,
     Permission.EDIT_USER,
@@ -78,37 +82,25 @@ export const rolePermissions: Record<UserRole, Permission[]> = {
     Permission.VIEW_DOCUMENTS,
     Permission.UPLOAD_DOCUMENTS,
     Permission.VIEW_SETTINGS,
+    Permission.EDIT_SETTINGS,
   ],
 
-  [UserRole.GATE_1_ANALYST]: [
+  [UserRole.ANALYST]: [
     Permission.VIEW_DASHBOARD,
     Permission.VIEW_INNOVATIONS,
+    Permission.EDIT_OWN_INNOVATION,
     Permission.VIEW_EVALUATIONS,
     Permission.EVALUATE_GATE_1,
-    Permission.VIEW_DOCUMENTS,
-    Permission.UPLOAD_DOCUMENTS,
-  ],
-
-  [UserRole.GATE_2_ANALYST]: [
-    Permission.VIEW_DASHBOARD,
-    Permission.VIEW_INNOVATIONS,
-    Permission.VIEW_EVALUATIONS,
     Permission.EVALUATE_GATE_2,
+    Permission.VIEW_PARTNERS,
+    Permission.CREATE_PARTNER,
+    Permission.EDIT_PARTNER,
     Permission.VIEW_DOCUMENTS,
     Permission.UPLOAD_DOCUMENTS,
-  ],
-
-  [UserRole.GATE_3_DECISION_MAKER]: [
-    Permission.VIEW_DASHBOARD,
-    Permission.VIEW_INNOVATIONS,
-    Permission.VIEW_EVALUATIONS,
-    Permission.EVALUATE_GATE_3,
     Permission.VIEW_REPORTS,
-    Permission.EXPORT_REPORTS,
-    Permission.VIEW_DOCUMENTS,
   ],
 
-  [UserRole.DD_SPECIALIST_SCIENTIFIC]: [
+  [UserRole.DD_SPECIALIST]: [
     Permission.VIEW_DASHBOARD,
     Permission.VIEW_INNOVATIONS,
     Permission.VIEW_EVALUATIONS,
@@ -117,31 +109,12 @@ export const rolePermissions: Record<UserRole, Permission[]> = {
     Permission.UPLOAD_DOCUMENTS,
   ],
 
-  [UserRole.DD_SPECIALIST_REGULATORY]: [
+  [UserRole.VIEWER]: [
     Permission.VIEW_DASHBOARD,
     Permission.VIEW_INNOVATIONS,
     Permission.VIEW_EVALUATIONS,
-    Permission.CONDUCT_DUE_DILIGENCE,
     Permission.VIEW_DOCUMENTS,
-    Permission.UPLOAD_DOCUMENTS,
-  ],
-
-  [UserRole.DD_SPECIALIST_COMMERCIAL]: [
-    Permission.VIEW_DASHBOARD,
-    Permission.VIEW_INNOVATIONS,
-    Permission.VIEW_EVALUATIONS,
-    Permission.CONDUCT_DUE_DILIGENCE,
-    Permission.VIEW_DOCUMENTS,
-    Permission.UPLOAD_DOCUMENTS,
-  ],
-
-  [UserRole.DD_SPECIALIST_FINANCIAL]: [
-    Permission.VIEW_DASHBOARD,
-    Permission.VIEW_INNOVATIONS,
-    Permission.VIEW_EVALUATIONS,
-    Permission.CONDUCT_DUE_DILIGENCE,
-    Permission.VIEW_DOCUMENTS,
-    Permission.UPLOAD_DOCUMENTS,
+    Permission.VIEW_REPORTS,
   ],
 
   [UserRole.PRODUCT_OWNER]: [
@@ -151,30 +124,6 @@ export const rolePermissions: Record<UserRole, Permission[]> = {
     Permission.EDIT_OWN_INNOVATION,
     Permission.VIEW_DOCUMENTS,
     Permission.UPLOAD_DOCUMENTS,
-  ],
-
-  [UserRole.HOSPITAL_STAFF]: [
-    Permission.VIEW_DASHBOARD,
-    Permission.VIEW_INNOVATIONS,
-    Permission.VIEW_DOCUMENTS,
-  ],
-
-  [UserRole.DISTRIBUTOR_STAFF]: [
-    Permission.VIEW_DASHBOARD,
-    Permission.VIEW_INNOVATIONS,
-    Permission.VIEW_DOCUMENTS,
-  ],
-
-  [UserRole.LICENSE_HOLDER_STAFF]: [
-    Permission.VIEW_DASHBOARD,
-    Permission.VIEW_INNOVATIONS,
-    Permission.VIEW_DOCUMENTS,
-  ],
-
-  [UserRole.MANUFACTURING_STAFF]: [
-    Permission.VIEW_DASHBOARD,
-    Permission.VIEW_INNOVATIONS,
-    Permission.VIEW_DOCUMENTS,
   ],
 };
 

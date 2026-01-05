@@ -24,16 +24,49 @@ export function ProjectCard({
   onSelect,
 }: ProjectCardProps) {
   const getStageColor = (stage: string) => {
-    if (stage.includes('LOBBY')) return 'default';
-    if (stage.includes('SURVEY')) return 'info';
-    if (stage.includes('JAPAN')) return 'primary';
-    if (stage.includes('NDA')) return 'warning';
-    if (stage.includes('DUE_DILIGENCE')) return 'primary';
-    if (stage.includes('CONTRACT')) return 'success';
-    if (stage.includes('DATA_ANALYSIS')) return 'info';
-    if (stage.includes('OUTREACH') || stage.includes('INTRODUCTIONS')) return 'warning';
-    if (stage.includes('REVENUE')) return 'success';
+    // Updated for new workflow stages
+    if (stage === 'NEW') return 'info';
+    if (stage === 'DATA_GATHERING') return 'info';
+    if (stage === 'SCREENING') return 'primary';
+    if (stage === 'INTERNAL_REVIEW') return 'warning';
+    if (stage === 'MONITORING') return 'default';
+    if (stage === 'NDA_REQUESTED') return 'warning';
+    if (stage === 'DUE_DILIGENCE') return 'primary';
+    if (stage === 'PARTNER_MATCHING') return 'primary';
+    if (stage === 'OUTREACH') return 'warning';
+    if (stage === 'CONTRACT_NEGOTIATION') return 'success';
+    if (stage === 'COMPLETED') return 'success';
     return 'default';
+  };
+
+  const getReachTypeBadge = () => {
+    const variants = {
+      COLD: 'info' as const,
+      WARM: 'warning' as const,
+      HOT: 'error' as const,
+    };
+
+    return (
+      <Badge variant={variants[project.reachType]} size="sm">
+        {project.reachType} Reach
+      </Badge>
+    );
+  };
+
+  const getProjectStatusBadge = () => {
+    if (project.projectStatus === 'ACTIVE') return null; // Don't show if active (default)
+
+    const variants = {
+      MONITORING: 'default' as const,
+      COMPLETED: 'success' as const,
+      ARCHIVED: 'default' as const,
+    };
+
+    return (
+      <Badge variant={variants[project.projectStatus]} size="sm">
+        {project.projectStatus}
+      </Badge>
+    );
   };
 
   const getScoreColor = (score: number) => {
@@ -114,35 +147,48 @@ export function ProjectCard({
 
       {/* Tags and Badges */}
       <div className="flex flex-wrap items-center gap-2 mb-4">
-        {/* Project Tag */}
-        {project.tags.map((tag) => (
-          <Badge key={tag} variant="primary" size="sm">
-            {tag}
-          </Badge>
-        ))}
+        {/* Reach Type */}
+        {getReachTypeBadge()}
 
         {/* Stage Badge */}
         <Badge variant={getStageColor(project.currentStage)} size="sm">
           {StageLabels[project.currentStage]}
         </Badge>
 
+        {/* Project Status (if not active) */}
+        {getProjectStatusBadge()}
+
+        {/* Disease Area */}
+        {project.diseaseArea && (
+          <Badge variant="default" size="sm">
+            {project.diseaseArea}
+          </Badge>
+        )}
+
         {/* Japan Fit */}
         {getJapanFitBadge()}
 
-        {/* Hot/Diamond Flags */}
+        {/* Hot/Priority Flags */}
         {project.isHot && (
           <Badge variant="error" size="sm">
             🔥 Hot
           </Badge>
         )}
-        {project.isDiamond && (
+        {project.isPriority && (
           <Badge variant="success" size="sm">
-            💎 Diamond
+            ⭐ Priority
           </Badge>
         )}
         {project.isStalled && (
           <Badge variant="default" size="sm">
             ⏸️ Stalled
+          </Badge>
+        )}
+
+        {/* Partner Count */}
+        {project.matchedPartners && project.matchedPartners.length > 0 && (
+          <Badge variant="primary" size="sm">
+            {project.matchedPartners.length} Partners
           </Badge>
         )}
       </div>

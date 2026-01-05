@@ -14,6 +14,10 @@ import type {
   JapanMarketFit,
   NDAStatus,
   ContractStatus,
+  ReachType,
+  ProjectStatus,
+  InternalReviewDecision,
+  PartnerOutreachStatus,
 } from '../../types/project.types';
 import { mockProjects } from '../../data/mockProjects';
 
@@ -62,19 +66,22 @@ const projectsSlice = createSlice({
           ...originalProject,
           id: `project-${Date.now()}`,
           name: `${originalProject.name} (Copy)`,
-          currentStage: 'LOBBY', // Reset to initial stage
+          currentStage: 'NEW', // Reset to initial stage
           score: 0, // Reset score
           scoreBreakdown: undefined,
           lastScoredAt: undefined,
           isHot: false,
+          isPriority: false,
           ddProgress: 0,
           ddCompletedAt: undefined,
+          internalReviewDecision: 'PENDING',
+          thankYouEmailSent: false,
           stageHistory: [
             {
               id: `stage-${Date.now()}`,
               projectId: `project-${Date.now()}`,
               fromStage: null,
-              toStage: 'LOBBY',
+              toStage: 'NEW',
               changedBy: 'user-001',
               changedByName: 'Current User',
               changedAt: now,
@@ -143,16 +150,22 @@ const projectsSlice = createSlice({
     // Score Management
     updateScore: (
       state,
-      action: PayloadAction<{ projectId: string; score: number; breakdown?: ScoreBreakdown }>
+      action: PayloadAction<{
+        projectId: string;
+        score: number;
+        breakdown?: ScoreBreakdown;
+        scoredBy?: 'AI' | 'MANUAL';
+      }>
     ) => {
       const project = state.projects.find((p) => p.id === action.payload.projectId);
       if (project) {
         project.score = action.payload.score;
         project.scoreBreakdown = action.payload.breakdown;
+        project.autoScoredBy = action.payload.scoredBy || 'MANUAL';
         project.lastScoredAt = new Date().toISOString();
         project.updatedAt = new Date().toISOString();
-        // Update hot flag
-        project.isHot = project.score > 80 && project.japanInterest;
+        // Update hot flag based on score threshold
+        project.isHot = project.score > 80;
       }
     },
 
@@ -163,13 +176,149 @@ const projectsSlice = createSlice({
         projectId: string;
         japanMarketFit: JapanMarketFit;
         japanSummary?: string;
+        japanMarketAnalysis?: string;
       }>
     ) => {
       const project = state.projects.find((p) => p.id === action.payload.projectId);
       if (project) {
         project.japanMarketFit = action.payload.japanMarketFit;
         project.japanSummary = action.payload.japanSummary;
+        project.japanMarketAnalysis = action.payload.japanMarketAnalysis;
         project.japanScreeningCompletedAt = new Date().toISOString();
+        project.updatedAt = new Date().toISOString();
+      }
+    },
+
+    // Internal Review Decision
+    updateInternalReview: (
+      state,
+      action: PayloadAction<{
+        projectId: string;
+        decision: InternalReviewDecision;
+        notes?: string;
+        reviewedBy?: string;
+      }>
+    ) => {
+      const project = state.projects.find((p) => p.id === action.payload.projectId);
+      if (project) {
+        project.internalReviewDecision = action.payload.decision;
+        project.internalReviewDate = new Date().toISOString();
+        project.internalReviewNotes = action.payload.notes;
+        project.internalReviewBy = action.payload.reviewedBy;
+        project.updatedAt = new Date().toISOString();
+
+        // Auto-move to appropriate stage based on decision
+        if (action.payload.decision === 'MONITOR') {
+          project.projectStatus = 'MONITORING';
+          project.currentStage = 'MONITORING';
+        } else if (action.payload.decision === 'PROCEED') {
+          project.projectStatus = 'ACTIVE';
+          // Move to next stage in workflow (NDA_REQUESTED)
+          project.currentStage = 'NDA_REQUESTED';
+        }
+      }
+    },
+
+    // Missing Data Management
+    updateMissingData: (
+      state,
+      action: PayloadAction<{
+        projectId: string;
+        missingDataItems?: string[];
+        missingDataFromScreening?: string[];
+      }>
+    ) => {
+      const project = state.projects.find((p) => p.id === action.payload.projectId);
+      if (project) {
+        if (action.payload.missingDataItems !== undefined) {
+          project.missingDataItems = action.payload.missingDataItems;
+        }
+        if (action.payload.missingDataFromScreening !== undefined) {
+          project.missingDataFromScreening = action.payload.missingDataFromScreening;
+        }
+        project.missingDataLastUpdated = new Date().toISOString();
+        project.updatedAt = new Date().toISOString();
+      }
+    },
+
+    // Partner Matching
+    updatePartnerMatching: (
+      state,
+      action: PayloadAction<{
+        projectId: string;
+        matchedPartners: string[];
+      }>
+    ) => {
+      const project = state.projects.find((p) => p.id === action.payload.projectId);
+      if (project) {
+        project.matchedPartners = action.payload.matchedPartners;
+        project.partnerMatchingCompletedAt = new Date().toISOString();
+        project.updatedAt = new Date().toISOString();
+      }
+    },
+
+    // Partner Outreach Status
+    updatePartnerOutreach: (
+      state,
+      action: PayloadAction<{
+        projectId: string;
+        partnerOutreachStatus: PartnerOutreachStatus[];
+      }>
+    ) => {
+      const project = state.projects.find((p) => p.id === action.payload.projectId);
+      if (project) {
+        project.partnerOutreachStatus = action.payload.partnerOutreachStatus;
+        project.updatedAt = new Date().toISOString();
+      }
+    },
+
+    // Update single partner outreach
+    updateSinglePartnerOutreach: (
+      state,
+      action: PayloadAction<{
+        projectId: string;
+        partnerId: string;
+        status: PartnerOutreachStatus;
+      }>
+    ) => {
+      const project = state.projects.find((p) => p.id === action.payload.projectId);
+      if (project) {
+        if (!project.partnerOutreachStatus) {
+          project.partnerOutreachStatus = [];
+        }
+        const index = project.partnerOutreachStatus.findIndex(
+          (p) => p.partnerId === action.payload.partnerId
+        );
+        if (index !== -1) {
+          project.partnerOutreachStatus[index] = action.payload.status;
+        } else {
+          project.partnerOutreachStatus.push(action.payload.status);
+        }
+        project.updatedAt = new Date().toISOString();
+      }
+    },
+
+    // Project Status Management
+    updateProjectStatus: (
+      state,
+      action: PayloadAction<{
+        projectId: string;
+        projectStatus: ProjectStatus;
+      }>
+    ) => {
+      const project = state.projects.find((p) => p.id === action.payload.projectId);
+      if (project) {
+        project.projectStatus = action.payload.projectStatus;
+        project.updatedAt = new Date().toISOString();
+      }
+    },
+
+    // Thank You Email Tracking
+    markThankYouEmailSent: (state, action: PayloadAction<{ projectId: string }>) => {
+      const project = state.projects.find((p) => p.id === action.payload.projectId);
+      if (project) {
+        project.thankYouEmailSent = true;
+        project.thankYouEmailSentAt = new Date().toISOString();
         project.updatedAt = new Date().toISOString();
       }
     },
@@ -325,6 +474,13 @@ export const {
   bulkMoveToStage,
   updateScore,
   updateJapanAssessment,
+  updateInternalReview,
+  updateMissingData,
+  updatePartnerMatching,
+  updatePartnerOutreach,
+  updateSinglePartnerOutreach,
+  updateProjectStatus,
+  markThankYouEmailSent,
   updateNDAStatus,
   updateDDProgress,
   updateContractStatus,

@@ -9,7 +9,7 @@ import {
   IconFlask,
   IconBuilding,
   IconArrowLeft,
-  IconEdit,
+  // IconEdit, // REMOVED: Edit button removed
   IconTrash,
   IconCalendar,
   IconTargetArrow,
@@ -20,11 +20,11 @@ import { useAppSelector, useAppDispatch } from '../app/store';
 import { deleteProject, updateProject } from '../store/slices/projectsSlice';
 import { AppLayout } from '../components/layout';
 import { Button, Card, Badge, Modal } from '../components/ui';
-import { ProjectFormModal } from '../components/features';
+// import { ProjectFormModal } from '../components/features'; // REMOVED: Outdated component
 import { StageTimeline, StageHistory } from '../components/common';
-import { GateReviewPanel, GateHistoryTimeline } from '../components/features/gates';
+// import { GateReviewPanel, GateHistoryTimeline } from '../components/features/gates'; // REMOVED: Out of scope
 import { WhatIfScoreCalculator } from '../components/features/projects';
-import { StageLabels } from '../types/project.types';
+import { StageLabels, ReachTypeLabels } from '../types/project.types';
 import type { ScoreBreakdown } from '../types/project.types';
 
 export default function ProjectDetailPage() {
@@ -34,10 +34,10 @@ export default function ProjectDetailPage() {
 
   const project = useAppSelector((state) => state.projects.projects.find((p) => p.id === id));
 
-  const gateReviews = useAppSelector((state) => state.gate.reviews);
+  // const gateReviews = useAppSelector((state) => state.gate.reviews); // REMOVED: Gate system out of scope
 
   const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [showEditModal, setShowEditModal] = useState(false);
+  // const [showEditModal, setShowEditModal] = useState(false); // REMOVED: ProjectFormModal outdated
 
   // If project not found
   if (!project) {
@@ -112,13 +112,7 @@ export default function ProjectDetailPage() {
                 Japan Screening
               </Button>
             )}
-            <Button
-              variant="outline"
-              leftIcon={<IconEdit size={18} />}
-              onClick={() => setShowEditModal(true)}
-            >
-              Edit
-            </Button>
+            {/* Edit button removed - ProjectFormModal component needs updating for new workflow */}
             <Button
               variant="danger"
               leftIcon={<IconTrash size={18} />}
@@ -131,12 +125,19 @@ export default function ProjectDetailPage() {
 
         {/* Status Badges */}
         <div className="flex items-center gap-2 flex-wrap">
-          {/* Project Tags */}
-          {project.tags.map((tag) => (
-            <Badge key={tag} variant="primary" size="md">
-              {tag}
-            </Badge>
-          ))}
+          {/* Reach Type Badge */}
+          <Badge
+            variant={
+              project.reachType === 'HOT'
+                ? 'error'
+                : project.reachType === 'WARM'
+                  ? 'warning'
+                  : 'info'
+            }
+            size="md"
+          >
+            {ReachTypeLabels[project.reachType]}
+          </Badge>
 
           {/* Stage Badge */}
           <Badge variant={getStageColor(project.currentStage)} size="md">
@@ -165,9 +166,9 @@ export default function ProjectDetailPage() {
               🔥 Hot
             </Badge>
           )}
-          {project.isDiamond && (
+          {project.isPriority && (
             <Badge variant="success" size="md">
-              💎 Diamond
+              ⭐ Priority
             </Badge>
           )}
           {project.isStalled && (
@@ -182,10 +183,10 @@ export default function ProjectDetailPage() {
           <div className="mb-4">
             <h2 className="text-xl font-semibold text-gray-900 mb-2">Stage Workflow</h2>
             <p className="text-sm text-gray-600">
-              Track progress through the {project.tags[0]} pipeline
+              Track progress through the {ReachTypeLabels[project.reachType]} workflow
             </p>
           </div>
-          <StageTimeline currentStage={project.currentStage} projectTag={project.tags[0]} />
+          <StageTimeline currentStage={project.currentStage} />
         </Card>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -397,12 +398,7 @@ export default function ProjectDetailPage() {
                     </Badge>
                   </div>
 
-                  {project.japanSummary && (
-                    <div>
-                      <p className="text-sm text-gray-600 mb-2">Summary</p>
-                      <p className="text-gray-700 leading-relaxed">{project.japanSummary}</p>
-                    </div>
-                  )}
+                  {/* japanSummary removed - now part of screening stage data */}
 
                   {project.japanScreeningCompletedAt && (
                     <div className="pt-4 border-t border-gray-200">
@@ -451,38 +447,11 @@ export default function ProjectDetailPage() {
               }
             >
               <div className="space-y-6">
-                {/* Gate Review Panels */}
-                <div className="space-y-4">
-                  <GateReviewPanel
-                    projectId={project.id}
-                    gateNumber={1}
-                    existingReview={gateReviews.find(
-                      (r) => r.projectId === project.id && r.gateNumber === 1
-                    )}
-                  />
-                  <GateReviewPanel
-                    projectId={project.id}
-                    gateNumber={2}
-                    existingReview={gateReviews.find(
-                      (r) => r.projectId === project.id && r.gateNumber === 2
-                    )}
-                  />
-                  <GateReviewPanel
-                    projectId={project.id}
-                    gateNumber={3}
-                    existingReview={gateReviews.find(
-                      (r) => r.projectId === project.id && r.gateNumber === 3
-                    )}
-                  />
+                {/* Gate Review Panels - REMOVED: Gate system out of scope */}
+                {/* Internal Review section will be built here */}
+                <div className="text-center py-8 text-gray-500">
+                  Internal Review component to be implemented
                 </div>
-
-                {/* Gate History Timeline */}
-                {gateReviews.filter((r) => r.projectId === project.id).length > 0 && (
-                  <div className="pt-6 border-t border-gray-200">
-                    <h3 className="text-lg font-semibold text-gray-900 mb-4">Review History</h3>
-                    <GateHistoryTimeline reviews={gateReviews} projectId={project.id} />
-                  </div>
-                )}
               </div>
             </Card>
           </div>
@@ -539,82 +508,8 @@ export default function ProjectDetailPage() {
                   </div>
                 )}
 
-                {/* Gate Status */}
-                {(project.currentGate ||
-                  project.gate1Status ||
-                  project.gate2Status ||
-                  project.gate3Status) && (
-                  <div className="pt-4 border-t border-gray-200">
-                    <p className="text-sm text-gray-600 mb-3">Gate Progress</p>
-                    <div className="space-y-2">
-                      {project.gate1Status && (
-                        <div className="flex items-center justify-between">
-                          <span className="text-xs text-gray-600">Gate 1</span>
-                          <Badge
-                            variant={
-                              project.gate1Status === 'APPROVED'
-                                ? 'success'
-                                : project.gate1Status === 'REJECTED'
-                                  ? 'error'
-                                  : project.gate1Status === 'CONDITIONAL'
-                                    ? 'warning'
-                                    : 'default'
-                            }
-                            size="sm"
-                          >
-                            {project.gate1Status}
-                          </Badge>
-                        </div>
-                      )}
-                      {project.gate2Status && (
-                        <div className="flex items-center justify-between">
-                          <span className="text-xs text-gray-600">Gate 2</span>
-                          <Badge
-                            variant={
-                              project.gate2Status === 'APPROVED'
-                                ? 'success'
-                                : project.gate2Status === 'REJECTED'
-                                  ? 'error'
-                                  : project.gate2Status === 'CONDITIONAL'
-                                    ? 'warning'
-                                    : 'default'
-                            }
-                            size="sm"
-                          >
-                            {project.gate2Status}
-                          </Badge>
-                        </div>
-                      )}
-                      {project.gate3Status && (
-                        <div className="flex items-center justify-between">
-                          <span className="text-xs text-gray-600">Gate 3</span>
-                          <Badge
-                            variant={
-                              project.gate3Status === 'APPROVED'
-                                ? 'success'
-                                : project.gate3Status === 'REJECTED'
-                                  ? 'error'
-                                  : project.gate3Status === 'CONDITIONAL'
-                                    ? 'warning'
-                                    : 'default'
-                            }
-                            size="sm"
-                          >
-                            {project.gate3Status}
-                          </Badge>
-                        </div>
-                      )}
-                      {project.currentGate && (
-                        <div className="mt-2 pt-2 border-t border-gray-100">
-                          <span className="text-xs text-gray-600">
-                            Current:{' '}
-                            <span className="font-semibold">Gate {project.currentGate}</span>
-                          </span>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                )}
+                {/* Gate Status - REMOVED: Gate system out of scope */}
+                {/* Internal Review status will be shown here */}
               </div>
             </Card>
 
@@ -708,12 +603,7 @@ export default function ProjectDetailPage() {
         </div>
       </Modal>
 
-      {/* Project Edit Modal */}
-      <ProjectFormModal
-        isOpen={showEditModal}
-        onClose={() => setShowEditModal(false)}
-        project={project}
-      />
+      {/* Project Edit Modal - REMOVED: Using simplified workflow, edit via detail page or new form */}
     </AppLayout>
   );
 }
