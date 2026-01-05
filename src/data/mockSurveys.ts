@@ -11,6 +11,7 @@ import type {
 } from '../types/survey.types';
 import { mockCompanies } from './mockCompanies';
 import { mockProjects } from './mockProjects';
+import { expandedSurvey1Template } from './expandedSurvey1Template';
 
 // ===== Survey 1 Template =====
 const survey1Questions: SurveyQuestion[] = [
@@ -308,6 +309,7 @@ export const survey3Template: SurveyTemplate = {
 // ===== Survey Templates Array =====
 export const mockSurveyTemplates: SurveyTemplate[] = [
   survey1Template,
+  expandedSurvey1Template, // Version 2.0 with 130+ questions
   survey2Template,
   survey3Template,
 ];

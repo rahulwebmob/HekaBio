@@ -18,7 +18,17 @@ export type QuestionType =
   | 'MULTIPLE_CHOICE'
   | 'RATING'
   | 'DATE'
-  | 'FILE_UPLOAD';
+  | 'FILE_UPLOAD'
+  | 'EMAIL'
+  | 'URL'
+  | 'PHONE'
+  | 'CURRENCY'
+  | 'PERCENTAGE'
+  | 'RANGE' // Min-max range
+  | 'CHECKBOX' // Single checkbox (yes/no)
+  | 'SCALE' // 1-10 scale
+  | 'MATRIX' // Grid of options
+  | 'DROPDOWN'; // Select dropdown
 
 export type SurveyStatus = 'DRAFT' | 'ACTIVE' | 'COMPLETED' | 'ARCHIVED';
 

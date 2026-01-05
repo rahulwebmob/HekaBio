@@ -3,7 +3,7 @@
  * Main project list view with filters
  */
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   IconSearch,
@@ -14,14 +14,19 @@ import {
   IconCheck,
   IconX,
   IconArrowsMove,
+  IconDownload,
+  IconBookmark,
 } from '@tabler/icons-react';
 import { PlusIcon } from '../icons';
 import { useAppSelector, useAppDispatch } from '../app/store';
-import { bulkMoveToStage } from '../store/slices/projectsSlice';
+import { bulkMoveToStage, loadSavedFiltersFromStorage } from '../store/slices/projectsSlice';
 import { AppLayout } from '../components/layout';
 import { Button, Card, Input, Select } from '../components/ui';
 import { ProjectCard } from '../components/common/ProjectCard';
 import { ProjectFormModal, BulkStageMovementModal } from '../components/features';
+import SavedFilters from '../components/features/projects/SavedFilters';
+import FilterPresets from '../components/features/projects/FilterPresets';
+import { exportProjectsToCSV } from '../utils/csvUtils';
 import type { ProjectTag, Stage } from '../types/project.types';
 import { StageLabels } from '../types/project.types';
 
@@ -33,6 +38,12 @@ export default function ProjectsPage() {
   // Modal state
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isBulkModalOpen, setIsBulkModalOpen] = useState(false);
+  const [isSavedFiltersOpen, setIsSavedFiltersOpen] = useState(false);
+
+  // Load saved filters from localStorage on mount
+  useEffect(() => {
+    dispatch(loadSavedFiltersFromStorage());
+  }, [dispatch]);
 
   // Selection state
   const [selectionMode, setSelectionMode] = useState(false);
@@ -270,6 +281,21 @@ export default function ProjectsPage() {
           </div>
           <div className="flex items-center gap-3">
             <Button
+              variant="ghost"
+              leftIcon={<IconDownload size={18} />}
+              onClick={() => exportProjectsToCSV(filteredProjects)}
+              disabled={filteredProjects.length === 0}
+            >
+              Export CSV
+            </Button>
+            <Button
+              variant="ghost"
+              leftIcon={<IconBookmark size={18} />}
+              onClick={() => setIsSavedFiltersOpen(true)}
+            >
+              Saved Filters
+            </Button>
+            <Button
               variant={selectionMode ? 'outline' : 'ghost'}
               leftIcon={selectionMode ? <IconX size={18} /> : <IconCheck size={18} />}
               onClick={handleToggleSelectionMode}
@@ -390,6 +416,14 @@ export default function ProjectsPage() {
             );
           })}
         </div>
+
+        {/* Filter Presets */}
+        <Card padding="md" shadow="sm">
+          <div className="space-y-3">
+            <h3 className="text-sm font-semibold text-gray-700">Quick Filters</h3>
+            <FilterPresets variant="chips" />
+          </div>
+        </Card>
 
         {/* Filters */}
         <Card padding="md" shadow="sm">
@@ -571,6 +605,13 @@ export default function ProjectsPage() {
         projectTag={bulkProjectTag}
         onConfirm={handleBulkMove}
       />
+
+      {/* Saved Filters Modal */}
+      {isSavedFiltersOpen && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <SavedFilters onClose={() => setIsSavedFiltersOpen(false)} />
+        </div>
+      )}
     </AppLayout>
   );
 }

@@ -15,6 +15,7 @@ const CompanyFormPage = lazy(() => import('../pages/CompanyFormPage'));
 const ContactsPage = lazy(() => import('../pages/ContactsPage'));
 const ProjectsPage = lazy(() => import('../pages/ProjectsPage'));
 const ProjectDetailPage = lazy(() => import('../pages/ProjectDetailPage'));
+const OpportunitiesPage = lazy(() => import('../pages/OpportunitiesPage'));
 const SurveysPage = lazy(() => import('../pages/SurveysPage'));
 const SurveyDetailPage = lazy(() => import('../pages/SurveyDetailPage'));
 const PublicSurveyPage = lazy(() => import('../pages/PublicSurveyPage'));
@@ -22,6 +23,8 @@ const SurveyTemplatesPage = lazy(() => import('../pages/SurveyTemplatesPage'));
 const SurveyBuilderPage = lazy(() => import('../pages/SurveyBuilderPage'));
 const LeadScorePage = lazy(() => import('../pages/LeadScorePage'));
 const JapanScreeningPage = lazy(() => import('../pages/JapanScreeningPage'));
+const ScreeningsPage = lazy(() => import('../pages/ScreeningsPage'));
+const AutomationPage = lazy(() => import('../pages/AutomationPage'));
 const CommunicationsPage = lazy(() => import('../pages/CommunicationsPage'));
 const TasksPage = lazy(() => import('../pages/TasksPage'));
 const NotificationsPage = lazy(() => import('../pages/NotificationsPage'));
@@ -89,6 +92,15 @@ export const routes: RouteConfig[] = [
     title: 'Project Detail - HekaBio',
   },
 
+  // Phase 1: Opportunities
+  {
+    path: '/opportunities',
+    element: OpportunitiesPage,
+    isPublic: false,
+    allowedRoles: ['super_admin', 'crm_owner', 'gate_1_analyst'],
+    title: 'Opportunities - HekaBio',
+  },
+
   // Phase 1: Surveys
   {
     path: '/surveys',
@@ -133,6 +145,30 @@ export const routes: RouteConfig[] = [
       'gate_3_decision_maker',
     ],
     title: 'Japan Market Screening - HekaBio',
+  },
+
+  // General Screenings
+  {
+    path: '/screenings',
+    element: ScreeningsPage,
+    isPublic: false,
+    allowedRoles: [
+      'super_admin',
+      'crm_owner',
+      'gate_1_analyst',
+      'gate_2_analyst',
+      'gate_3_decision_maker',
+    ],
+    title: 'Pre-Project Screenings - HekaBio',
+  },
+
+  // Automation
+  {
+    path: '/automation',
+    element: AutomationPage,
+    isPublic: false,
+    allowedRoles: ['super_admin', 'crm_owner'],
+    title: 'Automation Rules - HekaBio',
   },
 
   // Pipeline

@@ -219,6 +219,42 @@ export interface ProjectFilters {
   dateTo?: Timestamp;
 }
 
+// ===== Saved Filters =====
+export interface SavedFilter {
+  id: ID;
+  name: string;
+  description?: string;
+  filters: ProjectFilters;
+  isPublic: boolean; // Can other users see this filter?
+  isDefault?: boolean; // Load this filter by default?
+  createdBy: ID;
+  createdByName: string;
+  createdAt: Timestamp;
+  updatedAt?: Timestamp;
+  usageCount?: number; // Track how often it's used
+}
+
+// ===== Filter Presets =====
+export type FilterPresetType =
+  | 'HOT_PROSPECTS'
+  | 'JAPAN_HIGH_FIT'
+  | 'STALLED_PROJECTS'
+  | 'PENDING_NDA'
+  | 'IN_DD'
+  | 'AWAITING_CONTRACT'
+  | 'GATE_1_PENDING'
+  | 'GATE_2_PENDING'
+  | 'GATE_3_PENDING';
+
+export interface FilterPreset {
+  type: FilterPresetType;
+  name: string;
+  description: string;
+  icon: string; // Icon name from Tabler Icons
+  filters: ProjectFilters;
+  badgeColor?: string; // Tailwind color class
+}
+
 // ===== Project Statistics =====
 export interface ProjectStats {
   total: number;

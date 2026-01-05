@@ -10,6 +10,7 @@ import type { TypedUseSelectorHook } from 'react-redux';
 import authReducer from '../features/auth/authSlice';
 import addressBookReducer from '../store/slices/addressBookSlice';
 import projectsReducer from '../store/slices/projectsSlice';
+import opportunitiesReducer from '../store/slices/opportunitiesSlice';
 import surveysReducer from '../store/slices/surveysSlice';
 import communicationsReducer from '../store/slices/communicationsSlice';
 import tasksReducer from '../store/slices/tasksSlice';
@@ -24,12 +25,15 @@ import contractReducer from '../store/slices/contractSlice';
 import extractionReducer from '../store/slices/extractionSlice';
 import userPreferencesReducer from '../store/slices/userPreferencesSlice';
 import emailTemplatesReducer from '../store/slices/emailTemplatesSlice';
+import screeningsReducer from '../store/slices/screeningsSlice';
+import automationReducer from '../store/slices/automationSlice';
 
 export const store = configureStore({
   reducer: {
     auth: authReducer,
     addressBook: addressBookReducer,
     projects: projectsReducer,
+    opportunities: opportunitiesReducer,
     surveys: surveysReducer,
     communications: communicationsReducer,
     tasks: tasksReducer,
@@ -44,6 +48,8 @@ export const store = configureStore({
     extraction: extractionReducer,
     userPreferences: userPreferencesReducer,
     emailTemplates: emailTemplatesReducer,
+    screenings: screeningsReducer,
+    automation: automationReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

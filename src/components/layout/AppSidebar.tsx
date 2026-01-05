@@ -19,6 +19,9 @@ import {
   IconShieldCheck,
   IconClipboardCheck,
   IconContract,
+  IconBulb,
+  IconThermometer,
+  IconBolt,
 } from '@tabler/icons-react';
 import { ChevronLeftIcon, GridIcon, UserIcon } from '../../icons';
 import { useSidebar } from '../../contexts/SidebarContext';
@@ -47,9 +50,27 @@ const menuItems: MenuItem[] = [
     // All roles can view projects
   },
   {
+    label: 'Opportunities',
+    icon: <IconBulb size={20} stroke={1.5} />,
+    path: '/opportunities',
+    allowedRoles: ['super_admin', 'crm_owner', 'gate_1_analyst'],
+  },
+  {
     label: 'Lead Scoring',
     icon: <IconTrendingUp size={20} stroke={1.5} />,
     path: '/lead-scoring',
+    allowedRoles: [
+      'super_admin',
+      'crm_owner',
+      'gate_1_analyst',
+      'gate_2_analyst',
+      'gate_3_decision_maker',
+    ],
+  },
+  {
+    label: 'Screenings',
+    icon: <IconThermometer size={20} stroke={1.5} />,
+    path: '/screenings',
     allowedRoles: [
       'super_admin',
       'crm_owner',
@@ -80,6 +101,12 @@ const menuItems: MenuItem[] = [
     label: 'Survey Templates',
     icon: <IconTemplate size={20} stroke={1.5} />,
     path: '/admin/survey-templates',
+    allowedRoles: ['super_admin', 'crm_owner'],
+  },
+  {
+    label: 'Automation',
+    icon: <IconBolt size={20} stroke={1.5} />,
+    path: '/automation',
     allowedRoles: ['super_admin', 'crm_owner'],
   },
   {

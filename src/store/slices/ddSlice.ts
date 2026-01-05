@@ -15,6 +15,7 @@ import type {
   DDSectionType,
 } from '../../types/dd.types';
 import { calculateDDCompletion } from '../../types/dd.types';
+import { DD_TEMPLATES } from '../../data/mockDDTemplates';
 
 interface DDState {
   workspaces: DDWorkspace[];
@@ -24,7 +25,7 @@ interface DDState {
 
 const initialState: DDState = {
   workspaces: [],
-  templates: [],
+  templates: DD_TEMPLATES,
   activities: [],
 };
 

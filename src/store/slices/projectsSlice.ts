@@ -8,6 +8,7 @@ import type { PayloadAction } from '@reduxjs/toolkit';
 import type {
   Project,
   ProjectFilters,
+  SavedFilter,
   Stage,
   ScoreBreakdown,
   JapanMarketFit,
@@ -20,6 +21,8 @@ interface ProjectsState {
   projects: Project[];
   selectedProjectId: string | null;
   filters: ProjectFilters;
+  savedFilters: SavedFilter[];
+  currentSavedFilterId: string | null; // Track which saved filter is active
   isLoading: boolean;
   error: string | null;
 }
@@ -28,6 +31,8 @@ const initialState: ProjectsState = {
   projects: mockProjects,
   selectedProjectId: null,
   filters: {},
+  savedFilters: [], // Will be populated from localStorage or backend
+  currentSavedFilterId: null,
   isLoading: false,
   error: null,
 };
@@ -222,9 +227,82 @@ const projectsSlice = createSlice({
     // Filters
     setFilters: (state, action: PayloadAction<ProjectFilters>) => {
       state.filters = action.payload;
+      state.currentSavedFilterId = null; // Clear active saved filter when manually changing filters
     },
     clearFilters: (state) => {
       state.filters = {};
+      state.currentSavedFilterId = null;
+    },
+
+    // Saved Filters
+    saveSavedFilter: (state, action: PayloadAction<SavedFilter>) => {
+      // Check if filter with same ID exists (update) or add new
+      const existingIndex = state.savedFilters.findIndex((f) => f.id === action.payload.id);
+      if (existingIndex !== -1) {
+        state.savedFilters[existingIndex] = action.payload;
+      } else {
+        state.savedFilters.push(action.payload);
+      }
+      // Persist to localStorage
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('hekabio_saved_filters', JSON.stringify(state.savedFilters));
+      }
+    },
+    loadSavedFilter: (state, action: PayloadAction<string>) => {
+      const savedFilter = state.savedFilters.find((f) => f.id === action.payload);
+      if (savedFilter) {
+        state.filters = savedFilter.filters;
+        state.currentSavedFilterId = savedFilter.id;
+        // Increment usage count
+        savedFilter.usageCount = (savedFilter.usageCount || 0) + 1;
+        if (typeof window !== 'undefined') {
+          localStorage.setItem('hekabio_saved_filters', JSON.stringify(state.savedFilters));
+        }
+      }
+    },
+    deleteSavedFilter: (state, action: PayloadAction<string>) => {
+      state.savedFilters = state.savedFilters.filter((f) => f.id !== action.payload);
+      if (state.currentSavedFilterId === action.payload) {
+        state.currentSavedFilterId = null;
+      }
+      // Persist to localStorage
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('hekabio_saved_filters', JSON.stringify(state.savedFilters));
+      }
+    },
+    setDefaultSavedFilter: (state, action: PayloadAction<string>) => {
+      // Clear all defaults first
+      state.savedFilters.forEach((f) => {
+        f.isDefault = false;
+      });
+      // Set the specified filter as default
+      const filter = state.savedFilters.find((f) => f.id === action.payload);
+      if (filter) {
+        filter.isDefault = true;
+      }
+      // Persist to localStorage
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('hekabio_saved_filters', JSON.stringify(state.savedFilters));
+      }
+    },
+    loadSavedFiltersFromStorage: (state) => {
+      // Load saved filters from localStorage
+      if (typeof window !== 'undefined') {
+        const stored = localStorage.getItem('hekabio_saved_filters');
+        if (stored) {
+          try {
+            state.savedFilters = JSON.parse(stored);
+            // Auto-load default filter if exists
+            const defaultFilter = state.savedFilters.find((f) => f.isDefault);
+            if (defaultFilter) {
+              state.filters = defaultFilter.filters;
+              state.currentSavedFilterId = defaultFilter.id;
+            }
+          } catch (error) {
+            console.error('Failed to parse saved filters from localStorage:', error);
+          }
+        }
+      }
     },
 
     // Utility
@@ -252,6 +330,11 @@ export const {
   updateContractStatus,
   setFilters,
   clearFilters,
+  saveSavedFilter,
+  loadSavedFilter,
+  deleteSavedFilter,
+  setDefaultSavedFilter,
+  loadSavedFiltersFromStorage,
   setLoading,
   setError,
 } = projectsSlice.actions;

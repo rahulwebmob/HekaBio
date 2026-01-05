@@ -4,6 +4,7 @@
  */
 
 import type { Contact } from '../types/addressBook.types';
+import type { Project } from '../types/project.types';
 
 /**
  * Convert array of objects to CSV string
@@ -238,4 +239,50 @@ export function validateContactsData(contacts: Partial<Contact>[]): ContactValid
   });
 
   return errors;
+}
+
+/**
+ * Export projects to CSV
+ */
+export function exportProjectsToCSV(projects: Project[]): void {
+  // Transform projects to flatten nested properties
+  const flattenedProjects = projects.map((project) => ({
+    name: project.name,
+    company: project.company.name,
+    currentStage: project.currentStage,
+    score: project.score,
+    tags: project.tags,
+    japanInterest: project.japanInterest ? 'Yes' : 'No',
+    japanMarketFit: project.japanMarketFit || 'N/A',
+    ndaStatus: project.ndaStatus,
+    contractStatus: project.contractStatus || 'N/A',
+    ddProgress: project.ddProgress !== undefined ? `${project.ddProgress}%` : 'N/A',
+    assignedTo: project.assignedTo,
+    partnerTags: project.partnerTags,
+    isHot: project.isHot ? 'Yes' : 'No',
+    isStalled: project.isStalled ? 'Yes' : 'No',
+    createdAt: project.createdAt,
+  }));
+
+  const headers = [
+    { key: 'name' as const, label: 'Project Name' },
+    { key: 'company' as const, label: 'Company' },
+    { key: 'currentStage' as const, label: 'Current Stage' },
+    { key: 'score' as const, label: 'Score' },
+    { key: 'tags' as const, label: 'Tags' },
+    { key: 'japanInterest' as const, label: 'Japan Interest' },
+    { key: 'japanMarketFit' as const, label: 'Japan Market Fit' },
+    { key: 'ndaStatus' as const, label: 'NDA Status' },
+    { key: 'contractStatus' as const, label: 'Contract Status' },
+    { key: 'ddProgress' as const, label: 'DD Progress' },
+    { key: 'assignedTo' as const, label: 'Assigned To' },
+    { key: 'partnerTags' as const, label: 'Partner Tags' },
+    { key: 'isHot' as const, label: 'Hot Prospect' },
+    { key: 'isStalled' as const, label: 'Stalled' },
+    { key: 'createdAt' as const, label: 'Created Date' },
+  ];
+
+  const csvContent = arrayToCSV(flattenedProjects, headers);
+  const timestamp = new Date().toISOString().split('T')[0];
+  downloadCSV(csvContent, `projects-export-${timestamp}.csv`);
 }
