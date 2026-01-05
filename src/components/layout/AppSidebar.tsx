@@ -22,12 +22,15 @@ import {
 } from '@tabler/icons-react';
 import { ChevronLeftIcon, GridIcon, UserIcon } from '../../icons';
 import { useSidebar } from '../../contexts/SidebarContext';
+import { useAuthorization } from '../../hooks/useAuthorization';
+import type { UserRole } from '../../types/auth.types';
 
 interface MenuItem {
   label: string;
   icon: React.ReactNode;
   path: string;
   badge?: string;
+  allowedRoles?: UserRole[]; // Roles that can see this menu item
 }
 
 const menuItems: MenuItem[] = [
@@ -35,81 +38,134 @@ const menuItems: MenuItem[] = [
     label: 'Dashboard',
     icon: <GridIcon className="w-5 h-5" />,
     path: '/dashboard',
+    // All roles can access dashboard
   },
   {
     label: 'Projects',
     icon: <IconFlask size={20} stroke={1.5} />,
     path: '/projects',
+    // All roles can view projects
   },
   {
     label: 'Lead Scoring',
     icon: <IconTrendingUp size={20} stroke={1.5} />,
     path: '/lead-scoring',
+    allowedRoles: [
+      'super_admin',
+      'crm_owner',
+      'gate_1_analyst',
+      'gate_2_analyst',
+      'gate_3_decision_maker',
+    ],
   },
   {
     label: 'Pipeline',
     icon: <IconChartDots size={20} stroke={1.5} />,
     path: '/pipeline',
+    allowedRoles: [
+      'super_admin',
+      'crm_owner',
+      'gate_1_analyst',
+      'gate_2_analyst',
+      'gate_3_decision_maker',
+    ],
   },
   {
     label: 'Surveys',
     icon: <IconFileText size={20} stroke={1.5} />,
     path: '/surveys',
+    allowedRoles: ['super_admin', 'crm_owner', 'gate_1_analyst'],
   },
   {
     label: 'Survey Templates',
     icon: <IconTemplate size={20} stroke={1.5} />,
     path: '/admin/survey-templates',
+    allowedRoles: ['super_admin', 'crm_owner'],
   },
   {
     label: 'Communications',
     icon: <IconMail size={20} stroke={1.5} />,
     path: '/communications',
+    allowedRoles: [
+      'super_admin',
+      'crm_owner',
+      'gate_1_analyst',
+      'gate_2_analyst',
+      'gate_3_decision_maker',
+    ],
   },
   {
     label: 'Tasks',
     icon: <IconChecklist size={20} stroke={1.5} />,
     path: '/tasks',
+    // All roles can access tasks
   },
   {
     label: 'Notifications',
     icon: <IconBell size={20} stroke={1.5} />,
     path: '/notifications',
+    // All roles can access notifications
   },
   {
     label: 'Calendar',
     icon: <IconCalendar size={20} stroke={1.5} />,
     path: '/calendar',
+    // All roles can access calendar
   },
   {
     label: 'Documents',
     icon: <IconFolder size={20} stroke={1.5} />,
     path: '/documents',
+    // All roles can view documents
   },
   {
     label: 'Contracts',
     icon: <IconContract size={20} stroke={1.5} />,
     path: '/contracts',
+    allowedRoles: ['super_admin', 'crm_owner', 'gate_3_decision_maker'],
   },
   {
     label: 'NDAs',
     icon: <IconShieldCheck size={20} stroke={1.5} />,
     path: '/ndas',
+    allowedRoles: ['super_admin', 'crm_owner', 'gate_2_analyst', 'gate_3_decision_maker'],
   },
   {
     label: 'Due Diligence',
     icon: <IconClipboardCheck size={20} stroke={1.5} />,
     path: '/dd-workspace',
+    allowedRoles: [
+      'super_admin',
+      'crm_owner',
+      'dd_specialist_scientific',
+      'dd_specialist_regulatory',
+      'dd_specialist_commercial',
+      'dd_specialist_financial',
+    ],
   },
   {
     label: 'Companies',
     icon: <IconBuildingHospital size={20} stroke={1.5} />,
     path: '/companies',
+    allowedRoles: [
+      'super_admin',
+      'crm_owner',
+      'gate_1_analyst',
+      'gate_2_analyst',
+      'gate_3_decision_maker',
+    ],
   },
   {
     label: 'Contacts',
     icon: <UserIcon className="w-5 h-5" />,
     path: '/contacts',
+    allowedRoles: [
+      'super_admin',
+      'crm_owner',
+      'gate_1_analyst',
+      'gate_2_analyst',
+      'gate_3_decision_maker',
+    ],
   },
 ];
 
@@ -117,6 +173,7 @@ export default function AppSidebar() {
   const location = useLocation();
   const { isCollapsed, isMobileOpen, isHoverExpanded, setHoverExpanded, closeMobile } =
     useSidebar();
+  const { hasRole } = useAuthorization();
 
   const isExpanded = !isCollapsed || isHoverExpanded;
   const sidebarWidth = isExpanded ? 'w-64' : 'w-20';
@@ -124,6 +181,16 @@ export default function AppSidebar() {
   const isActive = (path: string) => {
     return location.pathname === path || location.pathname.startsWith(path + '/');
   };
+
+  // Filter menu items based on user's role
+  const visibleMenuItems = menuItems.filter((item) => {
+    // If no allowedRoles specified, item is visible to all
+    if (!item.allowedRoles || item.allowedRoles.length === 0) {
+      return true;
+    }
+    // Check if user has one of the allowed roles
+    return hasRole(item.allowedRoles);
+  });
 
   return (
     <>
@@ -165,7 +232,7 @@ export default function AppSidebar() {
         {/* Navigation */}
         <nav className="flex-1 overflow-y-auto py-4 px-3">
           <ul className="space-y-1">
-            {menuItems.map((item) => (
+            {visibleMenuItems.map((item) => (
               <li key={item.label}>
                 <Link
                   to={item.path}

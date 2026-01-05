@@ -94,12 +94,14 @@ export const routes: RouteConfig[] = [
     path: '/surveys',
     element: SurveysPage,
     isPublic: false,
+    allowedRoles: ['super_admin', 'crm_owner', 'gate_1_analyst'],
     title: 'Surveys - HekaBio',
   },
   {
     path: '/surveys/:id',
     element: SurveyDetailPage,
     isPublic: false,
+    allowedRoles: ['super_admin', 'crm_owner', 'gate_1_analyst'],
     title: 'Survey Detail - HekaBio',
   },
 
@@ -108,6 +110,13 @@ export const routes: RouteConfig[] = [
     path: '/lead-scoring',
     element: LeadScorePage,
     isPublic: false,
+    allowedRoles: [
+      'super_admin',
+      'crm_owner',
+      'gate_1_analyst',
+      'gate_2_analyst',
+      'gate_3_decision_maker',
+    ],
     title: 'Lead Scoring - HekaBio',
   },
 
@@ -116,6 +125,13 @@ export const routes: RouteConfig[] = [
     path: '/projects/:projectId/japan-screening',
     element: JapanScreeningPage,
     isPublic: false,
+    allowedRoles: [
+      'super_admin',
+      'crm_owner',
+      'gate_1_analyst',
+      'gate_2_analyst',
+      'gate_3_decision_maker',
+    ],
     title: 'Japan Market Screening - HekaBio',
   },
 
@@ -124,6 +140,13 @@ export const routes: RouteConfig[] = [
     path: '/pipeline',
     element: PipelinePage,
     isPublic: false,
+    allowedRoles: [
+      'super_admin',
+      'crm_owner',
+      'gate_1_analyst',
+      'gate_2_analyst',
+      'gate_3_decision_maker',
+    ],
     title: 'Sales Pipeline - HekaBio',
   },
 
@@ -132,6 +155,13 @@ export const routes: RouteConfig[] = [
     path: '/communications',
     element: CommunicationsPage,
     isPublic: false,
+    allowedRoles: [
+      'super_admin',
+      'crm_owner',
+      'gate_1_analyst',
+      'gate_2_analyst',
+      'gate_3_decision_maker',
+    ],
     title: 'Communications - HekaBio',
   },
 
@@ -180,6 +210,7 @@ export const routes: RouteConfig[] = [
     path: '/contracts',
     element: ContractsPage,
     isPublic: false,
+    allowedRoles: ['super_admin', 'crm_owner', 'gate_3_decision_maker'],
     title: 'Contracts - HekaBio',
   },
 
@@ -188,6 +219,7 @@ export const routes: RouteConfig[] = [
     path: '/ndas',
     element: NDAPage,
     isPublic: false,
+    allowedRoles: ['super_admin', 'crm_owner', 'gate_2_analyst', 'gate_3_decision_maker'],
     title: 'NDAs - HekaBio',
   },
 
@@ -196,6 +228,14 @@ export const routes: RouteConfig[] = [
     path: '/dd-workspace',
     element: DDWorkspacePage,
     isPublic: false,
+    allowedRoles: [
+      'super_admin',
+      'crm_owner',
+      'dd_specialist_scientific',
+      'dd_specialist_regulatory',
+      'dd_specialist_commercial',
+      'dd_specialist_financial',
+    ],
     title: 'Due Diligence - HekaBio',
   },
 
@@ -220,30 +260,65 @@ export const routes: RouteConfig[] = [
     path: '/companies',
     element: CompaniesPage,
     isPublic: false,
+    allowedRoles: [
+      'super_admin',
+      'crm_owner',
+      'gate_1_analyst',
+      'gate_2_analyst',
+      'gate_3_decision_maker',
+    ],
     title: 'Companies - HekaBio',
   },
   {
     path: '/companies/new',
     element: CompanyFormPage,
     isPublic: false,
+    allowedRoles: [
+      'super_admin',
+      'crm_owner',
+      'gate_1_analyst',
+      'gate_2_analyst',
+      'gate_3_decision_maker',
+    ],
     title: 'Add Company - HekaBio',
   },
   {
     path: '/companies/:id/edit',
     element: CompanyFormPage,
     isPublic: false,
+    allowedRoles: [
+      'super_admin',
+      'crm_owner',
+      'gate_1_analyst',
+      'gate_2_analyst',
+      'gate_3_decision_maker',
+    ],
     title: 'Edit Company - HekaBio',
   },
   {
     path: '/companies/:id',
     element: CompanyDetailPage,
     isPublic: false,
+    allowedRoles: [
+      'super_admin',
+      'crm_owner',
+      'gate_1_analyst',
+      'gate_2_analyst',
+      'gate_3_decision_maker',
+    ],
     title: 'Company Detail - HekaBio',
   },
   {
     path: '/contacts',
     element: ContactsPage,
     isPublic: false,
+    allowedRoles: [
+      'super_admin',
+      'crm_owner',
+      'gate_1_analyst',
+      'gate_2_analyst',
+      'gate_3_decision_maker',
+    ],
     title: 'Contacts - HekaBio',
   },
 

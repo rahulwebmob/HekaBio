@@ -15,6 +15,9 @@ import { routes } from './routes';
 
 // Components
 import { useAuth } from './hooks/useAuth';
+import { useAuthorization } from './hooks/useAuthorization';
+import AccessDeniedPage from './pages/AccessDeniedPage';
+import type { UserRole } from './types/auth.types';
 
 // Loading Fallback
 const LoadingFallback = () => (
@@ -27,11 +30,26 @@ const LoadingFallback = () => (
 );
 
 // Protected Route Component
-function ProtectedRoute({ children }: { children: ReactElement }) {
+function ProtectedRoute({
+  children,
+  allowedRoles,
+}: {
+  children: ReactElement;
+  allowedRoles?: UserRole[];
+}) {
   const { isAuthenticated } = useAuth();
+  const { hasRole } = useAuthorization();
 
+  // Check authentication first
   if (!isAuthenticated) {
     return <Navigate to="/login" replace />;
+  }
+
+  // Check role-based authorization if allowedRoles is specified
+  if (allowedRoles && allowedRoles.length > 0) {
+    if (!hasRole(allowedRoles)) {
+      return <AccessDeniedPage />;
+    }
   }
 
   return children;
@@ -78,8 +96,8 @@ function AppRouter() {
                     <Element />
                   )
                 ) : (
-                  // Protected route
-                  <ProtectedRoute>
+                  // Protected route with optional role-based access control
+                  <ProtectedRoute allowedRoles={route.allowedRoles}>
                     <Element />
                   </ProtectedRoute>
                 )
