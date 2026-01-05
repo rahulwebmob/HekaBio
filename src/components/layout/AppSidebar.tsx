@@ -1,19 +1,6 @@
-/**
- * App Sidebar - Main navigation sidebar
- * Collapsible sidebar with hover expand, submenu support
- */
-
 import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import {
-  IconUsers,
-  IconFileText,
-  IconClipboardCheck,
-  IconChartBar,
-  IconSettings,
-  IconFlask,
-  IconBuildingHospital,
-} from '@tabler/icons-react';
+import { IconUsers, IconSettings } from '@tabler/icons-react';
 import { ChevronDownIcon, ChevronLeftIcon, GridIcon } from '../../icons';
 import { useSidebar } from '../../contexts/SidebarContext';
 
